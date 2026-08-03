@@ -1,0 +1,14 @@
+gitRepo:
+  gitProvider: 
+  path: /Analytics-on-Springboot-35
+  TestDBUrl: 
+  TestDBName: AnalyticsonSpringboot35_test_db
+  TestDBPassword: 
+  TestDBDialect: org.hibernate.dialect.MySQL8Dialect 
+  TestDBDriver: com.mysql.cj.jdbc.Driver
+  DockerUserName: tylertravismya
+  DockerPassword: 69cutlass
+  DockerOrgName: theharbormaster
+  DockerRepo: Analytics-on-springboot-35
+  DockerHost: docker.io
+  DockerTag: latest
