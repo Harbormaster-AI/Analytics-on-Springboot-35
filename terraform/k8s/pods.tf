@@ -7,7 +7,7 @@ resource "kubernetes_replication_controller" "app-master" {
     replicas = 1
 
     selector = {
-      app  = "AnalyticsonSpringboot35"
+      app  = "Analyticsonspringboot35"
     }
     template {        
     template {

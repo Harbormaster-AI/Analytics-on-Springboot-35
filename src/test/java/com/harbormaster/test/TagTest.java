@@ -94,7 +94,7 @@ public class TagTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a Tag" );
 
         try {            
-            entity = TagBusinessDelegate.getTagInstance().createTag( generateNewCommand() );
+            entity = TagService.getTagInstance().createTag( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getTagId();
@@ -125,7 +125,7 @@ public class TagTest
         msg.append( theId );
 
         try {
-            entity = TagBusinessDelegate.getTagInstance().getTag( new TagFetchOneSummary(theId) );
+            entity = TagService.getTagInstance().getTag( new TagFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class TagTest
 
             LOGGER.info( "-- Now updating the created Tag." );
             
-            TagBusinessDelegate proxy = TagBusinessDelegate.getTagInstance();            
+            TagService proxy = TagService.getTagInstance();            
             entity = proxy.updateTag( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class TagTest
         try {
         	DeleteTagCommand deleteCommand = new DeleteTagCommand( theId );
         	
-            TagBusinessDelegate.getTagInstance().delete( deleteCommand );
+            TagService.getTagInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted Tag with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class TagTest
         List<Tag> collection  = null;
 
         try {
-            // call the static get method on the TagBusinessDelegate
-            collection = TagBusinessDelegate.getTagInstance().getAllTag();
+            // call the static get method on the TagService
+            collection = TagService.getTagInstance().getAllTag();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

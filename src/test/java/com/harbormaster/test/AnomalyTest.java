@@ -94,7 +94,7 @@ public class AnomalyTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a Anomaly" );
 
         try {            
-            entity = AnomalyBusinessDelegate.getAnomalyInstance().createAnomaly( generateNewCommand() );
+            entity = AnomalyService.getAnomalyInstance().createAnomaly( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getAnomalyId();
@@ -125,7 +125,7 @@ public class AnomalyTest
         msg.append( theId );
 
         try {
-            entity = AnomalyBusinessDelegate.getAnomalyInstance().getAnomaly( new AnomalyFetchOneSummary(theId) );
+            entity = AnomalyService.getAnomalyInstance().getAnomaly( new AnomalyFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class AnomalyTest
 
             LOGGER.info( "-- Now updating the created Anomaly." );
             
-            AnomalyBusinessDelegate proxy = AnomalyBusinessDelegate.getAnomalyInstance();            
+            AnomalyService proxy = AnomalyService.getAnomalyInstance();            
             entity = proxy.updateAnomaly( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class AnomalyTest
         try {
         	DeleteAnomalyCommand deleteCommand = new DeleteAnomalyCommand( theId );
         	
-            AnomalyBusinessDelegate.getAnomalyInstance().delete( deleteCommand );
+            AnomalyService.getAnomalyInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted Anomaly with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class AnomalyTest
         List<Anomaly> collection  = null;
 
         try {
-            // call the static get method on the AnomalyBusinessDelegate
-            collection = AnomalyBusinessDelegate.getAnomalyInstance().getAllAnomaly();
+            // call the static get method on the AnomalyService
+            collection = AnomalyService.getAnomalyInstance().getAllAnomaly();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

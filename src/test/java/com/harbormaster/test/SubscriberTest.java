@@ -94,7 +94,7 @@ public class SubscriberTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a Subscriber" );
 
         try {            
-            entity = SubscriberBusinessDelegate.getSubscriberInstance().createSubscriber( generateNewCommand() );
+            entity = SubscriberService.getSubscriberInstance().createSubscriber( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getSubscriberId();
@@ -125,7 +125,7 @@ public class SubscriberTest
         msg.append( theId );
 
         try {
-            entity = SubscriberBusinessDelegate.getSubscriberInstance().getSubscriber( new SubscriberFetchOneSummary(theId) );
+            entity = SubscriberService.getSubscriberInstance().getSubscriber( new SubscriberFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class SubscriberTest
 
             LOGGER.info( "-- Now updating the created Subscriber." );
             
-            SubscriberBusinessDelegate proxy = SubscriberBusinessDelegate.getSubscriberInstance();            
+            SubscriberService proxy = SubscriberService.getSubscriberInstance();            
             entity = proxy.updateSubscriber( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class SubscriberTest
         try {
         	DeleteSubscriberCommand deleteCommand = new DeleteSubscriberCommand( theId );
         	
-            SubscriberBusinessDelegate.getSubscriberInstance().delete( deleteCommand );
+            SubscriberService.getSubscriberInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted Subscriber with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class SubscriberTest
         List<Subscriber> collection  = null;
 
         try {
-            // call the static get method on the SubscriberBusinessDelegate
-            collection = SubscriberBusinessDelegate.getSubscriberInstance().getAllSubscriber();
+            // call the static get method on the SubscriberService
+            collection = SubscriberService.getSubscriberInstance().getAllSubscriber();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

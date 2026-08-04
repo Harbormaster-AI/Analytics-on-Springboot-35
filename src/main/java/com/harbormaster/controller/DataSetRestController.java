@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	DataSetBusinessDelegate
+ *  	DataSetService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/DataSet")
 public class DataSetRestController extends BaseSpringRestController {
 
+	public DataSetRestController( DataSetService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a DataSet.  if not key provided, calls create, otherwise calls save
      * @param		DataSet	dataSet
@@ -93,7 +96,7 @@ public class DataSetRestController extends BaseSpringRestController {
     	DataSet entity = null;
 		try {       
         	
-			entity = DataSetBusinessDelegate.getDataSetInstance().createDataSet( command );
+			entity = service.createDataSet( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class DataSetRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateDataSetCommand
 			// -----------------------------------------------
-			entity = DataSetBusinessDelegate.getDataSetInstance().updateDataSet(command);;
+			entity = service.updateDataSet(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "DataSetController:update() - successfully update DataSet - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class DataSetRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteDataSetCommand command ) {                
     	try {
-        	DataSetBusinessDelegate delegate = DataSetBusinessDelegate.getDataSetInstance();
+        	DataSetService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted DataSet with key " + command.getDataSetId() );
@@ -151,7 +154,7 @@ public class DataSetRestController extends BaseSpringRestController {
     	DataSet entity = null;
 
     	try {  
-    		entity = DataSetBusinessDelegate.getDataSetInstance().getDataSet( new DataSetFetchOneSummary( uuid ) );   
+    		entity = service.getDataSet( new DataSetFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load DataSet using Id " + uuid );
@@ -171,7 +174,7 @@ public class DataSetRestController extends BaseSpringRestController {
         
     	try {
             // load the DataSet
-            dataSetList = DataSetBusinessDelegate.getDataSetInstance().getAllDataSet();
+            dataSetList = service.getAllDataSet();
             
             if ( dataSetList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all DataSets" );
@@ -192,7 +195,7 @@ public class DataSetRestController extends BaseSpringRestController {
 	@PutMapping("/assignWorkspace")
 	public void assignWorkspace( @RequestBody AssignWorkspaceToDataSetCommand command ) {
 		try {
-			DataSetBusinessDelegate.getDataSetInstance().assignWorkspace( command );   
+			service.assignWorkspace( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Workspace", exc );
@@ -206,7 +209,7 @@ public class DataSetRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignWorkspace")
 	public void unAssignWorkspace( @RequestBody(required=true)  UnAssignWorkspaceFromDataSetCommand command ) {
 		try {
-			DataSetBusinessDelegate.getDataSetInstance().unAssignWorkspace( command );   
+			service.unAssignWorkspace( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Workspace", exc );
@@ -220,7 +223,7 @@ public class DataSetRestController extends BaseSpringRestController {
 	@PutMapping("/assignLineageNode")
 	public void assignLineageNode( @RequestBody AssignLineageNodeToDataSetCommand command ) {
 		try {
-			DataSetBusinessDelegate.getDataSetInstance().assignLineageNode( command );   
+			service.assignLineageNode( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign LineageNode", exc );
@@ -234,7 +237,7 @@ public class DataSetRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignLineageNode")
 	public void unAssignLineageNode( @RequestBody(required=true)  UnAssignLineageNodeFromDataSetCommand command ) {
 		try {
-			DataSetBusinessDelegate.getDataSetInstance().unAssignLineageNode( command );   
+			service.unAssignLineageNode( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign LineageNode", exc );
@@ -249,7 +252,7 @@ public class DataSetRestController extends BaseSpringRestController {
 	@PutMapping("/addToSources")
 	public void addToSources( @RequestBody(required=true) AssignSourcesToDataSetCommand command ) {
 		try {
-			DataSetBusinessDelegate.getDataSetInstance().addToSources( command );   
+			service.addToSources( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Sources", exc );
@@ -264,7 +267,7 @@ public class DataSetRestController extends BaseSpringRestController {
 	public void removeFromSources( 	@RequestBody(required=true) RemoveSourcesFromDataSetCommand command )
 	{		
 		try {
-			DataSetBusinessDelegate.getDataSetInstance().removeFromSources( command );
+			service.removeFromSources( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Sources", exc );
@@ -278,7 +281,7 @@ public class DataSetRestController extends BaseSpringRestController {
 	@PutMapping("/addToPipelines")
 	public void addToPipelines( @RequestBody(required=true) AssignPipelinesToDataSetCommand command ) {
 		try {
-			DataSetBusinessDelegate.getDataSetInstance().addToPipelines( command );   
+			service.addToPipelines( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Pipelines", exc );
@@ -293,7 +296,7 @@ public class DataSetRestController extends BaseSpringRestController {
 	public void removeFromPipelines( 	@RequestBody(required=true) RemovePipelinesFromDataSetCommand command )
 	{		
 		try {
-			DataSetBusinessDelegate.getDataSetInstance().removeFromPipelines( command );
+			service.removeFromPipelines( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Pipelines", exc );
@@ -307,7 +310,7 @@ public class DataSetRestController extends BaseSpringRestController {
 	@PutMapping("/addToSemanticModels")
 	public void addToSemanticModels( @RequestBody(required=true) AssignSemanticModelsToDataSetCommand command ) {
 		try {
-			DataSetBusinessDelegate.getDataSetInstance().addToSemanticModels( command );   
+			service.addToSemanticModels( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set SemanticModels", exc );
@@ -322,7 +325,7 @@ public class DataSetRestController extends BaseSpringRestController {
 	public void removeFromSemanticModels( 	@RequestBody(required=true) RemoveSemanticModelsFromDataSetCommand command )
 	{		
 		try {
-			DataSetBusinessDelegate.getDataSetInstance().removeFromSemanticModels( command );
+			service.removeFromSemanticModels( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set SemanticModels", exc );
@@ -336,7 +339,7 @@ public class DataSetRestController extends BaseSpringRestController {
 	@PutMapping("/addToDimensions")
 	public void addToDimensions( @RequestBody(required=true) AssignDimensionsToDataSetCommand command ) {
 		try {
-			DataSetBusinessDelegate.getDataSetInstance().addToDimensions( command );   
+			service.addToDimensions( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Dimensions", exc );
@@ -351,7 +354,7 @@ public class DataSetRestController extends BaseSpringRestController {
 	public void removeFromDimensions( 	@RequestBody(required=true) RemoveDimensionsFromDataSetCommand command )
 	{		
 		try {
-			DataSetBusinessDelegate.getDataSetInstance().removeFromDimensions( command );
+			service.removeFromDimensions( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Dimensions", exc );
@@ -365,7 +368,7 @@ public class DataSetRestController extends BaseSpringRestController {
 	@PutMapping("/addToMeasures")
 	public void addToMeasures( @RequestBody(required=true) AssignMeasuresToDataSetCommand command ) {
 		try {
-			DataSetBusinessDelegate.getDataSetInstance().addToMeasures( command );   
+			service.addToMeasures( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Measures", exc );
@@ -380,7 +383,7 @@ public class DataSetRestController extends BaseSpringRestController {
 	public void removeFromMeasures( 	@RequestBody(required=true) RemoveMeasuresFromDataSetCommand command )
 	{		
 		try {
-			DataSetBusinessDelegate.getDataSetInstance().removeFromMeasures( command );
+			service.removeFromMeasures( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Measures", exc );
@@ -394,7 +397,7 @@ public class DataSetRestController extends BaseSpringRestController {
 	@PutMapping("/addToMetrics")
 	public void addToMetrics( @RequestBody(required=true) AssignMetricsToDataSetCommand command ) {
 		try {
-			DataSetBusinessDelegate.getDataSetInstance().addToMetrics( command );   
+			service.addToMetrics( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Metrics", exc );
@@ -409,7 +412,7 @@ public class DataSetRestController extends BaseSpringRestController {
 	public void removeFromMetrics( 	@RequestBody(required=true) RemoveMetricsFromDataSetCommand command )
 	{		
 		try {
-			DataSetBusinessDelegate.getDataSetInstance().removeFromMetrics( command );
+			service.removeFromMetrics( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Metrics", exc );
@@ -423,7 +426,7 @@ public class DataSetRestController extends BaseSpringRestController {
 	@PutMapping("/addToQualityRules")
 	public void addToQualityRules( @RequestBody(required=true) AssignQualityRulesToDataSetCommand command ) {
 		try {
-			DataSetBusinessDelegate.getDataSetInstance().addToQualityRules( command );   
+			service.addToQualityRules( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set QualityRules", exc );
@@ -438,7 +441,7 @@ public class DataSetRestController extends BaseSpringRestController {
 	public void removeFromQualityRules( 	@RequestBody(required=true) RemoveQualityRulesFromDataSetCommand command )
 	{		
 		try {
-			DataSetBusinessDelegate.getDataSetInstance().removeFromQualityRules( command );
+			service.removeFromQualityRules( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set QualityRules", exc );
@@ -452,7 +455,7 @@ public class DataSetRestController extends BaseSpringRestController {
 	@PutMapping("/addToTags")
 	public void addToTags( @RequestBody(required=true) AssignTagsToDataSetCommand command ) {
 		try {
-			DataSetBusinessDelegate.getDataSetInstance().addToTags( command );   
+			service.addToTags( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Tags", exc );
@@ -467,7 +470,7 @@ public class DataSetRestController extends BaseSpringRestController {
 	public void removeFromTags( 	@RequestBody(required=true) RemoveTagsFromDataSetCommand command )
 	{		
 		try {
-			DataSetBusinessDelegate.getDataSetInstance().removeFromTags( command );
+			service.removeFromTags( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Tags", exc );
@@ -481,6 +484,7 @@ public class DataSetRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected DataSet dataSet = null;
+	protected DataSetService service = null;
     private static final Logger LOGGER = Logger.getLogger(DataSetRestController.class.getName());
     
 }

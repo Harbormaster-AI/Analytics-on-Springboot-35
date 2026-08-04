@@ -94,7 +94,7 @@ public class MeasureTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a Measure" );
 
         try {            
-            entity = MeasureBusinessDelegate.getMeasureInstance().createMeasure( generateNewCommand() );
+            entity = MeasureService.getMeasureInstance().createMeasure( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getMeasureId();
@@ -125,7 +125,7 @@ public class MeasureTest
         msg.append( theId );
 
         try {
-            entity = MeasureBusinessDelegate.getMeasureInstance().getMeasure( new MeasureFetchOneSummary(theId) );
+            entity = MeasureService.getMeasureInstance().getMeasure( new MeasureFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class MeasureTest
 
             LOGGER.info( "-- Now updating the created Measure." );
             
-            MeasureBusinessDelegate proxy = MeasureBusinessDelegate.getMeasureInstance();            
+            MeasureService proxy = MeasureService.getMeasureInstance();            
             entity = proxy.updateMeasure( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class MeasureTest
         try {
         	DeleteMeasureCommand deleteCommand = new DeleteMeasureCommand( theId );
         	
-            MeasureBusinessDelegate.getMeasureInstance().delete( deleteCommand );
+            MeasureService.getMeasureInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted Measure with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class MeasureTest
         List<Measure> collection  = null;
 
         try {
-            // call the static get method on the MeasureBusinessDelegate
-            collection = MeasureBusinessDelegate.getMeasureInstance().getAllMeasure();
+            // call the static get method on the MeasureService
+            collection = MeasureService.getMeasureInstance().getAllMeasure();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

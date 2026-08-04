@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	LineageNodeBusinessDelegate
+ *  	LineageNodeService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/LineageNode")
 public class LineageNodeRestController extends BaseSpringRestController {
 
+	public LineageNodeRestController( LineageNodeService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a LineageNode.  if not key provided, calls create, otherwise calls save
      * @param		LineageNode	lineageNode
@@ -93,7 +96,7 @@ public class LineageNodeRestController extends BaseSpringRestController {
     	LineageNode entity = null;
 		try {       
         	
-			entity = LineageNodeBusinessDelegate.getLineageNodeInstance().createLineageNode( command );
+			entity = service.createLineageNode( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class LineageNodeRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateLineageNodeCommand
 			// -----------------------------------------------
-			entity = LineageNodeBusinessDelegate.getLineageNodeInstance().updateLineageNode(command);;
+			entity = service.updateLineageNode(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "LineageNodeController:update() - successfully update LineageNode - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class LineageNodeRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteLineageNodeCommand command ) {                
     	try {
-        	LineageNodeBusinessDelegate delegate = LineageNodeBusinessDelegate.getLineageNodeInstance();
+        	LineageNodeService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted LineageNode with key " + command.getLineageNodeId() );
@@ -151,7 +154,7 @@ public class LineageNodeRestController extends BaseSpringRestController {
     	LineageNode entity = null;
 
     	try {  
-    		entity = LineageNodeBusinessDelegate.getLineageNodeInstance().getLineageNode( new LineageNodeFetchOneSummary( uuid ) );   
+    		entity = service.getLineageNode( new LineageNodeFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load LineageNode using Id " + uuid );
@@ -171,7 +174,7 @@ public class LineageNodeRestController extends BaseSpringRestController {
         
     	try {
             // load the LineageNode
-            lineageNodeList = LineageNodeBusinessDelegate.getLineageNodeInstance().getAllLineageNode();
+            lineageNodeList = service.getAllLineageNode();
             
             if ( lineageNodeList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all LineageNodes" );
@@ -192,7 +195,7 @@ public class LineageNodeRestController extends BaseSpringRestController {
 	@PutMapping("/assignWorkspace")
 	public void assignWorkspace( @RequestBody AssignWorkspaceToLineageNodeCommand command ) {
 		try {
-			LineageNodeBusinessDelegate.getLineageNodeInstance().assignWorkspace( command );   
+			service.assignWorkspace( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Workspace", exc );
@@ -206,7 +209,7 @@ public class LineageNodeRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignWorkspace")
 	public void unAssignWorkspace( @RequestBody(required=true)  UnAssignWorkspaceFromLineageNodeCommand command ) {
 		try {
-			LineageNodeBusinessDelegate.getLineageNodeInstance().unAssignWorkspace( command );   
+			service.unAssignWorkspace( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Workspace", exc );
@@ -221,7 +224,7 @@ public class LineageNodeRestController extends BaseSpringRestController {
 	@PutMapping("/addToInputs")
 	public void addToInputs( @RequestBody(required=true) AssignInputsToLineageNodeCommand command ) {
 		try {
-			LineageNodeBusinessDelegate.getLineageNodeInstance().addToInputs( command );   
+			service.addToInputs( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Inputs", exc );
@@ -236,7 +239,7 @@ public class LineageNodeRestController extends BaseSpringRestController {
 	public void removeFromInputs( 	@RequestBody(required=true) RemoveInputsFromLineageNodeCommand command )
 	{		
 		try {
-			LineageNodeBusinessDelegate.getLineageNodeInstance().removeFromInputs( command );
+			service.removeFromInputs( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Inputs", exc );
@@ -250,7 +253,7 @@ public class LineageNodeRestController extends BaseSpringRestController {
 	@PutMapping("/addToOutputs")
 	public void addToOutputs( @RequestBody(required=true) AssignOutputsToLineageNodeCommand command ) {
 		try {
-			LineageNodeBusinessDelegate.getLineageNodeInstance().addToOutputs( command );   
+			service.addToOutputs( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Outputs", exc );
@@ -265,7 +268,7 @@ public class LineageNodeRestController extends BaseSpringRestController {
 	public void removeFromOutputs( 	@RequestBody(required=true) RemoveOutputsFromLineageNodeCommand command )
 	{		
 		try {
-			LineageNodeBusinessDelegate.getLineageNodeInstance().removeFromOutputs( command );
+			service.removeFromOutputs( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Outputs", exc );
@@ -279,7 +282,7 @@ public class LineageNodeRestController extends BaseSpringRestController {
 	@PutMapping("/addToDatasets")
 	public void addToDatasets( @RequestBody(required=true) AssignDatasetsToLineageNodeCommand command ) {
 		try {
-			LineageNodeBusinessDelegate.getLineageNodeInstance().addToDatasets( command );   
+			service.addToDatasets( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Datasets", exc );
@@ -294,7 +297,7 @@ public class LineageNodeRestController extends BaseSpringRestController {
 	public void removeFromDatasets( 	@RequestBody(required=true) RemoveDatasetsFromLineageNodeCommand command )
 	{		
 		try {
-			LineageNodeBusinessDelegate.getLineageNodeInstance().removeFromDatasets( command );
+			service.removeFromDatasets( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Datasets", exc );
@@ -308,7 +311,7 @@ public class LineageNodeRestController extends BaseSpringRestController {
 	@PutMapping("/addToModels")
 	public void addToModels( @RequestBody(required=true) AssignModelsToLineageNodeCommand command ) {
 		try {
-			LineageNodeBusinessDelegate.getLineageNodeInstance().addToModels( command );   
+			service.addToModels( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Models", exc );
@@ -323,7 +326,7 @@ public class LineageNodeRestController extends BaseSpringRestController {
 	public void removeFromModels( 	@RequestBody(required=true) RemoveModelsFromLineageNodeCommand command )
 	{		
 		try {
-			LineageNodeBusinessDelegate.getLineageNodeInstance().removeFromModels( command );
+			service.removeFromModels( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Models", exc );
@@ -337,7 +340,7 @@ public class LineageNodeRestController extends BaseSpringRestController {
 	@PutMapping("/addToPipelines")
 	public void addToPipelines( @RequestBody(required=true) AssignPipelinesToLineageNodeCommand command ) {
 		try {
-			LineageNodeBusinessDelegate.getLineageNodeInstance().addToPipelines( command );   
+			service.addToPipelines( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Pipelines", exc );
@@ -352,7 +355,7 @@ public class LineageNodeRestController extends BaseSpringRestController {
 	public void removeFromPipelines( 	@RequestBody(required=true) RemovePipelinesFromLineageNodeCommand command )
 	{		
 		try {
-			LineageNodeBusinessDelegate.getLineageNodeInstance().removeFromPipelines( command );
+			service.removeFromPipelines( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Pipelines", exc );
@@ -366,7 +369,7 @@ public class LineageNodeRestController extends BaseSpringRestController {
 	@PutMapping("/addToDashboards")
 	public void addToDashboards( @RequestBody(required=true) AssignDashboardsToLineageNodeCommand command ) {
 		try {
-			LineageNodeBusinessDelegate.getLineageNodeInstance().addToDashboards( command );   
+			service.addToDashboards( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Dashboards", exc );
@@ -381,7 +384,7 @@ public class LineageNodeRestController extends BaseSpringRestController {
 	public void removeFromDashboards( 	@RequestBody(required=true) RemoveDashboardsFromLineageNodeCommand command )
 	{		
 		try {
-			LineageNodeBusinessDelegate.getLineageNodeInstance().removeFromDashboards( command );
+			service.removeFromDashboards( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Dashboards", exc );
@@ -395,7 +398,7 @@ public class LineageNodeRestController extends BaseSpringRestController {
 	@PutMapping("/addToReports")
 	public void addToReports( @RequestBody(required=true) AssignReportsToLineageNodeCommand command ) {
 		try {
-			LineageNodeBusinessDelegate.getLineageNodeInstance().addToReports( command );   
+			service.addToReports( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Reports", exc );
@@ -410,7 +413,7 @@ public class LineageNodeRestController extends BaseSpringRestController {
 	public void removeFromReports( 	@RequestBody(required=true) RemoveReportsFromLineageNodeCommand command )
 	{		
 		try {
-			LineageNodeBusinessDelegate.getLineageNodeInstance().removeFromReports( command );
+			service.removeFromReports( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Reports", exc );
@@ -424,6 +427,7 @@ public class LineageNodeRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected LineageNode lineageNode = null;
+	protected LineageNodeService service = null;
     private static final Logger LOGGER = Logger.getLogger(LineageNodeRestController.class.getName());
     
 }

@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	TagBusinessDelegate
+ *  	TagService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/Tag")
 public class TagRestController extends BaseSpringRestController {
 
+	public TagRestController( TagService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a Tag.  if not key provided, calls create, otherwise calls save
      * @param		Tag	tag
@@ -93,7 +96,7 @@ public class TagRestController extends BaseSpringRestController {
     	Tag entity = null;
 		try {       
         	
-			entity = TagBusinessDelegate.getTagInstance().createTag( command );
+			entity = service.createTag( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class TagRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateTagCommand
 			// -----------------------------------------------
-			entity = TagBusinessDelegate.getTagInstance().updateTag(command);;
+			entity = service.updateTag(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "TagController:update() - successfully update Tag - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class TagRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteTagCommand command ) {                
     	try {
-        	TagBusinessDelegate delegate = TagBusinessDelegate.getTagInstance();
+        	TagService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted Tag with key " + command.getTagId() );
@@ -151,7 +154,7 @@ public class TagRestController extends BaseSpringRestController {
     	Tag entity = null;
 
     	try {  
-    		entity = TagBusinessDelegate.getTagInstance().getTag( new TagFetchOneSummary( uuid ) );   
+    		entity = service.getTag( new TagFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load Tag using Id " + uuid );
@@ -171,7 +174,7 @@ public class TagRestController extends BaseSpringRestController {
         
     	try {
             // load the Tag
-            tagList = TagBusinessDelegate.getTagInstance().getAllTag();
+            tagList = service.getAllTag();
             
             if ( tagList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Tags" );
@@ -193,7 +196,7 @@ public class TagRestController extends BaseSpringRestController {
 	@PutMapping("/addToDatasets")
 	public void addToDatasets( @RequestBody(required=true) AssignDatasetsToTagCommand command ) {
 		try {
-			TagBusinessDelegate.getTagInstance().addToDatasets( command );   
+			service.addToDatasets( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Datasets", exc );
@@ -208,7 +211,7 @@ public class TagRestController extends BaseSpringRestController {
 	public void removeFromDatasets( 	@RequestBody(required=true) RemoveDatasetsFromTagCommand command )
 	{		
 		try {
-			TagBusinessDelegate.getTagInstance().removeFromDatasets( command );
+			service.removeFromDatasets( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Datasets", exc );
@@ -222,7 +225,7 @@ public class TagRestController extends BaseSpringRestController {
 	@PutMapping("/addToModels")
 	public void addToModels( @RequestBody(required=true) AssignModelsToTagCommand command ) {
 		try {
-			TagBusinessDelegate.getTagInstance().addToModels( command );   
+			service.addToModels( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Models", exc );
@@ -237,7 +240,7 @@ public class TagRestController extends BaseSpringRestController {
 	public void removeFromModels( 	@RequestBody(required=true) RemoveModelsFromTagCommand command )
 	{		
 		try {
-			TagBusinessDelegate.getTagInstance().removeFromModels( command );
+			service.removeFromModels( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Models", exc );
@@ -251,7 +254,7 @@ public class TagRestController extends BaseSpringRestController {
 	@PutMapping("/addToModelVersions")
 	public void addToModelVersions( @RequestBody(required=true) AssignModelVersionsToTagCommand command ) {
 		try {
-			TagBusinessDelegate.getTagInstance().addToModelVersions( command );   
+			service.addToModelVersions( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set ModelVersions", exc );
@@ -266,7 +269,7 @@ public class TagRestController extends BaseSpringRestController {
 	public void removeFromModelVersions( 	@RequestBody(required=true) RemoveModelVersionsFromTagCommand command )
 	{		
 		try {
-			TagBusinessDelegate.getTagInstance().removeFromModelVersions( command );
+			service.removeFromModelVersions( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set ModelVersions", exc );
@@ -280,7 +283,7 @@ public class TagRestController extends BaseSpringRestController {
 	@PutMapping("/addToDashboards")
 	public void addToDashboards( @RequestBody(required=true) AssignDashboardsToTagCommand command ) {
 		try {
-			TagBusinessDelegate.getTagInstance().addToDashboards( command );   
+			service.addToDashboards( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Dashboards", exc );
@@ -295,7 +298,7 @@ public class TagRestController extends BaseSpringRestController {
 	public void removeFromDashboards( 	@RequestBody(required=true) RemoveDashboardsFromTagCommand command )
 	{		
 		try {
-			TagBusinessDelegate.getTagInstance().removeFromDashboards( command );
+			service.removeFromDashboards( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Dashboards", exc );
@@ -309,7 +312,7 @@ public class TagRestController extends BaseSpringRestController {
 	@PutMapping("/addToReports")
 	public void addToReports( @RequestBody(required=true) AssignReportsToTagCommand command ) {
 		try {
-			TagBusinessDelegate.getTagInstance().addToReports( command );   
+			service.addToReports( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Reports", exc );
@@ -324,7 +327,7 @@ public class TagRestController extends BaseSpringRestController {
 	public void removeFromReports( 	@RequestBody(required=true) RemoveReportsFromTagCommand command )
 	{		
 		try {
-			TagBusinessDelegate.getTagInstance().removeFromReports( command );
+			service.removeFromReports( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Reports", exc );
@@ -338,7 +341,7 @@ public class TagRestController extends BaseSpringRestController {
 	@PutMapping("/addToFeatureSets")
 	public void addToFeatureSets( @RequestBody(required=true) AssignFeatureSetsToTagCommand command ) {
 		try {
-			TagBusinessDelegate.getTagInstance().addToFeatureSets( command );   
+			service.addToFeatureSets( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set FeatureSets", exc );
@@ -353,7 +356,7 @@ public class TagRestController extends BaseSpringRestController {
 	public void removeFromFeatureSets( 	@RequestBody(required=true) RemoveFeatureSetsFromTagCommand command )
 	{		
 		try {
-			TagBusinessDelegate.getTagInstance().removeFromFeatureSets( command );
+			service.removeFromFeatureSets( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set FeatureSets", exc );
@@ -367,7 +370,7 @@ public class TagRestController extends BaseSpringRestController {
 	@PutMapping("/addToMetrics")
 	public void addToMetrics( @RequestBody(required=true) AssignMetricsToTagCommand command ) {
 		try {
-			TagBusinessDelegate.getTagInstance().addToMetrics( command );   
+			service.addToMetrics( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Metrics", exc );
@@ -382,7 +385,7 @@ public class TagRestController extends BaseSpringRestController {
 	public void removeFromMetrics( 	@RequestBody(required=true) RemoveMetricsFromTagCommand command )
 	{		
 		try {
-			TagBusinessDelegate.getTagInstance().removeFromMetrics( command );
+			service.removeFromMetrics( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Metrics", exc );
@@ -396,6 +399,7 @@ public class TagRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected Tag tag = null;
+	protected TagService service = null;
     private static final Logger LOGGER = Logger.getLogger(TagRestController.class.getName());
     
 }

@@ -94,7 +94,7 @@ public class DataSetTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a DataSet" );
 
         try {            
-            entity = DataSetBusinessDelegate.getDataSetInstance().createDataSet( generateNewCommand() );
+            entity = DataSetService.getDataSetInstance().createDataSet( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getDataSetId();
@@ -125,7 +125,7 @@ public class DataSetTest
         msg.append( theId );
 
         try {
-            entity = DataSetBusinessDelegate.getDataSetInstance().getDataSet( new DataSetFetchOneSummary(theId) );
+            entity = DataSetService.getDataSetInstance().getDataSet( new DataSetFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class DataSetTest
 
             LOGGER.info( "-- Now updating the created DataSet." );
             
-            DataSetBusinessDelegate proxy = DataSetBusinessDelegate.getDataSetInstance();            
+            DataSetService proxy = DataSetService.getDataSetInstance();            
             entity = proxy.updateDataSet( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class DataSetTest
         try {
         	DeleteDataSetCommand deleteCommand = new DeleteDataSetCommand( theId );
         	
-            DataSetBusinessDelegate.getDataSetInstance().delete( deleteCommand );
+            DataSetService.getDataSetInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted DataSet with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class DataSetTest
         List<DataSet> collection  = null;
 
         try {
-            // call the static get method on the DataSetBusinessDelegate
-            collection = DataSetBusinessDelegate.getDataSetInstance().getAllDataSet();
+            // call the static get method on the DataSetService
+            collection = DataSetService.getDataSetInstance().getAllDataSet();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	TimeSeriesBusinessDelegate
+ *  	TimeSeriesService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/TimeSeries")
 public class TimeSeriesRestController extends BaseSpringRestController {
 
+	public TimeSeriesRestController( TimeSeriesService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a TimeSeries.  if not key provided, calls create, otherwise calls save
      * @param		TimeSeries	timeSeries
@@ -93,7 +96,7 @@ public class TimeSeriesRestController extends BaseSpringRestController {
     	TimeSeries entity = null;
 		try {       
         	
-			entity = TimeSeriesBusinessDelegate.getTimeSeriesInstance().createTimeSeries( command );
+			entity = service.createTimeSeries( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class TimeSeriesRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateTimeSeriesCommand
 			// -----------------------------------------------
-			entity = TimeSeriesBusinessDelegate.getTimeSeriesInstance().updateTimeSeries(command);;
+			entity = service.updateTimeSeries(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "TimeSeriesController:update() - successfully update TimeSeries - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class TimeSeriesRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteTimeSeriesCommand command ) {                
     	try {
-        	TimeSeriesBusinessDelegate delegate = TimeSeriesBusinessDelegate.getTimeSeriesInstance();
+        	TimeSeriesService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted TimeSeries with key " + command.getTimeSeriesId() );
@@ -151,7 +154,7 @@ public class TimeSeriesRestController extends BaseSpringRestController {
     	TimeSeries entity = null;
 
     	try {  
-    		entity = TimeSeriesBusinessDelegate.getTimeSeriesInstance().getTimeSeries( new TimeSeriesFetchOneSummary( uuid ) );   
+    		entity = service.getTimeSeries( new TimeSeriesFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load TimeSeries using Id " + uuid );
@@ -171,7 +174,7 @@ public class TimeSeriesRestController extends BaseSpringRestController {
         
     	try {
             // load the TimeSeries
-            timeSeriesList = TimeSeriesBusinessDelegate.getTimeSeriesInstance().getAllTimeSeries();
+            timeSeriesList = service.getAllTimeSeries();
             
             if ( timeSeriesList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all TimeSeriess" );
@@ -193,7 +196,7 @@ public class TimeSeriesRestController extends BaseSpringRestController {
 	@PutMapping("/addToDatasets")
 	public void addToDatasets( @RequestBody(required=true) AssignDatasetsToTimeSeriesCommand command ) {
 		try {
-			TimeSeriesBusinessDelegate.getTimeSeriesInstance().addToDatasets( command );   
+			service.addToDatasets( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Datasets", exc );
@@ -208,7 +211,7 @@ public class TimeSeriesRestController extends BaseSpringRestController {
 	public void removeFromDatasets( 	@RequestBody(required=true) RemoveDatasetsFromTimeSeriesCommand command )
 	{		
 		try {
-			TimeSeriesBusinessDelegate.getTimeSeriesInstance().removeFromDatasets( command );
+			service.removeFromDatasets( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Datasets", exc );
@@ -222,7 +225,7 @@ public class TimeSeriesRestController extends BaseSpringRestController {
 	@PutMapping("/addToForecasts")
 	public void addToForecasts( @RequestBody(required=true) AssignForecastsToTimeSeriesCommand command ) {
 		try {
-			TimeSeriesBusinessDelegate.getTimeSeriesInstance().addToForecasts( command );   
+			service.addToForecasts( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Forecasts", exc );
@@ -237,7 +240,7 @@ public class TimeSeriesRestController extends BaseSpringRestController {
 	public void removeFromForecasts( 	@RequestBody(required=true) RemoveForecastsFromTimeSeriesCommand command )
 	{		
 		try {
-			TimeSeriesBusinessDelegate.getTimeSeriesInstance().removeFromForecasts( command );
+			service.removeFromForecasts( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Forecasts", exc );
@@ -251,7 +254,7 @@ public class TimeSeriesRestController extends BaseSpringRestController {
 	@PutMapping("/addToAnomalies")
 	public void addToAnomalies( @RequestBody(required=true) AssignAnomaliesToTimeSeriesCommand command ) {
 		try {
-			TimeSeriesBusinessDelegate.getTimeSeriesInstance().addToAnomalies( command );   
+			service.addToAnomalies( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Anomalies", exc );
@@ -266,7 +269,7 @@ public class TimeSeriesRestController extends BaseSpringRestController {
 	public void removeFromAnomalies( 	@RequestBody(required=true) RemoveAnomaliesFromTimeSeriesCommand command )
 	{		
 		try {
-			TimeSeriesBusinessDelegate.getTimeSeriesInstance().removeFromAnomalies( command );
+			service.removeFromAnomalies( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Anomalies", exc );
@@ -280,6 +283,7 @@ public class TimeSeriesRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected TimeSeries timeSeries = null;
+	protected TimeSeriesService service = null;
     private static final Logger LOGGER = Logger.getLogger(TimeSeriesRestController.class.getName());
     
 }

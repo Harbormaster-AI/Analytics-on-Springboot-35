@@ -94,7 +94,7 @@ public class FraudScenarioTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a FraudScenario" );
 
         try {            
-            entity = FraudScenarioBusinessDelegate.getFraudScenarioInstance().createFraudScenario( generateNewCommand() );
+            entity = FraudScenarioService.getFraudScenarioInstance().createFraudScenario( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getFraudScenarioId();
@@ -125,7 +125,7 @@ public class FraudScenarioTest
         msg.append( theId );
 
         try {
-            entity = FraudScenarioBusinessDelegate.getFraudScenarioInstance().getFraudScenario( new FraudScenarioFetchOneSummary(theId) );
+            entity = FraudScenarioService.getFraudScenarioInstance().getFraudScenario( new FraudScenarioFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class FraudScenarioTest
 
             LOGGER.info( "-- Now updating the created FraudScenario." );
             
-            FraudScenarioBusinessDelegate proxy = FraudScenarioBusinessDelegate.getFraudScenarioInstance();            
+            FraudScenarioService proxy = FraudScenarioService.getFraudScenarioInstance();            
             entity = proxy.updateFraudScenario( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class FraudScenarioTest
         try {
         	DeleteFraudScenarioCommand deleteCommand = new DeleteFraudScenarioCommand( theId );
         	
-            FraudScenarioBusinessDelegate.getFraudScenarioInstance().delete( deleteCommand );
+            FraudScenarioService.getFraudScenarioInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted FraudScenario with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class FraudScenarioTest
         List<FraudScenario> collection  = null;
 
         try {
-            // call the static get method on the FraudScenarioBusinessDelegate
-            collection = FraudScenarioBusinessDelegate.getFraudScenarioInstance().getAllFraudScenario();
+            // call the static get method on the FraudScenarioService
+            collection = FraudScenarioService.getFraudScenarioInstance().getAllFraudScenario();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

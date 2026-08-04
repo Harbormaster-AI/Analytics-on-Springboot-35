@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	NotebookBusinessDelegate
+ *  	NotebookService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/Notebook")
 public class NotebookRestController extends BaseSpringRestController {
 
+	public NotebookRestController( NotebookService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a Notebook.  if not key provided, calls create, otherwise calls save
      * @param		Notebook	notebook
@@ -93,7 +96,7 @@ public class NotebookRestController extends BaseSpringRestController {
     	Notebook entity = null;
 		try {       
         	
-			entity = NotebookBusinessDelegate.getNotebookInstance().createNotebook( command );
+			entity = service.createNotebook( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class NotebookRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateNotebookCommand
 			// -----------------------------------------------
-			entity = NotebookBusinessDelegate.getNotebookInstance().updateNotebook(command);;
+			entity = service.updateNotebook(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "NotebookController:update() - successfully update Notebook - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class NotebookRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteNotebookCommand command ) {                
     	try {
-        	NotebookBusinessDelegate delegate = NotebookBusinessDelegate.getNotebookInstance();
+        	NotebookService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted Notebook with key " + command.getNotebookId() );
@@ -151,7 +154,7 @@ public class NotebookRestController extends BaseSpringRestController {
     	Notebook entity = null;
 
     	try {  
-    		entity = NotebookBusinessDelegate.getNotebookInstance().getNotebook( new NotebookFetchOneSummary( uuid ) );   
+    		entity = service.getNotebook( new NotebookFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load Notebook using Id " + uuid );
@@ -171,7 +174,7 @@ public class NotebookRestController extends BaseSpringRestController {
         
     	try {
             // load the Notebook
-            notebookList = NotebookBusinessDelegate.getNotebookInstance().getAllNotebook();
+            notebookList = service.getAllNotebook();
             
             if ( notebookList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Notebooks" );
@@ -192,7 +195,7 @@ public class NotebookRestController extends BaseSpringRestController {
 	@PutMapping("/assignWorkspace")
 	public void assignWorkspace( @RequestBody AssignWorkspaceToNotebookCommand command ) {
 		try {
-			NotebookBusinessDelegate.getNotebookInstance().assignWorkspace( command );   
+			service.assignWorkspace( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Workspace", exc );
@@ -206,7 +209,7 @@ public class NotebookRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignWorkspace")
 	public void unAssignWorkspace( @RequestBody(required=true)  UnAssignWorkspaceFromNotebookCommand command ) {
 		try {
-			NotebookBusinessDelegate.getNotebookInstance().unAssignWorkspace( command );   
+			service.unAssignWorkspace( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Workspace", exc );
@@ -221,7 +224,7 @@ public class NotebookRestController extends BaseSpringRestController {
 	@PutMapping("/addToDatasets")
 	public void addToDatasets( @RequestBody(required=true) AssignDatasetsToNotebookCommand command ) {
 		try {
-			NotebookBusinessDelegate.getNotebookInstance().addToDatasets( command );   
+			service.addToDatasets( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Datasets", exc );
@@ -236,7 +239,7 @@ public class NotebookRestController extends BaseSpringRestController {
 	public void removeFromDatasets( 	@RequestBody(required=true) RemoveDatasetsFromNotebookCommand command )
 	{		
 		try {
-			NotebookBusinessDelegate.getNotebookInstance().removeFromDatasets( command );
+			service.removeFromDatasets( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Datasets", exc );
@@ -250,7 +253,7 @@ public class NotebookRestController extends BaseSpringRestController {
 	@PutMapping("/addToExperiments")
 	public void addToExperiments( @RequestBody(required=true) AssignExperimentsToNotebookCommand command ) {
 		try {
-			NotebookBusinessDelegate.getNotebookInstance().addToExperiments( command );   
+			service.addToExperiments( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Experiments", exc );
@@ -265,7 +268,7 @@ public class NotebookRestController extends BaseSpringRestController {
 	public void removeFromExperiments( 	@RequestBody(required=true) RemoveExperimentsFromNotebookCommand command )
 	{		
 		try {
-			NotebookBusinessDelegate.getNotebookInstance().removeFromExperiments( command );
+			service.removeFromExperiments( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Experiments", exc );
@@ -279,7 +282,7 @@ public class NotebookRestController extends BaseSpringRestController {
 	@PutMapping("/addToQueries")
 	public void addToQueries( @RequestBody(required=true) AssignQueriesToNotebookCommand command ) {
 		try {
-			NotebookBusinessDelegate.getNotebookInstance().addToQueries( command );   
+			service.addToQueries( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Queries", exc );
@@ -294,7 +297,7 @@ public class NotebookRestController extends BaseSpringRestController {
 	public void removeFromQueries( 	@RequestBody(required=true) RemoveQueriesFromNotebookCommand command )
 	{		
 		try {
-			NotebookBusinessDelegate.getNotebookInstance().removeFromQueries( command );
+			service.removeFromQueries( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Queries", exc );
@@ -308,6 +311,7 @@ public class NotebookRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected Notebook notebook = null;
+	protected NotebookService service = null;
     private static final Logger LOGGER = Logger.getLogger(NotebookRestController.class.getName());
     
 }

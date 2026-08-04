@@ -94,7 +94,7 @@ public class SemanticModelTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a SemanticModel" );
 
         try {            
-            entity = SemanticModelBusinessDelegate.getSemanticModelInstance().createSemanticModel( generateNewCommand() );
+            entity = SemanticModelService.getSemanticModelInstance().createSemanticModel( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getSemanticModelId();
@@ -125,7 +125,7 @@ public class SemanticModelTest
         msg.append( theId );
 
         try {
-            entity = SemanticModelBusinessDelegate.getSemanticModelInstance().getSemanticModel( new SemanticModelFetchOneSummary(theId) );
+            entity = SemanticModelService.getSemanticModelInstance().getSemanticModel( new SemanticModelFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class SemanticModelTest
 
             LOGGER.info( "-- Now updating the created SemanticModel." );
             
-            SemanticModelBusinessDelegate proxy = SemanticModelBusinessDelegate.getSemanticModelInstance();            
+            SemanticModelService proxy = SemanticModelService.getSemanticModelInstance();            
             entity = proxy.updateSemanticModel( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class SemanticModelTest
         try {
         	DeleteSemanticModelCommand deleteCommand = new DeleteSemanticModelCommand( theId );
         	
-            SemanticModelBusinessDelegate.getSemanticModelInstance().delete( deleteCommand );
+            SemanticModelService.getSemanticModelInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted SemanticModel with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class SemanticModelTest
         List<SemanticModel> collection  = null;
 
         try {
-            // call the static get method on the SemanticModelBusinessDelegate
-            collection = SemanticModelBusinessDelegate.getSemanticModelInstance().getAllSemanticModel();
+            // call the static get method on the SemanticModelService
+            collection = SemanticModelService.getSemanticModelInstance().getAllSemanticModel();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

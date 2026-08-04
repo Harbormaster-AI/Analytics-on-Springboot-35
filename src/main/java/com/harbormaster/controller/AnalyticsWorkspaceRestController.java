@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	AnalyticsWorkspaceBusinessDelegate
+ *  	AnalyticsWorkspaceService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/AnalyticsWorkspace")
 public class AnalyticsWorkspaceRestController extends BaseSpringRestController {
 
+	public AnalyticsWorkspaceRestController( AnalyticsWorkspaceService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a AnalyticsWorkspace.  if not key provided, calls create, otherwise calls save
      * @param		AnalyticsWorkspace	analyticsWorkspace
@@ -93,7 +96,7 @@ public class AnalyticsWorkspaceRestController extends BaseSpringRestController {
     	AnalyticsWorkspace entity = null;
 		try {       
         	
-			entity = AnalyticsWorkspaceBusinessDelegate.getAnalyticsWorkspaceInstance().createAnalyticsWorkspace( command );
+			entity = service.createAnalyticsWorkspace( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class AnalyticsWorkspaceRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateAnalyticsWorkspaceCommand
 			// -----------------------------------------------
-			entity = AnalyticsWorkspaceBusinessDelegate.getAnalyticsWorkspaceInstance().updateAnalyticsWorkspace(command);;
+			entity = service.updateAnalyticsWorkspace(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "AnalyticsWorkspaceController:update() - successfully update AnalyticsWorkspace - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class AnalyticsWorkspaceRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteAnalyticsWorkspaceCommand command ) {                
     	try {
-        	AnalyticsWorkspaceBusinessDelegate delegate = AnalyticsWorkspaceBusinessDelegate.getAnalyticsWorkspaceInstance();
+        	AnalyticsWorkspaceService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted AnalyticsWorkspace with key " + command.getAnalyticsWorkspaceId() );
@@ -151,7 +154,7 @@ public class AnalyticsWorkspaceRestController extends BaseSpringRestController {
     	AnalyticsWorkspace entity = null;
 
     	try {  
-    		entity = AnalyticsWorkspaceBusinessDelegate.getAnalyticsWorkspaceInstance().getAnalyticsWorkspace( new AnalyticsWorkspaceFetchOneSummary( uuid ) );   
+    		entity = service.getAnalyticsWorkspace( new AnalyticsWorkspaceFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load AnalyticsWorkspace using Id " + uuid );
@@ -171,7 +174,7 @@ public class AnalyticsWorkspaceRestController extends BaseSpringRestController {
         
     	try {
             // load the AnalyticsWorkspace
-            analyticsWorkspaceList = AnalyticsWorkspaceBusinessDelegate.getAnalyticsWorkspaceInstance().getAllAnalyticsWorkspace();
+            analyticsWorkspaceList = service.getAllAnalyticsWorkspace();
             
             if ( analyticsWorkspaceList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all AnalyticsWorkspaces" );
@@ -193,7 +196,7 @@ public class AnalyticsWorkspaceRestController extends BaseSpringRestController {
 	@PutMapping("/addToDatasets")
 	public void addToDatasets( @RequestBody(required=true) AssignDatasetsToAnalyticsWorkspaceCommand command ) {
 		try {
-			AnalyticsWorkspaceBusinessDelegate.getAnalyticsWorkspaceInstance().addToDatasets( command );   
+			service.addToDatasets( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Datasets", exc );
@@ -208,7 +211,7 @@ public class AnalyticsWorkspaceRestController extends BaseSpringRestController {
 	public void removeFromDatasets( 	@RequestBody(required=true) RemoveDatasetsFromAnalyticsWorkspaceCommand command )
 	{		
 		try {
-			AnalyticsWorkspaceBusinessDelegate.getAnalyticsWorkspaceInstance().removeFromDatasets( command );
+			service.removeFromDatasets( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Datasets", exc );
@@ -222,7 +225,7 @@ public class AnalyticsWorkspaceRestController extends BaseSpringRestController {
 	@PutMapping("/addToDataSources")
 	public void addToDataSources( @RequestBody(required=true) AssignDataSourcesToAnalyticsWorkspaceCommand command ) {
 		try {
-			AnalyticsWorkspaceBusinessDelegate.getAnalyticsWorkspaceInstance().addToDataSources( command );   
+			service.addToDataSources( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set DataSources", exc );
@@ -237,7 +240,7 @@ public class AnalyticsWorkspaceRestController extends BaseSpringRestController {
 	public void removeFromDataSources( 	@RequestBody(required=true) RemoveDataSourcesFromAnalyticsWorkspaceCommand command )
 	{		
 		try {
-			AnalyticsWorkspaceBusinessDelegate.getAnalyticsWorkspaceInstance().removeFromDataSources( command );
+			service.removeFromDataSources( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set DataSources", exc );
@@ -251,7 +254,7 @@ public class AnalyticsWorkspaceRestController extends BaseSpringRestController {
 	@PutMapping("/addToPipelines")
 	public void addToPipelines( @RequestBody(required=true) AssignPipelinesToAnalyticsWorkspaceCommand command ) {
 		try {
-			AnalyticsWorkspaceBusinessDelegate.getAnalyticsWorkspaceInstance().addToPipelines( command );   
+			service.addToPipelines( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Pipelines", exc );
@@ -266,7 +269,7 @@ public class AnalyticsWorkspaceRestController extends BaseSpringRestController {
 	public void removeFromPipelines( 	@RequestBody(required=true) RemovePipelinesFromAnalyticsWorkspaceCommand command )
 	{		
 		try {
-			AnalyticsWorkspaceBusinessDelegate.getAnalyticsWorkspaceInstance().removeFromPipelines( command );
+			service.removeFromPipelines( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Pipelines", exc );
@@ -280,7 +283,7 @@ public class AnalyticsWorkspaceRestController extends BaseSpringRestController {
 	@PutMapping("/addToDashboards")
 	public void addToDashboards( @RequestBody(required=true) AssignDashboardsToAnalyticsWorkspaceCommand command ) {
 		try {
-			AnalyticsWorkspaceBusinessDelegate.getAnalyticsWorkspaceInstance().addToDashboards( command );   
+			service.addToDashboards( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Dashboards", exc );
@@ -295,7 +298,7 @@ public class AnalyticsWorkspaceRestController extends BaseSpringRestController {
 	public void removeFromDashboards( 	@RequestBody(required=true) RemoveDashboardsFromAnalyticsWorkspaceCommand command )
 	{		
 		try {
-			AnalyticsWorkspaceBusinessDelegate.getAnalyticsWorkspaceInstance().removeFromDashboards( command );
+			service.removeFromDashboards( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Dashboards", exc );
@@ -309,7 +312,7 @@ public class AnalyticsWorkspaceRestController extends BaseSpringRestController {
 	@PutMapping("/addToReports")
 	public void addToReports( @RequestBody(required=true) AssignReportsToAnalyticsWorkspaceCommand command ) {
 		try {
-			AnalyticsWorkspaceBusinessDelegate.getAnalyticsWorkspaceInstance().addToReports( command );   
+			service.addToReports( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Reports", exc );
@@ -324,7 +327,7 @@ public class AnalyticsWorkspaceRestController extends BaseSpringRestController {
 	public void removeFromReports( 	@RequestBody(required=true) RemoveReportsFromAnalyticsWorkspaceCommand command )
 	{		
 		try {
-			AnalyticsWorkspaceBusinessDelegate.getAnalyticsWorkspaceInstance().removeFromReports( command );
+			service.removeFromReports( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Reports", exc );
@@ -338,7 +341,7 @@ public class AnalyticsWorkspaceRestController extends BaseSpringRestController {
 	@PutMapping("/addToNotebooks")
 	public void addToNotebooks( @RequestBody(required=true) AssignNotebooksToAnalyticsWorkspaceCommand command ) {
 		try {
-			AnalyticsWorkspaceBusinessDelegate.getAnalyticsWorkspaceInstance().addToNotebooks( command );   
+			service.addToNotebooks( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Notebooks", exc );
@@ -353,7 +356,7 @@ public class AnalyticsWorkspaceRestController extends BaseSpringRestController {
 	public void removeFromNotebooks( 	@RequestBody(required=true) RemoveNotebooksFromAnalyticsWorkspaceCommand command )
 	{		
 		try {
-			AnalyticsWorkspaceBusinessDelegate.getAnalyticsWorkspaceInstance().removeFromNotebooks( command );
+			service.removeFromNotebooks( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Notebooks", exc );
@@ -367,7 +370,7 @@ public class AnalyticsWorkspaceRestController extends BaseSpringRestController {
 	@PutMapping("/addToModels")
 	public void addToModels( @RequestBody(required=true) AssignModelsToAnalyticsWorkspaceCommand command ) {
 		try {
-			AnalyticsWorkspaceBusinessDelegate.getAnalyticsWorkspaceInstance().addToModels( command );   
+			service.addToModels( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Models", exc );
@@ -382,7 +385,7 @@ public class AnalyticsWorkspaceRestController extends BaseSpringRestController {
 	public void removeFromModels( 	@RequestBody(required=true) RemoveModelsFromAnalyticsWorkspaceCommand command )
 	{		
 		try {
-			AnalyticsWorkspaceBusinessDelegate.getAnalyticsWorkspaceInstance().removeFromModels( command );
+			service.removeFromModels( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Models", exc );
@@ -396,7 +399,7 @@ public class AnalyticsWorkspaceRestController extends BaseSpringRestController {
 	@PutMapping("/addToFeatureSets")
 	public void addToFeatureSets( @RequestBody(required=true) AssignFeatureSetsToAnalyticsWorkspaceCommand command ) {
 		try {
-			AnalyticsWorkspaceBusinessDelegate.getAnalyticsWorkspaceInstance().addToFeatureSets( command );   
+			service.addToFeatureSets( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set FeatureSets", exc );
@@ -411,7 +414,7 @@ public class AnalyticsWorkspaceRestController extends BaseSpringRestController {
 	public void removeFromFeatureSets( 	@RequestBody(required=true) RemoveFeatureSetsFromAnalyticsWorkspaceCommand command )
 	{		
 		try {
-			AnalyticsWorkspaceBusinessDelegate.getAnalyticsWorkspaceInstance().removeFromFeatureSets( command );
+			service.removeFromFeatureSets( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set FeatureSets", exc );
@@ -425,7 +428,7 @@ public class AnalyticsWorkspaceRestController extends BaseSpringRestController {
 	@PutMapping("/addToPolicies")
 	public void addToPolicies( @RequestBody(required=true) AssignPoliciesToAnalyticsWorkspaceCommand command ) {
 		try {
-			AnalyticsWorkspaceBusinessDelegate.getAnalyticsWorkspaceInstance().addToPolicies( command );   
+			service.addToPolicies( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Policies", exc );
@@ -440,7 +443,7 @@ public class AnalyticsWorkspaceRestController extends BaseSpringRestController {
 	public void removeFromPolicies( 	@RequestBody(required=true) RemovePoliciesFromAnalyticsWorkspaceCommand command )
 	{		
 		try {
-			AnalyticsWorkspaceBusinessDelegate.getAnalyticsWorkspaceInstance().removeFromPolicies( command );
+			service.removeFromPolicies( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Policies", exc );
@@ -454,7 +457,7 @@ public class AnalyticsWorkspaceRestController extends BaseSpringRestController {
 	@PutMapping("/addToLineageNodes")
 	public void addToLineageNodes( @RequestBody(required=true) AssignLineageNodesToAnalyticsWorkspaceCommand command ) {
 		try {
-			AnalyticsWorkspaceBusinessDelegate.getAnalyticsWorkspaceInstance().addToLineageNodes( command );   
+			service.addToLineageNodes( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set LineageNodes", exc );
@@ -469,7 +472,7 @@ public class AnalyticsWorkspaceRestController extends BaseSpringRestController {
 	public void removeFromLineageNodes( 	@RequestBody(required=true) RemoveLineageNodesFromAnalyticsWorkspaceCommand command )
 	{		
 		try {
-			AnalyticsWorkspaceBusinessDelegate.getAnalyticsWorkspaceInstance().removeFromLineageNodes( command );
+			service.removeFromLineageNodes( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set LineageNodes", exc );
@@ -483,6 +486,7 @@ public class AnalyticsWorkspaceRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected AnalyticsWorkspace analyticsWorkspace = null;
+	protected AnalyticsWorkspaceService service = null;
     private static final Logger LOGGER = Logger.getLogger(AnalyticsWorkspaceRestController.class.getName());
     
 }

@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	DimensionBusinessDelegate
+ *  	DimensionService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/Dimension")
 public class DimensionRestController extends BaseSpringRestController {
 
+	public DimensionRestController( DimensionService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a Dimension.  if not key provided, calls create, otherwise calls save
      * @param		Dimension	dimension
@@ -93,7 +96,7 @@ public class DimensionRestController extends BaseSpringRestController {
     	Dimension entity = null;
 		try {       
         	
-			entity = DimensionBusinessDelegate.getDimensionInstance().createDimension( command );
+			entity = service.createDimension( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class DimensionRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateDimensionCommand
 			// -----------------------------------------------
-			entity = DimensionBusinessDelegate.getDimensionInstance().updateDimension(command);;
+			entity = service.updateDimension(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "DimensionController:update() - successfully update Dimension - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class DimensionRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteDimensionCommand command ) {                
     	try {
-        	DimensionBusinessDelegate delegate = DimensionBusinessDelegate.getDimensionInstance();
+        	DimensionService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted Dimension with key " + command.getDimensionId() );
@@ -151,7 +154,7 @@ public class DimensionRestController extends BaseSpringRestController {
     	Dimension entity = null;
 
     	try {  
-    		entity = DimensionBusinessDelegate.getDimensionInstance().getDimension( new DimensionFetchOneSummary( uuid ) );   
+    		entity = service.getDimension( new DimensionFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load Dimension using Id " + uuid );
@@ -171,7 +174,7 @@ public class DimensionRestController extends BaseSpringRestController {
         
     	try {
             // load the Dimension
-            dimensionList = DimensionBusinessDelegate.getDimensionInstance().getAllDimension();
+            dimensionList = service.getAllDimension();
             
             if ( dimensionList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Dimensions" );
@@ -192,7 +195,7 @@ public class DimensionRestController extends BaseSpringRestController {
 	@PutMapping("/assignSemanticModel")
 	public void assignSemanticModel( @RequestBody AssignSemanticModelToDimensionCommand command ) {
 		try {
-			DimensionBusinessDelegate.getDimensionInstance().assignSemanticModel( command );   
+			service.assignSemanticModel( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign SemanticModel", exc );
@@ -206,7 +209,7 @@ public class DimensionRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignSemanticModel")
 	public void unAssignSemanticModel( @RequestBody(required=true)  UnAssignSemanticModelFromDimensionCommand command ) {
 		try {
-			DimensionBusinessDelegate.getDimensionInstance().unAssignSemanticModel( command );   
+			service.unAssignSemanticModel( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign SemanticModel", exc );
@@ -221,7 +224,7 @@ public class DimensionRestController extends BaseSpringRestController {
 	@PutMapping("/addToDatasets")
 	public void addToDatasets( @RequestBody(required=true) AssignDatasetsToDimensionCommand command ) {
 		try {
-			DimensionBusinessDelegate.getDimensionInstance().addToDatasets( command );   
+			service.addToDatasets( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Datasets", exc );
@@ -236,7 +239,7 @@ public class DimensionRestController extends BaseSpringRestController {
 	public void removeFromDatasets( 	@RequestBody(required=true) RemoveDatasetsFromDimensionCommand command )
 	{		
 		try {
-			DimensionBusinessDelegate.getDimensionInstance().removeFromDatasets( command );
+			service.removeFromDatasets( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Datasets", exc );
@@ -250,7 +253,7 @@ public class DimensionRestController extends BaseSpringRestController {
 	@PutMapping("/addToGlossaryTerms")
 	public void addToGlossaryTerms( @RequestBody(required=true) AssignGlossaryTermsToDimensionCommand command ) {
 		try {
-			DimensionBusinessDelegate.getDimensionInstance().addToGlossaryTerms( command );   
+			service.addToGlossaryTerms( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set GlossaryTerms", exc );
@@ -265,7 +268,7 @@ public class DimensionRestController extends BaseSpringRestController {
 	public void removeFromGlossaryTerms( 	@RequestBody(required=true) RemoveGlossaryTermsFromDimensionCommand command )
 	{		
 		try {
-			DimensionBusinessDelegate.getDimensionInstance().removeFromGlossaryTerms( command );
+			service.removeFromGlossaryTerms( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set GlossaryTerms", exc );
@@ -279,6 +282,7 @@ public class DimensionRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected Dimension dimension = null;
+	protected DimensionService service = null;
     private static final Logger LOGGER = Logger.getLogger(DimensionRestController.class.getName());
     
 }

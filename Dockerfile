@@ -1,11 +1,11 @@
 FROM eclipse-temurin:11-jre-alpine
 
 LABEL org.opencontainers.image.vendor="Harbormaster"
-LABEL org.opencontainers.image.title="Analytics-on-Springboot-35"
+LABEL org.opencontainers.image.title="Analytics-on-springboot-35"
 LABEL org.opencontainers.image.version="0.0.1"
 LABEL com.harbormaster.blueprint="Spring Boot 3.5"
 LABEL com.harbormaster.model="Analytics Capabilities Model"
-LABEL com.harbormaster.generated="2026-08-03"
+LABEL com.harbormaster.generated="2026-08-04"
 #LABEL com.harbormaster.certification="${certificationIdentifier}"
 
 RUN addgroup -S spring && adduser -S -G spring spring

@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	DataSourceBusinessDelegate
+ *  	DataSourceService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/DataSource")
 public class DataSourceRestController extends BaseSpringRestController {
 
+	public DataSourceRestController( DataSourceService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a DataSource.  if not key provided, calls create, otherwise calls save
      * @param		DataSource	dataSource
@@ -93,7 +96,7 @@ public class DataSourceRestController extends BaseSpringRestController {
     	DataSource entity = null;
 		try {       
         	
-			entity = DataSourceBusinessDelegate.getDataSourceInstance().createDataSource( command );
+			entity = service.createDataSource( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class DataSourceRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateDataSourceCommand
 			// -----------------------------------------------
-			entity = DataSourceBusinessDelegate.getDataSourceInstance().updateDataSource(command);;
+			entity = service.updateDataSource(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "DataSourceController:update() - successfully update DataSource - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class DataSourceRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteDataSourceCommand command ) {                
     	try {
-        	DataSourceBusinessDelegate delegate = DataSourceBusinessDelegate.getDataSourceInstance();
+        	DataSourceService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted DataSource with key " + command.getDataSourceId() );
@@ -151,7 +154,7 @@ public class DataSourceRestController extends BaseSpringRestController {
     	DataSource entity = null;
 
     	try {  
-    		entity = DataSourceBusinessDelegate.getDataSourceInstance().getDataSource( new DataSourceFetchOneSummary( uuid ) );   
+    		entity = service.getDataSource( new DataSourceFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load DataSource using Id " + uuid );
@@ -171,7 +174,7 @@ public class DataSourceRestController extends BaseSpringRestController {
         
     	try {
             // load the DataSource
-            dataSourceList = DataSourceBusinessDelegate.getDataSourceInstance().getAllDataSource();
+            dataSourceList = service.getAllDataSource();
             
             if ( dataSourceList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all DataSources" );
@@ -192,7 +195,7 @@ public class DataSourceRestController extends BaseSpringRestController {
 	@PutMapping("/assignWorkspace")
 	public void assignWorkspace( @RequestBody AssignWorkspaceToDataSourceCommand command ) {
 		try {
-			DataSourceBusinessDelegate.getDataSourceInstance().assignWorkspace( command );   
+			service.assignWorkspace( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Workspace", exc );
@@ -206,7 +209,7 @@ public class DataSourceRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignWorkspace")
 	public void unAssignWorkspace( @RequestBody(required=true)  UnAssignWorkspaceFromDataSourceCommand command ) {
 		try {
-			DataSourceBusinessDelegate.getDataSourceInstance().unAssignWorkspace( command );   
+			service.unAssignWorkspace( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Workspace", exc );
@@ -221,7 +224,7 @@ public class DataSourceRestController extends BaseSpringRestController {
 	@PutMapping("/addToProducedDatasets")
 	public void addToProducedDatasets( @RequestBody(required=true) AssignProducedDatasetsToDataSourceCommand command ) {
 		try {
-			DataSourceBusinessDelegate.getDataSourceInstance().addToProducedDatasets( command );   
+			service.addToProducedDatasets( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set ProducedDatasets", exc );
@@ -236,7 +239,7 @@ public class DataSourceRestController extends BaseSpringRestController {
 	public void removeFromProducedDatasets( 	@RequestBody(required=true) RemoveProducedDatasetsFromDataSourceCommand command )
 	{		
 		try {
-			DataSourceBusinessDelegate.getDataSourceInstance().removeFromProducedDatasets( command );
+			service.removeFromProducedDatasets( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set ProducedDatasets", exc );
@@ -250,7 +253,7 @@ public class DataSourceRestController extends BaseSpringRestController {
 	@PutMapping("/addToPipelines")
 	public void addToPipelines( @RequestBody(required=true) AssignPipelinesToDataSourceCommand command ) {
 		try {
-			DataSourceBusinessDelegate.getDataSourceInstance().addToPipelines( command );   
+			service.addToPipelines( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Pipelines", exc );
@@ -265,7 +268,7 @@ public class DataSourceRestController extends BaseSpringRestController {
 	public void removeFromPipelines( 	@RequestBody(required=true) RemovePipelinesFromDataSourceCommand command )
 	{		
 		try {
-			DataSourceBusinessDelegate.getDataSourceInstance().removeFromPipelines( command );
+			service.removeFromPipelines( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Pipelines", exc );
@@ -279,6 +282,7 @@ public class DataSourceRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected DataSource dataSource = null;
+	protected DataSourceService service = null;
     private static final Logger LOGGER = Logger.getLogger(DataSourceRestController.class.getName());
     
 }

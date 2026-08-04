@@ -8,7 +8,7 @@ Harbormaster
 
 
 ## Application
-- Name: Analytics-on-Springboot-35
+- Name: Analytics-on-springboot-35
 - Description: Banking Restful backend
 - Company Name: Turnstone Biologics
 
@@ -118,7 +118,7 @@ e.getName()
 ## GitHub
 - Host: https://github.com
 - Owner: Harbormaster-AI
-- Repo: Analytics-on-Springboot-35
+- Repo: Analytics-on-springboot-35
 
 ## Docker
 - Host: docker.io

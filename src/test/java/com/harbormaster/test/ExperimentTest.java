@@ -94,7 +94,7 @@ public class ExperimentTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a Experiment" );
 
         try {            
-            entity = ExperimentBusinessDelegate.getExperimentInstance().createExperiment( generateNewCommand() );
+            entity = ExperimentService.getExperimentInstance().createExperiment( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getExperimentId();
@@ -125,7 +125,7 @@ public class ExperimentTest
         msg.append( theId );
 
         try {
-            entity = ExperimentBusinessDelegate.getExperimentInstance().getExperiment( new ExperimentFetchOneSummary(theId) );
+            entity = ExperimentService.getExperimentInstance().getExperiment( new ExperimentFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class ExperimentTest
 
             LOGGER.info( "-- Now updating the created Experiment." );
             
-            ExperimentBusinessDelegate proxy = ExperimentBusinessDelegate.getExperimentInstance();            
+            ExperimentService proxy = ExperimentService.getExperimentInstance();            
             entity = proxy.updateExperiment( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class ExperimentTest
         try {
         	DeleteExperimentCommand deleteCommand = new DeleteExperimentCommand( theId );
         	
-            ExperimentBusinessDelegate.getExperimentInstance().delete( deleteCommand );
+            ExperimentService.getExperimentInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted Experiment with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class ExperimentTest
         List<Experiment> collection  = null;
 
         try {
-            // call the static get method on the ExperimentBusinessDelegate
-            collection = ExperimentBusinessDelegate.getExperimentInstance().getAllExperiment();
+            // call the static get method on the ExperimentService
+            collection = ExperimentService.getExperimentInstance().getAllExperiment();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

@@ -94,7 +94,7 @@ public class DimensionTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a Dimension" );
 
         try {            
-            entity = DimensionBusinessDelegate.getDimensionInstance().createDimension( generateNewCommand() );
+            entity = DimensionService.getDimensionInstance().createDimension( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getDimensionId();
@@ -125,7 +125,7 @@ public class DimensionTest
         msg.append( theId );
 
         try {
-            entity = DimensionBusinessDelegate.getDimensionInstance().getDimension( new DimensionFetchOneSummary(theId) );
+            entity = DimensionService.getDimensionInstance().getDimension( new DimensionFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class DimensionTest
 
             LOGGER.info( "-- Now updating the created Dimension." );
             
-            DimensionBusinessDelegate proxy = DimensionBusinessDelegate.getDimensionInstance();            
+            DimensionService proxy = DimensionService.getDimensionInstance();            
             entity = proxy.updateDimension( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class DimensionTest
         try {
         	DeleteDimensionCommand deleteCommand = new DeleteDimensionCommand( theId );
         	
-            DimensionBusinessDelegate.getDimensionInstance().delete( deleteCommand );
+            DimensionService.getDimensionInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted Dimension with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class DimensionTest
         List<Dimension> collection  = null;
 
         try {
-            // call the static get method on the DimensionBusinessDelegate
-            collection = DimensionBusinessDelegate.getDimensionInstance().getAllDimension();
+            // call the static get method on the DimensionService
+            collection = DimensionService.getDimensionInstance().getAllDimension();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

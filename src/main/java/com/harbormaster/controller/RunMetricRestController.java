@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	RunMetricBusinessDelegate
+ *  	RunMetricService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/RunMetric")
 public class RunMetricRestController extends BaseSpringRestController {
 
+	public RunMetricRestController( RunMetricService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a RunMetric.  if not key provided, calls create, otherwise calls save
      * @param		RunMetric	runMetric
@@ -93,7 +96,7 @@ public class RunMetricRestController extends BaseSpringRestController {
     	RunMetric entity = null;
 		try {       
         	
-			entity = RunMetricBusinessDelegate.getRunMetricInstance().createRunMetric( command );
+			entity = service.createRunMetric( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class RunMetricRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateRunMetricCommand
 			// -----------------------------------------------
-			entity = RunMetricBusinessDelegate.getRunMetricInstance().updateRunMetric(command);;
+			entity = service.updateRunMetric(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "RunMetricController:update() - successfully update RunMetric - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class RunMetricRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteRunMetricCommand command ) {                
     	try {
-        	RunMetricBusinessDelegate delegate = RunMetricBusinessDelegate.getRunMetricInstance();
+        	RunMetricService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted RunMetric with key " + command.getRunMetricId() );
@@ -151,7 +154,7 @@ public class RunMetricRestController extends BaseSpringRestController {
     	RunMetric entity = null;
 
     	try {  
-    		entity = RunMetricBusinessDelegate.getRunMetricInstance().getRunMetric( new RunMetricFetchOneSummary( uuid ) );   
+    		entity = service.getRunMetric( new RunMetricFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load RunMetric using Id " + uuid );
@@ -171,7 +174,7 @@ public class RunMetricRestController extends BaseSpringRestController {
         
     	try {
             // load the RunMetric
-            runMetricList = RunMetricBusinessDelegate.getRunMetricInstance().getAllRunMetric();
+            runMetricList = service.getAllRunMetric();
             
             if ( runMetricList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all RunMetrics" );
@@ -192,7 +195,7 @@ public class RunMetricRestController extends BaseSpringRestController {
 	@PutMapping("/assignTrainingRun")
 	public void assignTrainingRun( @RequestBody AssignTrainingRunToRunMetricCommand command ) {
 		try {
-			RunMetricBusinessDelegate.getRunMetricInstance().assignTrainingRun( command );   
+			service.assignTrainingRun( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign TrainingRun", exc );
@@ -206,7 +209,7 @@ public class RunMetricRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignTrainingRun")
 	public void unAssignTrainingRun( @RequestBody(required=true)  UnAssignTrainingRunFromRunMetricCommand command ) {
 		try {
-			RunMetricBusinessDelegate.getRunMetricInstance().unAssignTrainingRun( command );   
+			service.unAssignTrainingRun( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign TrainingRun", exc );
@@ -220,7 +223,7 @@ public class RunMetricRestController extends BaseSpringRestController {
 	@PutMapping("/assignMetric")
 	public void assignMetric( @RequestBody AssignMetricToRunMetricCommand command ) {
 		try {
-			RunMetricBusinessDelegate.getRunMetricInstance().assignMetric( command );   
+			service.assignMetric( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Metric", exc );
@@ -234,7 +237,7 @@ public class RunMetricRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignMetric")
 	public void unAssignMetric( @RequestBody(required=true)  UnAssignMetricFromRunMetricCommand command ) {
 		try {
-			RunMetricBusinessDelegate.getRunMetricInstance().unAssignMetric( command );   
+			service.unAssignMetric( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Metric", exc );
@@ -248,7 +251,7 @@ public class RunMetricRestController extends BaseSpringRestController {
 	@PutMapping("/assignDataset")
 	public void assignDataset( @RequestBody AssignDatasetToRunMetricCommand command ) {
 		try {
-			RunMetricBusinessDelegate.getRunMetricInstance().assignDataset( command );   
+			service.assignDataset( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Dataset", exc );
@@ -262,7 +265,7 @@ public class RunMetricRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignDataset")
 	public void unAssignDataset( @RequestBody(required=true)  UnAssignDatasetFromRunMetricCommand command ) {
 		try {
-			RunMetricBusinessDelegate.getRunMetricInstance().unAssignDataset( command );   
+			service.unAssignDataset( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Dataset", exc );
@@ -277,6 +280,7 @@ public class RunMetricRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected RunMetric runMetric = null;
+	protected RunMetricService service = null;
     private static final Logger LOGGER = Logger.getLogger(RunMetricRestController.class.getName());
     
 }

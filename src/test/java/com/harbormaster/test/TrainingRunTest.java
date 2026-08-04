@@ -94,7 +94,7 @@ public class TrainingRunTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a TrainingRun" );
 
         try {            
-            entity = TrainingRunBusinessDelegate.getTrainingRunInstance().createTrainingRun( generateNewCommand() );
+            entity = TrainingRunService.getTrainingRunInstance().createTrainingRun( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getTrainingRunId();
@@ -125,7 +125,7 @@ public class TrainingRunTest
         msg.append( theId );
 
         try {
-            entity = TrainingRunBusinessDelegate.getTrainingRunInstance().getTrainingRun( new TrainingRunFetchOneSummary(theId) );
+            entity = TrainingRunService.getTrainingRunInstance().getTrainingRun( new TrainingRunFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class TrainingRunTest
 
             LOGGER.info( "-- Now updating the created TrainingRun." );
             
-            TrainingRunBusinessDelegate proxy = TrainingRunBusinessDelegate.getTrainingRunInstance();            
+            TrainingRunService proxy = TrainingRunService.getTrainingRunInstance();            
             entity = proxy.updateTrainingRun( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class TrainingRunTest
         try {
         	DeleteTrainingRunCommand deleteCommand = new DeleteTrainingRunCommand( theId );
         	
-            TrainingRunBusinessDelegate.getTrainingRunInstance().delete( deleteCommand );
+            TrainingRunService.getTrainingRunInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted TrainingRun with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class TrainingRunTest
         List<TrainingRun> collection  = null;
 
         try {
-            // call the static get method on the TrainingRunBusinessDelegate
-            collection = TrainingRunBusinessDelegate.getTrainingRunInstance().getAllTrainingRun();
+            // call the static get method on the TrainingRunService
+            collection = TrainingRunService.getTrainingRunInstance().getAllTrainingRun();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

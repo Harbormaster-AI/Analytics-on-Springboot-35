@@ -94,7 +94,7 @@ public class BusinessGlossaryTermTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a BusinessGlossaryTerm" );
 
         try {            
-            entity = BusinessGlossaryTermBusinessDelegate.getBusinessGlossaryTermInstance().createBusinessGlossaryTerm( generateNewCommand() );
+            entity = BusinessGlossaryTermService.getBusinessGlossaryTermInstance().createBusinessGlossaryTerm( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getBusinessGlossaryTermId();
@@ -125,7 +125,7 @@ public class BusinessGlossaryTermTest
         msg.append( theId );
 
         try {
-            entity = BusinessGlossaryTermBusinessDelegate.getBusinessGlossaryTermInstance().getBusinessGlossaryTerm( new BusinessGlossaryTermFetchOneSummary(theId) );
+            entity = BusinessGlossaryTermService.getBusinessGlossaryTermInstance().getBusinessGlossaryTerm( new BusinessGlossaryTermFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class BusinessGlossaryTermTest
 
             LOGGER.info( "-- Now updating the created BusinessGlossaryTerm." );
             
-            BusinessGlossaryTermBusinessDelegate proxy = BusinessGlossaryTermBusinessDelegate.getBusinessGlossaryTermInstance();            
+            BusinessGlossaryTermService proxy = BusinessGlossaryTermService.getBusinessGlossaryTermInstance();            
             entity = proxy.updateBusinessGlossaryTerm( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class BusinessGlossaryTermTest
         try {
         	DeleteBusinessGlossaryTermCommand deleteCommand = new DeleteBusinessGlossaryTermCommand( theId );
         	
-            BusinessGlossaryTermBusinessDelegate.getBusinessGlossaryTermInstance().delete( deleteCommand );
+            BusinessGlossaryTermService.getBusinessGlossaryTermInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted BusinessGlossaryTerm with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class BusinessGlossaryTermTest
         List<BusinessGlossaryTerm> collection  = null;
 
         try {
-            // call the static get method on the BusinessGlossaryTermBusinessDelegate
-            collection = BusinessGlossaryTermBusinessDelegate.getBusinessGlossaryTermInstance().getAllBusinessGlossaryTerm();
+            // call the static get method on the BusinessGlossaryTermService
+            collection = BusinessGlossaryTermService.getBusinessGlossaryTermInstance().getAllBusinessGlossaryTerm();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

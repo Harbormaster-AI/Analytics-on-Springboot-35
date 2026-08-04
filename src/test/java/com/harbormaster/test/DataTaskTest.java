@@ -94,7 +94,7 @@ public class DataTaskTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a DataTask" );
 
         try {            
-            entity = DataTaskBusinessDelegate.getDataTaskInstance().createDataTask( generateNewCommand() );
+            entity = DataTaskService.getDataTaskInstance().createDataTask( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getDataTaskId();
@@ -125,7 +125,7 @@ public class DataTaskTest
         msg.append( theId );
 
         try {
-            entity = DataTaskBusinessDelegate.getDataTaskInstance().getDataTask( new DataTaskFetchOneSummary(theId) );
+            entity = DataTaskService.getDataTaskInstance().getDataTask( new DataTaskFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class DataTaskTest
 
             LOGGER.info( "-- Now updating the created DataTask." );
             
-            DataTaskBusinessDelegate proxy = DataTaskBusinessDelegate.getDataTaskInstance();            
+            DataTaskService proxy = DataTaskService.getDataTaskInstance();            
             entity = proxy.updateDataTask( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class DataTaskTest
         try {
         	DeleteDataTaskCommand deleteCommand = new DeleteDataTaskCommand( theId );
         	
-            DataTaskBusinessDelegate.getDataTaskInstance().delete( deleteCommand );
+            DataTaskService.getDataTaskInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted DataTask with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class DataTaskTest
         List<DataTask> collection  = null;
 
         try {
-            // call the static get method on the DataTaskBusinessDelegate
-            collection = DataTaskBusinessDelegate.getDataTaskInstance().getAllDataTask();
+            // call the static get method on the DataTaskService
+            collection = DataTaskService.getDataTaskInstance().getAllDataTask();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

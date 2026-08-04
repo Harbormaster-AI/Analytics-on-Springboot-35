@@ -94,7 +94,7 @@ public class AlertTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a Alert" );
 
         try {            
-            entity = AlertBusinessDelegate.getAlertInstance().createAlert( generateNewCommand() );
+            entity = AlertService.getAlertInstance().createAlert( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getAlertId();
@@ -125,7 +125,7 @@ public class AlertTest
         msg.append( theId );
 
         try {
-            entity = AlertBusinessDelegate.getAlertInstance().getAlert( new AlertFetchOneSummary(theId) );
+            entity = AlertService.getAlertInstance().getAlert( new AlertFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class AlertTest
 
             LOGGER.info( "-- Now updating the created Alert." );
             
-            AlertBusinessDelegate proxy = AlertBusinessDelegate.getAlertInstance();            
+            AlertService proxy = AlertService.getAlertInstance();            
             entity = proxy.updateAlert( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class AlertTest
         try {
         	DeleteAlertCommand deleteCommand = new DeleteAlertCommand( theId );
         	
-            AlertBusinessDelegate.getAlertInstance().delete( deleteCommand );
+            AlertService.getAlertInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted Alert with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class AlertTest
         List<Alert> collection  = null;
 
         try {
-            // call the static get method on the AlertBusinessDelegate
-            collection = AlertBusinessDelegate.getAlertInstance().getAllAlert();
+            // call the static get method on the AlertService
+            collection = AlertService.getAlertInstance().getAllAlert();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

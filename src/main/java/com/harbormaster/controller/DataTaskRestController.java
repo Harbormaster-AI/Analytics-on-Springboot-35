@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	DataTaskBusinessDelegate
+ *  	DataTaskService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/DataTask")
 public class DataTaskRestController extends BaseSpringRestController {
 
+	public DataTaskRestController( DataTaskService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a DataTask.  if not key provided, calls create, otherwise calls save
      * @param		DataTask	dataTask
@@ -93,7 +96,7 @@ public class DataTaskRestController extends BaseSpringRestController {
     	DataTask entity = null;
 		try {       
         	
-			entity = DataTaskBusinessDelegate.getDataTaskInstance().createDataTask( command );
+			entity = service.createDataTask( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class DataTaskRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateDataTaskCommand
 			// -----------------------------------------------
-			entity = DataTaskBusinessDelegate.getDataTaskInstance().updateDataTask(command);;
+			entity = service.updateDataTask(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "DataTaskController:update() - successfully update DataTask - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class DataTaskRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteDataTaskCommand command ) {                
     	try {
-        	DataTaskBusinessDelegate delegate = DataTaskBusinessDelegate.getDataTaskInstance();
+        	DataTaskService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted DataTask with key " + command.getDataTaskId() );
@@ -151,7 +154,7 @@ public class DataTaskRestController extends BaseSpringRestController {
     	DataTask entity = null;
 
     	try {  
-    		entity = DataTaskBusinessDelegate.getDataTaskInstance().getDataTask( new DataTaskFetchOneSummary( uuid ) );   
+    		entity = service.getDataTask( new DataTaskFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load DataTask using Id " + uuid );
@@ -171,7 +174,7 @@ public class DataTaskRestController extends BaseSpringRestController {
         
     	try {
             // load the DataTask
-            dataTaskList = DataTaskBusinessDelegate.getDataTaskInstance().getAllDataTask();
+            dataTaskList = service.getAllDataTask();
             
             if ( dataTaskList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all DataTasks" );
@@ -192,7 +195,7 @@ public class DataTaskRestController extends BaseSpringRestController {
 	@PutMapping("/assignPipeline")
 	public void assignPipeline( @RequestBody AssignPipelineToDataTaskCommand command ) {
 		try {
-			DataTaskBusinessDelegate.getDataTaskInstance().assignPipeline( command );   
+			service.assignPipeline( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Pipeline", exc );
@@ -206,7 +209,7 @@ public class DataTaskRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignPipeline")
 	public void unAssignPipeline( @RequestBody(required=true)  UnAssignPipelineFromDataTaskCommand command ) {
 		try {
-			DataTaskBusinessDelegate.getDataTaskInstance().unAssignPipeline( command );   
+			service.unAssignPipeline( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Pipeline", exc );
@@ -221,7 +224,7 @@ public class DataTaskRestController extends BaseSpringRestController {
 	@PutMapping("/addToInputDatasets")
 	public void addToInputDatasets( @RequestBody(required=true) AssignInputDatasetsToDataTaskCommand command ) {
 		try {
-			DataTaskBusinessDelegate.getDataTaskInstance().addToInputDatasets( command );   
+			service.addToInputDatasets( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set InputDatasets", exc );
@@ -236,7 +239,7 @@ public class DataTaskRestController extends BaseSpringRestController {
 	public void removeFromInputDatasets( 	@RequestBody(required=true) RemoveInputDatasetsFromDataTaskCommand command )
 	{		
 		try {
-			DataTaskBusinessDelegate.getDataTaskInstance().removeFromInputDatasets( command );
+			service.removeFromInputDatasets( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set InputDatasets", exc );
@@ -250,7 +253,7 @@ public class DataTaskRestController extends BaseSpringRestController {
 	@PutMapping("/addToOutputDatasets")
 	public void addToOutputDatasets( @RequestBody(required=true) AssignOutputDatasetsToDataTaskCommand command ) {
 		try {
-			DataTaskBusinessDelegate.getDataTaskInstance().addToOutputDatasets( command );   
+			service.addToOutputDatasets( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set OutputDatasets", exc );
@@ -265,7 +268,7 @@ public class DataTaskRestController extends BaseSpringRestController {
 	public void removeFromOutputDatasets( 	@RequestBody(required=true) RemoveOutputDatasetsFromDataTaskCommand command )
 	{		
 		try {
-			DataTaskBusinessDelegate.getDataTaskInstance().removeFromOutputDatasets( command );
+			service.removeFromOutputDatasets( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set OutputDatasets", exc );
@@ -279,6 +282,7 @@ public class DataTaskRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected DataTask dataTask = null;
+	protected DataTaskService service = null;
     private static final Logger LOGGER = Logger.getLogger(DataTaskRestController.class.getName());
     
 }

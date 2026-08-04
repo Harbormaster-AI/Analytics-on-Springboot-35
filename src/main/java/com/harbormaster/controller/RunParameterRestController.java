@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	RunParameterBusinessDelegate
+ *  	RunParameterService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/RunParameter")
 public class RunParameterRestController extends BaseSpringRestController {
 
+	public RunParameterRestController( RunParameterService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a RunParameter.  if not key provided, calls create, otherwise calls save
      * @param		RunParameter	runParameter
@@ -93,7 +96,7 @@ public class RunParameterRestController extends BaseSpringRestController {
     	RunParameter entity = null;
 		try {       
         	
-			entity = RunParameterBusinessDelegate.getRunParameterInstance().createRunParameter( command );
+			entity = service.createRunParameter( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class RunParameterRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateRunParameterCommand
 			// -----------------------------------------------
-			entity = RunParameterBusinessDelegate.getRunParameterInstance().updateRunParameter(command);;
+			entity = service.updateRunParameter(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "RunParameterController:update() - successfully update RunParameter - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class RunParameterRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteRunParameterCommand command ) {                
     	try {
-        	RunParameterBusinessDelegate delegate = RunParameterBusinessDelegate.getRunParameterInstance();
+        	RunParameterService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted RunParameter with key " + command.getRunParameterId() );
@@ -151,7 +154,7 @@ public class RunParameterRestController extends BaseSpringRestController {
     	RunParameter entity = null;
 
     	try {  
-    		entity = RunParameterBusinessDelegate.getRunParameterInstance().getRunParameter( new RunParameterFetchOneSummary( uuid ) );   
+    		entity = service.getRunParameter( new RunParameterFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load RunParameter using Id " + uuid );
@@ -171,7 +174,7 @@ public class RunParameterRestController extends BaseSpringRestController {
         
     	try {
             // load the RunParameter
-            runParameterList = RunParameterBusinessDelegate.getRunParameterInstance().getAllRunParameter();
+            runParameterList = service.getAllRunParameter();
             
             if ( runParameterList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all RunParameters" );
@@ -192,7 +195,7 @@ public class RunParameterRestController extends BaseSpringRestController {
 	@PutMapping("/assignTrainingRun")
 	public void assignTrainingRun( @RequestBody AssignTrainingRunToRunParameterCommand command ) {
 		try {
-			RunParameterBusinessDelegate.getRunParameterInstance().assignTrainingRun( command );   
+			service.assignTrainingRun( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign TrainingRun", exc );
@@ -206,7 +209,7 @@ public class RunParameterRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignTrainingRun")
 	public void unAssignTrainingRun( @RequestBody(required=true)  UnAssignTrainingRunFromRunParameterCommand command ) {
 		try {
-			RunParameterBusinessDelegate.getRunParameterInstance().unAssignTrainingRun( command );   
+			service.unAssignTrainingRun( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign TrainingRun", exc );
@@ -221,6 +224,7 @@ public class RunParameterRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected RunParameter runParameter = null;
+	protected RunParameterService service = null;
     private static final Logger LOGGER = Logger.getLogger(RunParameterRestController.class.getName());
     
 }

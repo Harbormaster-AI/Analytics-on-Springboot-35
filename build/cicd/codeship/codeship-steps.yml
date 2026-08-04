@@ -1,10 +1,10 @@
-- service: AnalyticsonSpringboot35Service
-  name: Build Project AnalyticsonSpringboot35
+- service: Analyticsonspringboot35Service
+  name: Build Project Analyticsonspringboot35
   command: ./gitRoot/projectbuild.sh
 - service: adddocker
   type: push
   name: Docker Build and Push
-  image_name: Harbormaster/AnalyticsonSpringboot35
+  image_name: Harbormaster/Analyticsonspringboot35
   image_tag: latest
   registry: https://index.docker.io/v1/
   encrypted_dockercfg_path: .dockercfg

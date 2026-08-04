@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	DashboardBusinessDelegate
+ *  	DashboardService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/Dashboard")
 public class DashboardRestController extends BaseSpringRestController {
 
+	public DashboardRestController( DashboardService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a Dashboard.  if not key provided, calls create, otherwise calls save
      * @param		Dashboard	dashboard
@@ -93,7 +96,7 @@ public class DashboardRestController extends BaseSpringRestController {
     	Dashboard entity = null;
 		try {       
         	
-			entity = DashboardBusinessDelegate.getDashboardInstance().createDashboard( command );
+			entity = service.createDashboard( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class DashboardRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateDashboardCommand
 			// -----------------------------------------------
-			entity = DashboardBusinessDelegate.getDashboardInstance().updateDashboard(command);;
+			entity = service.updateDashboard(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "DashboardController:update() - successfully update Dashboard - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class DashboardRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteDashboardCommand command ) {                
     	try {
-        	DashboardBusinessDelegate delegate = DashboardBusinessDelegate.getDashboardInstance();
+        	DashboardService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted Dashboard with key " + command.getDashboardId() );
@@ -151,7 +154,7 @@ public class DashboardRestController extends BaseSpringRestController {
     	Dashboard entity = null;
 
     	try {  
-    		entity = DashboardBusinessDelegate.getDashboardInstance().getDashboard( new DashboardFetchOneSummary( uuid ) );   
+    		entity = service.getDashboard( new DashboardFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load Dashboard using Id " + uuid );
@@ -171,7 +174,7 @@ public class DashboardRestController extends BaseSpringRestController {
         
     	try {
             // load the Dashboard
-            dashboardList = DashboardBusinessDelegate.getDashboardInstance().getAllDashboard();
+            dashboardList = service.getAllDashboard();
             
             if ( dashboardList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Dashboards" );
@@ -192,7 +195,7 @@ public class DashboardRestController extends BaseSpringRestController {
 	@PutMapping("/assignWorkspace")
 	public void assignWorkspace( @RequestBody AssignWorkspaceToDashboardCommand command ) {
 		try {
-			DashboardBusinessDelegate.getDashboardInstance().assignWorkspace( command );   
+			service.assignWorkspace( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Workspace", exc );
@@ -206,7 +209,7 @@ public class DashboardRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignWorkspace")
 	public void unAssignWorkspace( @RequestBody(required=true)  UnAssignWorkspaceFromDashboardCommand command ) {
 		try {
-			DashboardBusinessDelegate.getDashboardInstance().unAssignWorkspace( command );   
+			service.unAssignWorkspace( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Workspace", exc );
@@ -221,7 +224,7 @@ public class DashboardRestController extends BaseSpringRestController {
 	@PutMapping("/addToVisualizations")
 	public void addToVisualizations( @RequestBody(required=true) AssignVisualizationsToDashboardCommand command ) {
 		try {
-			DashboardBusinessDelegate.getDashboardInstance().addToVisualizations( command );   
+			service.addToVisualizations( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Visualizations", exc );
@@ -236,7 +239,7 @@ public class DashboardRestController extends BaseSpringRestController {
 	public void removeFromVisualizations( 	@RequestBody(required=true) RemoveVisualizationsFromDashboardCommand command )
 	{		
 		try {
-			DashboardBusinessDelegate.getDashboardInstance().removeFromVisualizations( command );
+			service.removeFromVisualizations( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Visualizations", exc );
@@ -250,7 +253,7 @@ public class DashboardRestController extends BaseSpringRestController {
 	@PutMapping("/addToReports")
 	public void addToReports( @RequestBody(required=true) AssignReportsToDashboardCommand command ) {
 		try {
-			DashboardBusinessDelegate.getDashboardInstance().addToReports( command );   
+			service.addToReports( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Reports", exc );
@@ -265,7 +268,7 @@ public class DashboardRestController extends BaseSpringRestController {
 	public void removeFromReports( 	@RequestBody(required=true) RemoveReportsFromDashboardCommand command )
 	{		
 		try {
-			DashboardBusinessDelegate.getDashboardInstance().removeFromReports( command );
+			service.removeFromReports( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Reports", exc );
@@ -279,7 +282,7 @@ public class DashboardRestController extends BaseSpringRestController {
 	@PutMapping("/addToDatasets")
 	public void addToDatasets( @RequestBody(required=true) AssignDatasetsToDashboardCommand command ) {
 		try {
-			DashboardBusinessDelegate.getDashboardInstance().addToDatasets( command );   
+			service.addToDatasets( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Datasets", exc );
@@ -294,7 +297,7 @@ public class DashboardRestController extends BaseSpringRestController {
 	public void removeFromDatasets( 	@RequestBody(required=true) RemoveDatasetsFromDashboardCommand command )
 	{		
 		try {
-			DashboardBusinessDelegate.getDashboardInstance().removeFromDatasets( command );
+			service.removeFromDatasets( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Datasets", exc );
@@ -308,7 +311,7 @@ public class DashboardRestController extends BaseSpringRestController {
 	@PutMapping("/addToAlerts")
 	public void addToAlerts( @RequestBody(required=true) AssignAlertsToDashboardCommand command ) {
 		try {
-			DashboardBusinessDelegate.getDashboardInstance().addToAlerts( command );   
+			service.addToAlerts( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Alerts", exc );
@@ -323,7 +326,7 @@ public class DashboardRestController extends BaseSpringRestController {
 	public void removeFromAlerts( 	@RequestBody(required=true) RemoveAlertsFromDashboardCommand command )
 	{		
 		try {
-			DashboardBusinessDelegate.getDashboardInstance().removeFromAlerts( command );
+			service.removeFromAlerts( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Alerts", exc );
@@ -337,7 +340,7 @@ public class DashboardRestController extends BaseSpringRestController {
 	@PutMapping("/addToQueries")
 	public void addToQueries( @RequestBody(required=true) AssignQueriesToDashboardCommand command ) {
 		try {
-			DashboardBusinessDelegate.getDashboardInstance().addToQueries( command );   
+			service.addToQueries( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Queries", exc );
@@ -352,7 +355,7 @@ public class DashboardRestController extends BaseSpringRestController {
 	public void removeFromQueries( 	@RequestBody(required=true) RemoveQueriesFromDashboardCommand command )
 	{		
 		try {
-			DashboardBusinessDelegate.getDashboardInstance().removeFromQueries( command );
+			service.removeFromQueries( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Queries", exc );
@@ -366,7 +369,7 @@ public class DashboardRestController extends BaseSpringRestController {
 	@PutMapping("/addToTags")
 	public void addToTags( @RequestBody(required=true) AssignTagsToDashboardCommand command ) {
 		try {
-			DashboardBusinessDelegate.getDashboardInstance().addToTags( command );   
+			service.addToTags( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Tags", exc );
@@ -381,7 +384,7 @@ public class DashboardRestController extends BaseSpringRestController {
 	public void removeFromTags( 	@RequestBody(required=true) RemoveTagsFromDashboardCommand command )
 	{		
 		try {
-			DashboardBusinessDelegate.getDashboardInstance().removeFromTags( command );
+			service.removeFromTags( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Tags", exc );
@@ -395,6 +398,7 @@ public class DashboardRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected Dashboard dashboard = null;
+	protected DashboardService service = null;
     private static final Logger LOGGER = Logger.getLogger(DashboardRestController.class.getName());
     
 }

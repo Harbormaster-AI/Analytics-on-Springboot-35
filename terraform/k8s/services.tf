@@ -5,7 +5,7 @@ resource "kubernetes_service" "app-master" {
 
   spec {
     selector = {
-      app  = "AnalyticsonSpringboot35"
+      app  = "Analyticsonspringboot35"
     }
 
     port {

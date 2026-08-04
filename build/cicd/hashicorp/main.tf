@@ -59,8 +59,8 @@ resource "aws_key_pair" "generated" {
 # -------------------------------------------------------
 
 resource "aws_security_group" "web" {
-#  name        = "AnalyticsonSpringboot35-security-group-from-terraform" #optional, when omitted, terraform creates a random name
-  description = "security group for application AnalyticsonSpringboot35 created from terraform"
+#  name        = "Analyticsonspringboot35-security-group-from-terraform" #optional, when omitted, terraform creates a random name
+  description = "security group for application Analyticsonspringboot35 created from terraform"
   vpc_id      = "${aws-vpc}"
 
   # SSH access from anywhere
@@ -101,7 +101,7 @@ resource "aws_security_group" "web" {
 # -------------------------------------------------------
 
 resource "aws_security_group" "mysql" {
-  description = "security group for AnalyticsonSpringboot35 ${dEngine} created from terraform"
+  description = "security group for Analyticsonspringboot35 ${dEngine} created from terraform"
   vpc_id      = "${aws-vpc}"
 
   # mysql access from anywhere
@@ -123,11 +123,11 @@ resource "aws_security_group" "mysql" {
 
 resource "aws_db_instance" "default" {
   depends_on             = ["aws_security_group.rds"]
-#  identifier             = "AnalyticsonSpringboot35-rds" # Terraform will create a unique id if not assigned
+#  identifier             = "Analyticsonspringboot35-rds" # Terraform will create a unique id if not assigned
   allocated_storage      = 20
   engine                 = "mysql"
   instance_class         = "db.t3.medium"
-  name                   = "AnalyticsonSpringboot35"
+  name                   = "Analyticsonspringboot35"
   username               = "${dbUsername}"
   password               = "${dbPassword}"
   vpc_security_group_ids = ["${aws_security_group.rds.id}"]
@@ -152,7 +152,7 @@ resource "aws_instance" "web" {
 
   instance_type = "t2.medium"
   
-  tags = { Name = "AnalyticsonSpringboot35 instance" } 
+  tags = { Name = "Analyticsonspringboot35 instance" } 
 
   # -------------------------------------------------------
   # standard harbormaster community AMI with docker pre-installed
@@ -189,7 +189,7 @@ resource "aws_instance" "web" {
       "sudo apt-get -y update",
       "sudo docker login --username tylertravismya --password 69cutlass",
       "sudo docker pull theharbormaster/Analytics-on-springboot-35:latest",
-      "sudo docker run -it -p 8000:8000 -p 8080:8080 -e DATABASE_URL=jdbc:mysql://${aws_db_instance.default.endpoint}/AnalyticsonSpringboot35 theharbormaster/Analytics-on-springboot-35:latest"
+      "sudo docker run -it -p 8000:8000 -p 8080:8080 -e DATABASE_URL=jdbc:mysql://${aws_db_instance.default.endpoint}/Analyticsonspringboot35 theharbormaster/Analytics-on-springboot-35:latest"
     ]
   }
 }

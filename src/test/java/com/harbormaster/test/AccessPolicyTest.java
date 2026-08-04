@@ -94,7 +94,7 @@ public class AccessPolicyTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a AccessPolicy" );
 
         try {            
-            entity = AccessPolicyBusinessDelegate.getAccessPolicyInstance().createAccessPolicy( generateNewCommand() );
+            entity = AccessPolicyService.getAccessPolicyInstance().createAccessPolicy( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getAccessPolicyId();
@@ -125,7 +125,7 @@ public class AccessPolicyTest
         msg.append( theId );
 
         try {
-            entity = AccessPolicyBusinessDelegate.getAccessPolicyInstance().getAccessPolicy( new AccessPolicyFetchOneSummary(theId) );
+            entity = AccessPolicyService.getAccessPolicyInstance().getAccessPolicy( new AccessPolicyFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class AccessPolicyTest
 
             LOGGER.info( "-- Now updating the created AccessPolicy." );
             
-            AccessPolicyBusinessDelegate proxy = AccessPolicyBusinessDelegate.getAccessPolicyInstance();            
+            AccessPolicyService proxy = AccessPolicyService.getAccessPolicyInstance();            
             entity = proxy.updateAccessPolicy( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class AccessPolicyTest
         try {
         	DeleteAccessPolicyCommand deleteCommand = new DeleteAccessPolicyCommand( theId );
         	
-            AccessPolicyBusinessDelegate.getAccessPolicyInstance().delete( deleteCommand );
+            AccessPolicyService.getAccessPolicyInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted AccessPolicy with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class AccessPolicyTest
         List<AccessPolicy> collection  = null;
 
         try {
-            // call the static get method on the AccessPolicyBusinessDelegate
-            collection = AccessPolicyBusinessDelegate.getAccessPolicyInstance().getAllAccessPolicy();
+            // call the static get method on the AccessPolicyService
+            collection = AccessPolicyService.getAccessPolicyInstance().getAllAccessPolicy();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

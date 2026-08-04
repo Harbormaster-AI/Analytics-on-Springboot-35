@@ -94,7 +94,7 @@ public class ReportTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a Report" );
 
         try {            
-            entity = ReportBusinessDelegate.getReportInstance().createReport( generateNewCommand() );
+            entity = ReportService.getReportInstance().createReport( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getReportId();
@@ -125,7 +125,7 @@ public class ReportTest
         msg.append( theId );
 
         try {
-            entity = ReportBusinessDelegate.getReportInstance().getReport( new ReportFetchOneSummary(theId) );
+            entity = ReportService.getReportInstance().getReport( new ReportFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class ReportTest
 
             LOGGER.info( "-- Now updating the created Report." );
             
-            ReportBusinessDelegate proxy = ReportBusinessDelegate.getReportInstance();            
+            ReportService proxy = ReportService.getReportInstance();            
             entity = proxy.updateReport( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class ReportTest
         try {
         	DeleteReportCommand deleteCommand = new DeleteReportCommand( theId );
         	
-            ReportBusinessDelegate.getReportInstance().delete( deleteCommand );
+            ReportService.getReportInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted Report with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class ReportTest
         List<Report> collection  = null;
 
         try {
-            // call the static get method on the ReportBusinessDelegate
-            collection = ReportBusinessDelegate.getReportInstance().getAllReport();
+            // call the static get method on the ReportService
+            collection = ReportService.getReportInstance().getAllReport();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

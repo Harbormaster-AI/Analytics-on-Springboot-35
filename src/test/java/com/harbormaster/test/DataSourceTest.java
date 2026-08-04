@@ -94,7 +94,7 @@ public class DataSourceTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a DataSource" );
 
         try {            
-            entity = DataSourceBusinessDelegate.getDataSourceInstance().createDataSource( generateNewCommand() );
+            entity = DataSourceService.getDataSourceInstance().createDataSource( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getDataSourceId();
@@ -125,7 +125,7 @@ public class DataSourceTest
         msg.append( theId );
 
         try {
-            entity = DataSourceBusinessDelegate.getDataSourceInstance().getDataSource( new DataSourceFetchOneSummary(theId) );
+            entity = DataSourceService.getDataSourceInstance().getDataSource( new DataSourceFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class DataSourceTest
 
             LOGGER.info( "-- Now updating the created DataSource." );
             
-            DataSourceBusinessDelegate proxy = DataSourceBusinessDelegate.getDataSourceInstance();            
+            DataSourceService proxy = DataSourceService.getDataSourceInstance();            
             entity = proxy.updateDataSource( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class DataSourceTest
         try {
         	DeleteDataSourceCommand deleteCommand = new DeleteDataSourceCommand( theId );
         	
-            DataSourceBusinessDelegate.getDataSourceInstance().delete( deleteCommand );
+            DataSourceService.getDataSourceInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted DataSource with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class DataSourceTest
         List<DataSource> collection  = null;
 
         try {
-            // call the static get method on the DataSourceBusinessDelegate
-            collection = DataSourceBusinessDelegate.getDataSourceInstance().getAllDataSource();
+            // call the static get method on the DataSourceService
+            collection = DataSourceService.getDataSourceInstance().getAllDataSource();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

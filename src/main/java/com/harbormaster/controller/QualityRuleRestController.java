@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	QualityRuleBusinessDelegate
+ *  	QualityRuleService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/QualityRule")
 public class QualityRuleRestController extends BaseSpringRestController {
 
+	public QualityRuleRestController( QualityRuleService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a QualityRule.  if not key provided, calls create, otherwise calls save
      * @param		QualityRule	qualityRule
@@ -93,7 +96,7 @@ public class QualityRuleRestController extends BaseSpringRestController {
     	QualityRule entity = null;
 		try {       
         	
-			entity = QualityRuleBusinessDelegate.getQualityRuleInstance().createQualityRule( command );
+			entity = service.createQualityRule( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class QualityRuleRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateQualityRuleCommand
 			// -----------------------------------------------
-			entity = QualityRuleBusinessDelegate.getQualityRuleInstance().updateQualityRule(command);;
+			entity = service.updateQualityRule(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "QualityRuleController:update() - successfully update QualityRule - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class QualityRuleRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteQualityRuleCommand command ) {                
     	try {
-        	QualityRuleBusinessDelegate delegate = QualityRuleBusinessDelegate.getQualityRuleInstance();
+        	QualityRuleService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted QualityRule with key " + command.getQualityRuleId() );
@@ -151,7 +154,7 @@ public class QualityRuleRestController extends BaseSpringRestController {
     	QualityRule entity = null;
 
     	try {  
-    		entity = QualityRuleBusinessDelegate.getQualityRuleInstance().getQualityRule( new QualityRuleFetchOneSummary( uuid ) );   
+    		entity = service.getQualityRule( new QualityRuleFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load QualityRule using Id " + uuid );
@@ -171,7 +174,7 @@ public class QualityRuleRestController extends BaseSpringRestController {
         
     	try {
             // load the QualityRule
-            qualityRuleList = QualityRuleBusinessDelegate.getQualityRuleInstance().getAllQualityRule();
+            qualityRuleList = service.getAllQualityRule();
             
             if ( qualityRuleList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all QualityRules" );
@@ -192,7 +195,7 @@ public class QualityRuleRestController extends BaseSpringRestController {
 	@PutMapping("/assignDataset")
 	public void assignDataset( @RequestBody AssignDatasetToQualityRuleCommand command ) {
 		try {
-			QualityRuleBusinessDelegate.getQualityRuleInstance().assignDataset( command );   
+			service.assignDataset( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Dataset", exc );
@@ -206,7 +209,7 @@ public class QualityRuleRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignDataset")
 	public void unAssignDataset( @RequestBody(required=true)  UnAssignDatasetFromQualityRuleCommand command ) {
 		try {
-			QualityRuleBusinessDelegate.getQualityRuleInstance().unAssignDataset( command );   
+			service.unAssignDataset( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Dataset", exc );
@@ -221,7 +224,7 @@ public class QualityRuleRestController extends BaseSpringRestController {
 	@PutMapping("/addToChecks")
 	public void addToChecks( @RequestBody(required=true) AssignChecksToQualityRuleCommand command ) {
 		try {
-			QualityRuleBusinessDelegate.getQualityRuleInstance().addToChecks( command );   
+			service.addToChecks( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Checks", exc );
@@ -236,7 +239,7 @@ public class QualityRuleRestController extends BaseSpringRestController {
 	public void removeFromChecks( 	@RequestBody(required=true) RemoveChecksFromQualityRuleCommand command )
 	{		
 		try {
-			QualityRuleBusinessDelegate.getQualityRuleInstance().removeFromChecks( command );
+			service.removeFromChecks( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Checks", exc );
@@ -250,6 +253,7 @@ public class QualityRuleRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected QualityRule qualityRule = null;
+	protected QualityRuleService service = null;
     private static final Logger LOGGER = Logger.getLogger(QualityRuleRestController.class.getName());
     
 }

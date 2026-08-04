@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	BusinessGlossaryTermBusinessDelegate
+ *  	BusinessGlossaryTermService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/BusinessGlossaryTerm")
 public class BusinessGlossaryTermRestController extends BaseSpringRestController {
 
+	public BusinessGlossaryTermRestController( BusinessGlossaryTermService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a BusinessGlossaryTerm.  if not key provided, calls create, otherwise calls save
      * @param		BusinessGlossaryTerm	businessGlossaryTerm
@@ -93,7 +96,7 @@ public class BusinessGlossaryTermRestController extends BaseSpringRestController
     	BusinessGlossaryTerm entity = null;
 		try {       
         	
-			entity = BusinessGlossaryTermBusinessDelegate.getBusinessGlossaryTermInstance().createBusinessGlossaryTerm( command );
+			entity = service.createBusinessGlossaryTerm( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class BusinessGlossaryTermRestController extends BaseSpringRestController
 			// -----------------------------------------------
 			// delegate the UpdateBusinessGlossaryTermCommand
 			// -----------------------------------------------
-			entity = BusinessGlossaryTermBusinessDelegate.getBusinessGlossaryTermInstance().updateBusinessGlossaryTerm(command);;
+			entity = service.updateBusinessGlossaryTerm(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "BusinessGlossaryTermController:update() - successfully update BusinessGlossaryTerm - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class BusinessGlossaryTermRestController extends BaseSpringRestController
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteBusinessGlossaryTermCommand command ) {                
     	try {
-        	BusinessGlossaryTermBusinessDelegate delegate = BusinessGlossaryTermBusinessDelegate.getBusinessGlossaryTermInstance();
+        	BusinessGlossaryTermService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted BusinessGlossaryTerm with key " + command.getBusinessGlossaryTermId() );
@@ -151,7 +154,7 @@ public class BusinessGlossaryTermRestController extends BaseSpringRestController
     	BusinessGlossaryTerm entity = null;
 
     	try {  
-    		entity = BusinessGlossaryTermBusinessDelegate.getBusinessGlossaryTermInstance().getBusinessGlossaryTerm( new BusinessGlossaryTermFetchOneSummary( uuid ) );   
+    		entity = service.getBusinessGlossaryTerm( new BusinessGlossaryTermFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load BusinessGlossaryTerm using Id " + uuid );
@@ -171,7 +174,7 @@ public class BusinessGlossaryTermRestController extends BaseSpringRestController
         
     	try {
             // load the BusinessGlossaryTerm
-            businessGlossaryTermList = BusinessGlossaryTermBusinessDelegate.getBusinessGlossaryTermInstance().getAllBusinessGlossaryTerm();
+            businessGlossaryTermList = service.getAllBusinessGlossaryTerm();
             
             if ( businessGlossaryTermList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all BusinessGlossaryTerms" );
@@ -193,7 +196,7 @@ public class BusinessGlossaryTermRestController extends BaseSpringRestController
 	@PutMapping("/addToRelatedTerms")
 	public void addToRelatedTerms( @RequestBody(required=true) AssignRelatedTermsToBusinessGlossaryTermCommand command ) {
 		try {
-			BusinessGlossaryTermBusinessDelegate.getBusinessGlossaryTermInstance().addToRelatedTerms( command );   
+			service.addToRelatedTerms( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set RelatedTerms", exc );
@@ -208,7 +211,7 @@ public class BusinessGlossaryTermRestController extends BaseSpringRestController
 	public void removeFromRelatedTerms( 	@RequestBody(required=true) RemoveRelatedTermsFromBusinessGlossaryTermCommand command )
 	{		
 		try {
-			BusinessGlossaryTermBusinessDelegate.getBusinessGlossaryTermInstance().removeFromRelatedTerms( command );
+			service.removeFromRelatedTerms( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set RelatedTerms", exc );
@@ -222,7 +225,7 @@ public class BusinessGlossaryTermRestController extends BaseSpringRestController
 	@PutMapping("/addToMetrics")
 	public void addToMetrics( @RequestBody(required=true) AssignMetricsToBusinessGlossaryTermCommand command ) {
 		try {
-			BusinessGlossaryTermBusinessDelegate.getBusinessGlossaryTermInstance().addToMetrics( command );   
+			service.addToMetrics( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Metrics", exc );
@@ -237,7 +240,7 @@ public class BusinessGlossaryTermRestController extends BaseSpringRestController
 	public void removeFromMetrics( 	@RequestBody(required=true) RemoveMetricsFromBusinessGlossaryTermCommand command )
 	{		
 		try {
-			BusinessGlossaryTermBusinessDelegate.getBusinessGlossaryTermInstance().removeFromMetrics( command );
+			service.removeFromMetrics( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Metrics", exc );
@@ -251,7 +254,7 @@ public class BusinessGlossaryTermRestController extends BaseSpringRestController
 	@PutMapping("/addToDatasets")
 	public void addToDatasets( @RequestBody(required=true) AssignDatasetsToBusinessGlossaryTermCommand command ) {
 		try {
-			BusinessGlossaryTermBusinessDelegate.getBusinessGlossaryTermInstance().addToDatasets( command );   
+			service.addToDatasets( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Datasets", exc );
@@ -266,7 +269,7 @@ public class BusinessGlossaryTermRestController extends BaseSpringRestController
 	public void removeFromDatasets( 	@RequestBody(required=true) RemoveDatasetsFromBusinessGlossaryTermCommand command )
 	{		
 		try {
-			BusinessGlossaryTermBusinessDelegate.getBusinessGlossaryTermInstance().removeFromDatasets( command );
+			service.removeFromDatasets( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Datasets", exc );
@@ -280,7 +283,7 @@ public class BusinessGlossaryTermRestController extends BaseSpringRestController
 	@PutMapping("/addToDimensions")
 	public void addToDimensions( @RequestBody(required=true) AssignDimensionsToBusinessGlossaryTermCommand command ) {
 		try {
-			BusinessGlossaryTermBusinessDelegate.getBusinessGlossaryTermInstance().addToDimensions( command );   
+			service.addToDimensions( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Dimensions", exc );
@@ -295,7 +298,7 @@ public class BusinessGlossaryTermRestController extends BaseSpringRestController
 	public void removeFromDimensions( 	@RequestBody(required=true) RemoveDimensionsFromBusinessGlossaryTermCommand command )
 	{		
 		try {
-			BusinessGlossaryTermBusinessDelegate.getBusinessGlossaryTermInstance().removeFromDimensions( command );
+			service.removeFromDimensions( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Dimensions", exc );
@@ -309,7 +312,7 @@ public class BusinessGlossaryTermRestController extends BaseSpringRestController
 	@PutMapping("/addToMeasures")
 	public void addToMeasures( @RequestBody(required=true) AssignMeasuresToBusinessGlossaryTermCommand command ) {
 		try {
-			BusinessGlossaryTermBusinessDelegate.getBusinessGlossaryTermInstance().addToMeasures( command );   
+			service.addToMeasures( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Measures", exc );
@@ -324,7 +327,7 @@ public class BusinessGlossaryTermRestController extends BaseSpringRestController
 	public void removeFromMeasures( 	@RequestBody(required=true) RemoveMeasuresFromBusinessGlossaryTermCommand command )
 	{		
 		try {
-			BusinessGlossaryTermBusinessDelegate.getBusinessGlossaryTermInstance().removeFromMeasures( command );
+			service.removeFromMeasures( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Measures", exc );
@@ -338,6 +341,7 @@ public class BusinessGlossaryTermRestController extends BaseSpringRestController
 // Attributes
 //************************************************************************
     protected BusinessGlossaryTerm businessGlossaryTerm = null;
+	protected BusinessGlossaryTermService service = null;
     private static final Logger LOGGER = Logger.getLogger(BusinessGlossaryTermRestController.class.getName());
     
 }

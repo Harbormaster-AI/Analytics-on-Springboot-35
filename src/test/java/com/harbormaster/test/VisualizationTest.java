@@ -94,7 +94,7 @@ public class VisualizationTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a Visualization" );
 
         try {            
-            entity = VisualizationBusinessDelegate.getVisualizationInstance().createVisualization( generateNewCommand() );
+            entity = VisualizationService.getVisualizationInstance().createVisualization( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getVisualizationId();
@@ -125,7 +125,7 @@ public class VisualizationTest
         msg.append( theId );
 
         try {
-            entity = VisualizationBusinessDelegate.getVisualizationInstance().getVisualization( new VisualizationFetchOneSummary(theId) );
+            entity = VisualizationService.getVisualizationInstance().getVisualization( new VisualizationFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class VisualizationTest
 
             LOGGER.info( "-- Now updating the created Visualization." );
             
-            VisualizationBusinessDelegate proxy = VisualizationBusinessDelegate.getVisualizationInstance();            
+            VisualizationService proxy = VisualizationService.getVisualizationInstance();            
             entity = proxy.updateVisualization( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class VisualizationTest
         try {
         	DeleteVisualizationCommand deleteCommand = new DeleteVisualizationCommand( theId );
         	
-            VisualizationBusinessDelegate.getVisualizationInstance().delete( deleteCommand );
+            VisualizationService.getVisualizationInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted Visualization with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class VisualizationTest
         List<Visualization> collection  = null;
 
         try {
-            // call the static get method on the VisualizationBusinessDelegate
-            collection = VisualizationBusinessDelegate.getVisualizationInstance().getAllVisualization();
+            // call the static get method on the VisualizationService
+            collection = VisualizationService.getVisualizationInstance().getAllVisualization();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

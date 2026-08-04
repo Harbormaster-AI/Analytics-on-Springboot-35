@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	ReportBusinessDelegate
+ *  	ReportService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/Report")
 public class ReportRestController extends BaseSpringRestController {
 
+	public ReportRestController( ReportService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a Report.  if not key provided, calls create, otherwise calls save
      * @param		Report	report
@@ -93,7 +96,7 @@ public class ReportRestController extends BaseSpringRestController {
     	Report entity = null;
 		try {       
         	
-			entity = ReportBusinessDelegate.getReportInstance().createReport( command );
+			entity = service.createReport( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class ReportRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateReportCommand
 			// -----------------------------------------------
-			entity = ReportBusinessDelegate.getReportInstance().updateReport(command);;
+			entity = service.updateReport(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "ReportController:update() - successfully update Report - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class ReportRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteReportCommand command ) {                
     	try {
-        	ReportBusinessDelegate delegate = ReportBusinessDelegate.getReportInstance();
+        	ReportService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted Report with key " + command.getReportId() );
@@ -151,7 +154,7 @@ public class ReportRestController extends BaseSpringRestController {
     	Report entity = null;
 
     	try {  
-    		entity = ReportBusinessDelegate.getReportInstance().getReport( new ReportFetchOneSummary( uuid ) );   
+    		entity = service.getReport( new ReportFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load Report using Id " + uuid );
@@ -171,7 +174,7 @@ public class ReportRestController extends BaseSpringRestController {
         
     	try {
             // load the Report
-            reportList = ReportBusinessDelegate.getReportInstance().getAllReport();
+            reportList = service.getAllReport();
             
             if ( reportList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Reports" );
@@ -192,7 +195,7 @@ public class ReportRestController extends BaseSpringRestController {
 	@PutMapping("/assignWorkspace")
 	public void assignWorkspace( @RequestBody AssignWorkspaceToReportCommand command ) {
 		try {
-			ReportBusinessDelegate.getReportInstance().assignWorkspace( command );   
+			service.assignWorkspace( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Workspace", exc );
@@ -206,7 +209,7 @@ public class ReportRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignWorkspace")
 	public void unAssignWorkspace( @RequestBody(required=true)  UnAssignWorkspaceFromReportCommand command ) {
 		try {
-			ReportBusinessDelegate.getReportInstance().unAssignWorkspace( command );   
+			service.unAssignWorkspace( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Workspace", exc );
@@ -221,7 +224,7 @@ public class ReportRestController extends BaseSpringRestController {
 	@PutMapping("/addToVisualizations")
 	public void addToVisualizations( @RequestBody(required=true) AssignVisualizationsToReportCommand command ) {
 		try {
-			ReportBusinessDelegate.getReportInstance().addToVisualizations( command );   
+			service.addToVisualizations( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Visualizations", exc );
@@ -236,7 +239,7 @@ public class ReportRestController extends BaseSpringRestController {
 	public void removeFromVisualizations( 	@RequestBody(required=true) RemoveVisualizationsFromReportCommand command )
 	{		
 		try {
-			ReportBusinessDelegate.getReportInstance().removeFromVisualizations( command );
+			service.removeFromVisualizations( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Visualizations", exc );
@@ -250,7 +253,7 @@ public class ReportRestController extends BaseSpringRestController {
 	@PutMapping("/addToDatasets")
 	public void addToDatasets( @RequestBody(required=true) AssignDatasetsToReportCommand command ) {
 		try {
-			ReportBusinessDelegate.getReportInstance().addToDatasets( command );   
+			service.addToDatasets( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Datasets", exc );
@@ -265,7 +268,7 @@ public class ReportRestController extends BaseSpringRestController {
 	public void removeFromDatasets( 	@RequestBody(required=true) RemoveDatasetsFromReportCommand command )
 	{		
 		try {
-			ReportBusinessDelegate.getReportInstance().removeFromDatasets( command );
+			service.removeFromDatasets( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Datasets", exc );
@@ -279,7 +282,7 @@ public class ReportRestController extends BaseSpringRestController {
 	@PutMapping("/addToSemanticModels")
 	public void addToSemanticModels( @RequestBody(required=true) AssignSemanticModelsToReportCommand command ) {
 		try {
-			ReportBusinessDelegate.getReportInstance().addToSemanticModels( command );   
+			service.addToSemanticModels( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set SemanticModels", exc );
@@ -294,7 +297,7 @@ public class ReportRestController extends BaseSpringRestController {
 	public void removeFromSemanticModels( 	@RequestBody(required=true) RemoveSemanticModelsFromReportCommand command )
 	{		
 		try {
-			ReportBusinessDelegate.getReportInstance().removeFromSemanticModels( command );
+			service.removeFromSemanticModels( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set SemanticModels", exc );
@@ -308,7 +311,7 @@ public class ReportRestController extends BaseSpringRestController {
 	@PutMapping("/addToQueries")
 	public void addToQueries( @RequestBody(required=true) AssignQueriesToReportCommand command ) {
 		try {
-			ReportBusinessDelegate.getReportInstance().addToQueries( command );   
+			service.addToQueries( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Queries", exc );
@@ -323,7 +326,7 @@ public class ReportRestController extends BaseSpringRestController {
 	public void removeFromQueries( 	@RequestBody(required=true) RemoveQueriesFromReportCommand command )
 	{		
 		try {
-			ReportBusinessDelegate.getReportInstance().removeFromQueries( command );
+			service.removeFromQueries( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Queries", exc );
@@ -337,7 +340,7 @@ public class ReportRestController extends BaseSpringRestController {
 	@PutMapping("/addToTags")
 	public void addToTags( @RequestBody(required=true) AssignTagsToReportCommand command ) {
 		try {
-			ReportBusinessDelegate.getReportInstance().addToTags( command );   
+			service.addToTags( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Tags", exc );
@@ -352,7 +355,7 @@ public class ReportRestController extends BaseSpringRestController {
 	public void removeFromTags( 	@RequestBody(required=true) RemoveTagsFromReportCommand command )
 	{		
 		try {
-			ReportBusinessDelegate.getReportInstance().removeFromTags( command );
+			service.removeFromTags( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Tags", exc );
@@ -366,6 +369,7 @@ public class ReportRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected Report report = null;
+	protected ReportService service = null;
     private static final Logger LOGGER = Logger.getLogger(ReportRestController.class.getName());
     
 }

@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	MeasureBusinessDelegate
+ *  	MeasureService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/Measure")
 public class MeasureRestController extends BaseSpringRestController {
 
+	public MeasureRestController( MeasureService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a Measure.  if not key provided, calls create, otherwise calls save
      * @param		Measure	measure
@@ -93,7 +96,7 @@ public class MeasureRestController extends BaseSpringRestController {
     	Measure entity = null;
 		try {       
         	
-			entity = MeasureBusinessDelegate.getMeasureInstance().createMeasure( command );
+			entity = service.createMeasure( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class MeasureRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateMeasureCommand
 			// -----------------------------------------------
-			entity = MeasureBusinessDelegate.getMeasureInstance().updateMeasure(command);;
+			entity = service.updateMeasure(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "MeasureController:update() - successfully update Measure - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class MeasureRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteMeasureCommand command ) {                
     	try {
-        	MeasureBusinessDelegate delegate = MeasureBusinessDelegate.getMeasureInstance();
+        	MeasureService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted Measure with key " + command.getMeasureId() );
@@ -151,7 +154,7 @@ public class MeasureRestController extends BaseSpringRestController {
     	Measure entity = null;
 
     	try {  
-    		entity = MeasureBusinessDelegate.getMeasureInstance().getMeasure( new MeasureFetchOneSummary( uuid ) );   
+    		entity = service.getMeasure( new MeasureFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load Measure using Id " + uuid );
@@ -171,7 +174,7 @@ public class MeasureRestController extends BaseSpringRestController {
         
     	try {
             // load the Measure
-            measureList = MeasureBusinessDelegate.getMeasureInstance().getAllMeasure();
+            measureList = service.getAllMeasure();
             
             if ( measureList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Measures" );
@@ -192,7 +195,7 @@ public class MeasureRestController extends BaseSpringRestController {
 	@PutMapping("/assignSemanticModel")
 	public void assignSemanticModel( @RequestBody AssignSemanticModelToMeasureCommand command ) {
 		try {
-			MeasureBusinessDelegate.getMeasureInstance().assignSemanticModel( command );   
+			service.assignSemanticModel( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign SemanticModel", exc );
@@ -206,7 +209,7 @@ public class MeasureRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignSemanticModel")
 	public void unAssignSemanticModel( @RequestBody(required=true)  UnAssignSemanticModelFromMeasureCommand command ) {
 		try {
-			MeasureBusinessDelegate.getMeasureInstance().unAssignSemanticModel( command );   
+			service.unAssignSemanticModel( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign SemanticModel", exc );
@@ -221,7 +224,7 @@ public class MeasureRestController extends BaseSpringRestController {
 	@PutMapping("/addToDatasets")
 	public void addToDatasets( @RequestBody(required=true) AssignDatasetsToMeasureCommand command ) {
 		try {
-			MeasureBusinessDelegate.getMeasureInstance().addToDatasets( command );   
+			service.addToDatasets( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Datasets", exc );
@@ -236,7 +239,7 @@ public class MeasureRestController extends BaseSpringRestController {
 	public void removeFromDatasets( 	@RequestBody(required=true) RemoveDatasetsFromMeasureCommand command )
 	{		
 		try {
-			MeasureBusinessDelegate.getMeasureInstance().removeFromDatasets( command );
+			service.removeFromDatasets( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Datasets", exc );
@@ -250,7 +253,7 @@ public class MeasureRestController extends BaseSpringRestController {
 	@PutMapping("/addToGlossaryTerms")
 	public void addToGlossaryTerms( @RequestBody(required=true) AssignGlossaryTermsToMeasureCommand command ) {
 		try {
-			MeasureBusinessDelegate.getMeasureInstance().addToGlossaryTerms( command );   
+			service.addToGlossaryTerms( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set GlossaryTerms", exc );
@@ -265,7 +268,7 @@ public class MeasureRestController extends BaseSpringRestController {
 	public void removeFromGlossaryTerms( 	@RequestBody(required=true) RemoveGlossaryTermsFromMeasureCommand command )
 	{		
 		try {
-			MeasureBusinessDelegate.getMeasureInstance().removeFromGlossaryTerms( command );
+			service.removeFromGlossaryTerms( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set GlossaryTerms", exc );
@@ -279,6 +282,7 @@ public class MeasureRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected Measure measure = null;
+	protected MeasureService service = null;
     private static final Logger LOGGER = Logger.getLogger(MeasureRestController.class.getName());
     
 }

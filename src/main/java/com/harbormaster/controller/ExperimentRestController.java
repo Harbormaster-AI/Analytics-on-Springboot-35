@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	ExperimentBusinessDelegate
+ *  	ExperimentService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/Experiment")
 public class ExperimentRestController extends BaseSpringRestController {
 
+	public ExperimentRestController( ExperimentService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a Experiment.  if not key provided, calls create, otherwise calls save
      * @param		Experiment	experiment
@@ -93,7 +96,7 @@ public class ExperimentRestController extends BaseSpringRestController {
     	Experiment entity = null;
 		try {       
         	
-			entity = ExperimentBusinessDelegate.getExperimentInstance().createExperiment( command );
+			entity = service.createExperiment( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class ExperimentRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateExperimentCommand
 			// -----------------------------------------------
-			entity = ExperimentBusinessDelegate.getExperimentInstance().updateExperiment(command);;
+			entity = service.updateExperiment(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "ExperimentController:update() - successfully update Experiment - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class ExperimentRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteExperimentCommand command ) {                
     	try {
-        	ExperimentBusinessDelegate delegate = ExperimentBusinessDelegate.getExperimentInstance();
+        	ExperimentService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted Experiment with key " + command.getExperimentId() );
@@ -151,7 +154,7 @@ public class ExperimentRestController extends BaseSpringRestController {
     	Experiment entity = null;
 
     	try {  
-    		entity = ExperimentBusinessDelegate.getExperimentInstance().getExperiment( new ExperimentFetchOneSummary( uuid ) );   
+    		entity = service.getExperiment( new ExperimentFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load Experiment using Id " + uuid );
@@ -171,7 +174,7 @@ public class ExperimentRestController extends BaseSpringRestController {
         
     	try {
             // load the Experiment
-            experimentList = ExperimentBusinessDelegate.getExperimentInstance().getAllExperiment();
+            experimentList = service.getAllExperiment();
             
             if ( experimentList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Experiments" );
@@ -192,7 +195,7 @@ public class ExperimentRestController extends BaseSpringRestController {
 	@PutMapping("/assignWorkspace")
 	public void assignWorkspace( @RequestBody AssignWorkspaceToExperimentCommand command ) {
 		try {
-			ExperimentBusinessDelegate.getExperimentInstance().assignWorkspace( command );   
+			service.assignWorkspace( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Workspace", exc );
@@ -206,7 +209,7 @@ public class ExperimentRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignWorkspace")
 	public void unAssignWorkspace( @RequestBody(required=true)  UnAssignWorkspaceFromExperimentCommand command ) {
 		try {
-			ExperimentBusinessDelegate.getExperimentInstance().unAssignWorkspace( command );   
+			service.unAssignWorkspace( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Workspace", exc );
@@ -221,7 +224,7 @@ public class ExperimentRestController extends BaseSpringRestController {
 	@PutMapping("/addToTrainingRuns")
 	public void addToTrainingRuns( @RequestBody(required=true) AssignTrainingRunsToExperimentCommand command ) {
 		try {
-			ExperimentBusinessDelegate.getExperimentInstance().addToTrainingRuns( command );   
+			service.addToTrainingRuns( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set TrainingRuns", exc );
@@ -236,7 +239,7 @@ public class ExperimentRestController extends BaseSpringRestController {
 	public void removeFromTrainingRuns( 	@RequestBody(required=true) RemoveTrainingRunsFromExperimentCommand command )
 	{		
 		try {
-			ExperimentBusinessDelegate.getExperimentInstance().removeFromTrainingRuns( command );
+			service.removeFromTrainingRuns( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set TrainingRuns", exc );
@@ -250,7 +253,7 @@ public class ExperimentRestController extends BaseSpringRestController {
 	@PutMapping("/addToModels")
 	public void addToModels( @RequestBody(required=true) AssignModelsToExperimentCommand command ) {
 		try {
-			ExperimentBusinessDelegate.getExperimentInstance().addToModels( command );   
+			service.addToModels( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Models", exc );
@@ -265,7 +268,7 @@ public class ExperimentRestController extends BaseSpringRestController {
 	public void removeFromModels( 	@RequestBody(required=true) RemoveModelsFromExperimentCommand command )
 	{		
 		try {
-			ExperimentBusinessDelegate.getExperimentInstance().removeFromModels( command );
+			service.removeFromModels( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Models", exc );
@@ -279,7 +282,7 @@ public class ExperimentRestController extends BaseSpringRestController {
 	@PutMapping("/addToNotebooks")
 	public void addToNotebooks( @RequestBody(required=true) AssignNotebooksToExperimentCommand command ) {
 		try {
-			ExperimentBusinessDelegate.getExperimentInstance().addToNotebooks( command );   
+			service.addToNotebooks( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Notebooks", exc );
@@ -294,7 +297,7 @@ public class ExperimentRestController extends BaseSpringRestController {
 	public void removeFromNotebooks( 	@RequestBody(required=true) RemoveNotebooksFromExperimentCommand command )
 	{		
 		try {
-			ExperimentBusinessDelegate.getExperimentInstance().removeFromNotebooks( command );
+			service.removeFromNotebooks( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Notebooks", exc );
@@ -308,6 +311,7 @@ public class ExperimentRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected Experiment experiment = null;
+	protected ExperimentService service = null;
     private static final Logger LOGGER = Logger.getLogger(ExperimentRestController.class.getName());
     
 }

@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	FeatureBusinessDelegate
+ *  	FeatureService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/Feature")
 public class FeatureRestController extends BaseSpringRestController {
 
+	public FeatureRestController( FeatureService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a Feature.  if not key provided, calls create, otherwise calls save
      * @param		Feature	feature
@@ -93,7 +96,7 @@ public class FeatureRestController extends BaseSpringRestController {
     	Feature entity = null;
 		try {       
         	
-			entity = FeatureBusinessDelegate.getFeatureInstance().createFeature( command );
+			entity = service.createFeature( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class FeatureRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateFeatureCommand
 			// -----------------------------------------------
-			entity = FeatureBusinessDelegate.getFeatureInstance().updateFeature(command);;
+			entity = service.updateFeature(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "FeatureController:update() - successfully update Feature - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class FeatureRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteFeatureCommand command ) {                
     	try {
-        	FeatureBusinessDelegate delegate = FeatureBusinessDelegate.getFeatureInstance();
+        	FeatureService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted Feature with key " + command.getFeatureId() );
@@ -151,7 +154,7 @@ public class FeatureRestController extends BaseSpringRestController {
     	Feature entity = null;
 
     	try {  
-    		entity = FeatureBusinessDelegate.getFeatureInstance().getFeature( new FeatureFetchOneSummary( uuid ) );   
+    		entity = service.getFeature( new FeatureFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load Feature using Id " + uuid );
@@ -171,7 +174,7 @@ public class FeatureRestController extends BaseSpringRestController {
         
     	try {
             // load the Feature
-            featureList = FeatureBusinessDelegate.getFeatureInstance().getAllFeature();
+            featureList = service.getAllFeature();
             
             if ( featureList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Features" );
@@ -192,7 +195,7 @@ public class FeatureRestController extends BaseSpringRestController {
 	@PutMapping("/assignFeatureSet")
 	public void assignFeatureSet( @RequestBody AssignFeatureSetToFeatureCommand command ) {
 		try {
-			FeatureBusinessDelegate.getFeatureInstance().assignFeatureSet( command );   
+			service.assignFeatureSet( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign FeatureSet", exc );
@@ -206,7 +209,7 @@ public class FeatureRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignFeatureSet")
 	public void unAssignFeatureSet( @RequestBody(required=true)  UnAssignFeatureSetFromFeatureCommand command ) {
 		try {
-			FeatureBusinessDelegate.getFeatureInstance().unAssignFeatureSet( command );   
+			service.unAssignFeatureSet( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign FeatureSet", exc );
@@ -221,7 +224,7 @@ public class FeatureRestController extends BaseSpringRestController {
 	@PutMapping("/addToSourceDatasets")
 	public void addToSourceDatasets( @RequestBody(required=true) AssignSourceDatasetsToFeatureCommand command ) {
 		try {
-			FeatureBusinessDelegate.getFeatureInstance().addToSourceDatasets( command );   
+			service.addToSourceDatasets( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set SourceDatasets", exc );
@@ -236,7 +239,7 @@ public class FeatureRestController extends BaseSpringRestController {
 	public void removeFromSourceDatasets( 	@RequestBody(required=true) RemoveSourceDatasetsFromFeatureCommand command )
 	{		
 		try {
-			FeatureBusinessDelegate.getFeatureInstance().removeFromSourceDatasets( command );
+			service.removeFromSourceDatasets( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set SourceDatasets", exc );
@@ -250,7 +253,7 @@ public class FeatureRestController extends BaseSpringRestController {
 	@PutMapping("/addToModels")
 	public void addToModels( @RequestBody(required=true) AssignModelsToFeatureCommand command ) {
 		try {
-			FeatureBusinessDelegate.getFeatureInstance().addToModels( command );   
+			service.addToModels( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Models", exc );
@@ -265,7 +268,7 @@ public class FeatureRestController extends BaseSpringRestController {
 	public void removeFromModels( 	@RequestBody(required=true) RemoveModelsFromFeatureCommand command )
 	{		
 		try {
-			FeatureBusinessDelegate.getFeatureInstance().removeFromModels( command );
+			service.removeFromModels( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Models", exc );
@@ -279,7 +282,7 @@ public class FeatureRestController extends BaseSpringRestController {
 	@PutMapping("/addToTrainingRuns")
 	public void addToTrainingRuns( @RequestBody(required=true) AssignTrainingRunsToFeatureCommand command ) {
 		try {
-			FeatureBusinessDelegate.getFeatureInstance().addToTrainingRuns( command );   
+			service.addToTrainingRuns( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set TrainingRuns", exc );
@@ -294,7 +297,7 @@ public class FeatureRestController extends BaseSpringRestController {
 	public void removeFromTrainingRuns( 	@RequestBody(required=true) RemoveTrainingRunsFromFeatureCommand command )
 	{		
 		try {
-			FeatureBusinessDelegate.getFeatureInstance().removeFromTrainingRuns( command );
+			service.removeFromTrainingRuns( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set TrainingRuns", exc );
@@ -308,6 +311,7 @@ public class FeatureRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected Feature feature = null;
+	protected FeatureService service = null;
     private static final Logger LOGGER = Logger.getLogger(FeatureRestController.class.getName());
     
 }

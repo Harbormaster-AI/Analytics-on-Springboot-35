@@ -94,7 +94,7 @@ public class QualityCheckTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a QualityCheck" );
 
         try {            
-            entity = QualityCheckBusinessDelegate.getQualityCheckInstance().createQualityCheck( generateNewCommand() );
+            entity = QualityCheckService.getQualityCheckInstance().createQualityCheck( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getQualityCheckId();
@@ -125,7 +125,7 @@ public class QualityCheckTest
         msg.append( theId );
 
         try {
-            entity = QualityCheckBusinessDelegate.getQualityCheckInstance().getQualityCheck( new QualityCheckFetchOneSummary(theId) );
+            entity = QualityCheckService.getQualityCheckInstance().getQualityCheck( new QualityCheckFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class QualityCheckTest
 
             LOGGER.info( "-- Now updating the created QualityCheck." );
             
-            QualityCheckBusinessDelegate proxy = QualityCheckBusinessDelegate.getQualityCheckInstance();            
+            QualityCheckService proxy = QualityCheckService.getQualityCheckInstance();            
             entity = proxy.updateQualityCheck( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class QualityCheckTest
         try {
         	DeleteQualityCheckCommand deleteCommand = new DeleteQualityCheckCommand( theId );
         	
-            QualityCheckBusinessDelegate.getQualityCheckInstance().delete( deleteCommand );
+            QualityCheckService.getQualityCheckInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted QualityCheck with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class QualityCheckTest
         List<QualityCheck> collection  = null;
 
         try {
-            // call the static get method on the QualityCheckBusinessDelegate
-            collection = QualityCheckBusinessDelegate.getQualityCheckInstance().getAllQualityCheck();
+            // call the static get method on the QualityCheckService
+            collection = QualityCheckService.getQualityCheckInstance().getAllQualityCheck();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

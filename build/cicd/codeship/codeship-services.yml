@@ -1,18 +1,18 @@
-AnalyticsonSpringboot35Service:
+Analyticsonspringboot35Service:
   build:
-    image: AnalyticsonSpringboot35
+    image: Analyticsonspringboot35
     dockerfile: Dockerfile_For_Setup
   cached: true
   volumes:
     - ./tmp/code:/code 
 adddocker:
   build:
-    image: Harbormaster/AnalyticsonSpringboot35
+    image: Harbormaster/Analyticsonspringboot35
     dockerfile: Dockerfile_For_CodeShip
   volumes_from:
-    - AnalyticsonSpringboot35Service
+    - Analyticsonspringboot35Service
 terraform:
   build:
     dockerfile: Dockerfile_For_Terraform
   volumes_from:
-    - AnalyticsonSpringboot35Service
+    - Analyticsonspringboot35Service

@@ -94,7 +94,7 @@ public class QualityRuleTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a QualityRule" );
 
         try {            
-            entity = QualityRuleBusinessDelegate.getQualityRuleInstance().createQualityRule( generateNewCommand() );
+            entity = QualityRuleService.getQualityRuleInstance().createQualityRule( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getQualityRuleId();
@@ -125,7 +125,7 @@ public class QualityRuleTest
         msg.append( theId );
 
         try {
-            entity = QualityRuleBusinessDelegate.getQualityRuleInstance().getQualityRule( new QualityRuleFetchOneSummary(theId) );
+            entity = QualityRuleService.getQualityRuleInstance().getQualityRule( new QualityRuleFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class QualityRuleTest
 
             LOGGER.info( "-- Now updating the created QualityRule." );
             
-            QualityRuleBusinessDelegate proxy = QualityRuleBusinessDelegate.getQualityRuleInstance();            
+            QualityRuleService proxy = QualityRuleService.getQualityRuleInstance();            
             entity = proxy.updateQualityRule( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class QualityRuleTest
         try {
         	DeleteQualityRuleCommand deleteCommand = new DeleteQualityRuleCommand( theId );
         	
-            QualityRuleBusinessDelegate.getQualityRuleInstance().delete( deleteCommand );
+            QualityRuleService.getQualityRuleInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted QualityRule with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class QualityRuleTest
         List<QualityRule> collection  = null;
 
         try {
-            // call the static get method on the QualityRuleBusinessDelegate
-            collection = QualityRuleBusinessDelegate.getQualityRuleInstance().getAllQualityRule();
+            // call the static get method on the QualityRuleService
+            collection = QualityRuleService.getQualityRuleInstance().getAllQualityRule();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

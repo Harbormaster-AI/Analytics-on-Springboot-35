@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	MetricBusinessDelegate
+ *  	MetricService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/Metric")
 public class MetricRestController extends BaseSpringRestController {
 
+	public MetricRestController( MetricService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a Metric.  if not key provided, calls create, otherwise calls save
      * @param		Metric	metric
@@ -93,7 +96,7 @@ public class MetricRestController extends BaseSpringRestController {
     	Metric entity = null;
 		try {       
         	
-			entity = MetricBusinessDelegate.getMetricInstance().createMetric( command );
+			entity = service.createMetric( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class MetricRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateMetricCommand
 			// -----------------------------------------------
-			entity = MetricBusinessDelegate.getMetricInstance().updateMetric(command);;
+			entity = service.updateMetric(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "MetricController:update() - successfully update Metric - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class MetricRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteMetricCommand command ) {                
     	try {
-        	MetricBusinessDelegate delegate = MetricBusinessDelegate.getMetricInstance();
+        	MetricService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted Metric with key " + command.getMetricId() );
@@ -151,7 +154,7 @@ public class MetricRestController extends BaseSpringRestController {
     	Metric entity = null;
 
     	try {  
-    		entity = MetricBusinessDelegate.getMetricInstance().getMetric( new MetricFetchOneSummary( uuid ) );   
+    		entity = service.getMetric( new MetricFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load Metric using Id " + uuid );
@@ -171,7 +174,7 @@ public class MetricRestController extends BaseSpringRestController {
         
     	try {
             // load the Metric
-            metricList = MetricBusinessDelegate.getMetricInstance().getAllMetric();
+            metricList = service.getAllMetric();
             
             if ( metricList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Metrics" );
@@ -192,7 +195,7 @@ public class MetricRestController extends BaseSpringRestController {
 	@PutMapping("/assignSemanticModel")
 	public void assignSemanticModel( @RequestBody AssignSemanticModelToMetricCommand command ) {
 		try {
-			MetricBusinessDelegate.getMetricInstance().assignSemanticModel( command );   
+			service.assignSemanticModel( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign SemanticModel", exc );
@@ -206,7 +209,7 @@ public class MetricRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignSemanticModel")
 	public void unAssignSemanticModel( @RequestBody(required=true)  UnAssignSemanticModelFromMetricCommand command ) {
 		try {
-			MetricBusinessDelegate.getMetricInstance().unAssignSemanticModel( command );   
+			service.unAssignSemanticModel( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign SemanticModel", exc );
@@ -221,7 +224,7 @@ public class MetricRestController extends BaseSpringRestController {
 	@PutMapping("/addToDatasets")
 	public void addToDatasets( @RequestBody(required=true) AssignDatasetsToMetricCommand command ) {
 		try {
-			MetricBusinessDelegate.getMetricInstance().addToDatasets( command );   
+			service.addToDatasets( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Datasets", exc );
@@ -236,7 +239,7 @@ public class MetricRestController extends BaseSpringRestController {
 	public void removeFromDatasets( 	@RequestBody(required=true) RemoveDatasetsFromMetricCommand command )
 	{		
 		try {
-			MetricBusinessDelegate.getMetricInstance().removeFromDatasets( command );
+			service.removeFromDatasets( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Datasets", exc );
@@ -250,7 +253,7 @@ public class MetricRestController extends BaseSpringRestController {
 	@PutMapping("/addToGlossaryTerms")
 	public void addToGlossaryTerms( @RequestBody(required=true) AssignGlossaryTermsToMetricCommand command ) {
 		try {
-			MetricBusinessDelegate.getMetricInstance().addToGlossaryTerms( command );   
+			service.addToGlossaryTerms( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set GlossaryTerms", exc );
@@ -265,7 +268,7 @@ public class MetricRestController extends BaseSpringRestController {
 	public void removeFromGlossaryTerms( 	@RequestBody(required=true) RemoveGlossaryTermsFromMetricCommand command )
 	{		
 		try {
-			MetricBusinessDelegate.getMetricInstance().removeFromGlossaryTerms( command );
+			service.removeFromGlossaryTerms( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set GlossaryTerms", exc );
@@ -279,7 +282,7 @@ public class MetricRestController extends BaseSpringRestController {
 	@PutMapping("/addToAlerts")
 	public void addToAlerts( @RequestBody(required=true) AssignAlertsToMetricCommand command ) {
 		try {
-			MetricBusinessDelegate.getMetricInstance().addToAlerts( command );   
+			service.addToAlerts( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Alerts", exc );
@@ -294,7 +297,7 @@ public class MetricRestController extends BaseSpringRestController {
 	public void removeFromAlerts( 	@RequestBody(required=true) RemoveAlertsFromMetricCommand command )
 	{		
 		try {
-			MetricBusinessDelegate.getMetricInstance().removeFromAlerts( command );
+			service.removeFromAlerts( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Alerts", exc );
@@ -308,7 +311,7 @@ public class MetricRestController extends BaseSpringRestController {
 	@PutMapping("/addToVisualizations")
 	public void addToVisualizations( @RequestBody(required=true) AssignVisualizationsToMetricCommand command ) {
 		try {
-			MetricBusinessDelegate.getMetricInstance().addToVisualizations( command );   
+			service.addToVisualizations( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Visualizations", exc );
@@ -323,7 +326,7 @@ public class MetricRestController extends BaseSpringRestController {
 	public void removeFromVisualizations( 	@RequestBody(required=true) RemoveVisualizationsFromMetricCommand command )
 	{		
 		try {
-			MetricBusinessDelegate.getMetricInstance().removeFromVisualizations( command );
+			service.removeFromVisualizations( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Visualizations", exc );
@@ -337,6 +340,7 @@ public class MetricRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected Metric metric = null;
+	protected MetricService service = null;
     private static final Logger LOGGER = Logger.getLogger(MetricRestController.class.getName());
     
 }

@@ -94,7 +94,7 @@ public class LineageNodeTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a LineageNode" );
 
         try {            
-            entity = LineageNodeBusinessDelegate.getLineageNodeInstance().createLineageNode( generateNewCommand() );
+            entity = LineageNodeService.getLineageNodeInstance().createLineageNode( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getLineageNodeId();
@@ -125,7 +125,7 @@ public class LineageNodeTest
         msg.append( theId );
 
         try {
-            entity = LineageNodeBusinessDelegate.getLineageNodeInstance().getLineageNode( new LineageNodeFetchOneSummary(theId) );
+            entity = LineageNodeService.getLineageNodeInstance().getLineageNode( new LineageNodeFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class LineageNodeTest
 
             LOGGER.info( "-- Now updating the created LineageNode." );
             
-            LineageNodeBusinessDelegate proxy = LineageNodeBusinessDelegate.getLineageNodeInstance();            
+            LineageNodeService proxy = LineageNodeService.getLineageNodeInstance();            
             entity = proxy.updateLineageNode( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class LineageNodeTest
         try {
         	DeleteLineageNodeCommand deleteCommand = new DeleteLineageNodeCommand( theId );
         	
-            LineageNodeBusinessDelegate.getLineageNodeInstance().delete( deleteCommand );
+            LineageNodeService.getLineageNodeInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted LineageNode with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class LineageNodeTest
         List<LineageNode> collection  = null;
 
         try {
-            // call the static get method on the LineageNodeBusinessDelegate
-            collection = LineageNodeBusinessDelegate.getLineageNodeInstance().getAllLineageNode();
+            // call the static get method on the LineageNodeService
+            collection = LineageNodeService.getLineageNodeInstance().getAllLineageNode();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

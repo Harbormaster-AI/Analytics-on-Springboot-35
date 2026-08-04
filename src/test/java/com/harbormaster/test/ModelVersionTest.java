@@ -94,7 +94,7 @@ public class ModelVersionTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a ModelVersion" );
 
         try {            
-            entity = ModelVersionBusinessDelegate.getModelVersionInstance().createModelVersion( generateNewCommand() );
+            entity = ModelVersionService.getModelVersionInstance().createModelVersion( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getModelVersionId();
@@ -125,7 +125,7 @@ public class ModelVersionTest
         msg.append( theId );
 
         try {
-            entity = ModelVersionBusinessDelegate.getModelVersionInstance().getModelVersion( new ModelVersionFetchOneSummary(theId) );
+            entity = ModelVersionService.getModelVersionInstance().getModelVersion( new ModelVersionFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class ModelVersionTest
 
             LOGGER.info( "-- Now updating the created ModelVersion." );
             
-            ModelVersionBusinessDelegate proxy = ModelVersionBusinessDelegate.getModelVersionInstance();            
+            ModelVersionService proxy = ModelVersionService.getModelVersionInstance();            
             entity = proxy.updateModelVersion( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class ModelVersionTest
         try {
         	DeleteModelVersionCommand deleteCommand = new DeleteModelVersionCommand( theId );
         	
-            ModelVersionBusinessDelegate.getModelVersionInstance().delete( deleteCommand );
+            ModelVersionService.getModelVersionInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted ModelVersion with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class ModelVersionTest
         List<ModelVersion> collection  = null;
 
         try {
-            // call the static get method on the ModelVersionBusinessDelegate
-            collection = ModelVersionBusinessDelegate.getModelVersionInstance().getAllModelVersion();
+            // call the static get method on the ModelVersionService
+            collection = ModelVersionService.getModelVersionInstance().getAllModelVersion();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

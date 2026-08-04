@@ -94,7 +94,7 @@ public class DataPipelineTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a DataPipeline" );
 
         try {            
-            entity = DataPipelineBusinessDelegate.getDataPipelineInstance().createDataPipeline( generateNewCommand() );
+            entity = DataPipelineService.getDataPipelineInstance().createDataPipeline( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getDataPipelineId();
@@ -125,7 +125,7 @@ public class DataPipelineTest
         msg.append( theId );
 
         try {
-            entity = DataPipelineBusinessDelegate.getDataPipelineInstance().getDataPipeline( new DataPipelineFetchOneSummary(theId) );
+            entity = DataPipelineService.getDataPipelineInstance().getDataPipeline( new DataPipelineFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class DataPipelineTest
 
             LOGGER.info( "-- Now updating the created DataPipeline." );
             
-            DataPipelineBusinessDelegate proxy = DataPipelineBusinessDelegate.getDataPipelineInstance();            
+            DataPipelineService proxy = DataPipelineService.getDataPipelineInstance();            
             entity = proxy.updateDataPipeline( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class DataPipelineTest
         try {
         	DeleteDataPipelineCommand deleteCommand = new DeleteDataPipelineCommand( theId );
         	
-            DataPipelineBusinessDelegate.getDataPipelineInstance().delete( deleteCommand );
+            DataPipelineService.getDataPipelineInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted DataPipeline with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class DataPipelineTest
         List<DataPipeline> collection  = null;
 
         try {
-            // call the static get method on the DataPipelineBusinessDelegate
-            collection = DataPipelineBusinessDelegate.getDataPipelineInstance().getAllDataPipeline();
+            // call the static get method on the DataPipelineService
+            collection = DataPipelineService.getDataPipelineInstance().getAllDataPipeline();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

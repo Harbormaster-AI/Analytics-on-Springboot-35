@@ -94,7 +94,7 @@ public class FraudSignalTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a FraudSignal" );
 
         try {            
-            entity = FraudSignalBusinessDelegate.getFraudSignalInstance().createFraudSignal( generateNewCommand() );
+            entity = FraudSignalService.getFraudSignalInstance().createFraudSignal( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getFraudSignalId();
@@ -125,7 +125,7 @@ public class FraudSignalTest
         msg.append( theId );
 
         try {
-            entity = FraudSignalBusinessDelegate.getFraudSignalInstance().getFraudSignal( new FraudSignalFetchOneSummary(theId) );
+            entity = FraudSignalService.getFraudSignalInstance().getFraudSignal( new FraudSignalFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class FraudSignalTest
 
             LOGGER.info( "-- Now updating the created FraudSignal." );
             
-            FraudSignalBusinessDelegate proxy = FraudSignalBusinessDelegate.getFraudSignalInstance();            
+            FraudSignalService proxy = FraudSignalService.getFraudSignalInstance();            
             entity = proxy.updateFraudSignal( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class FraudSignalTest
         try {
         	DeleteFraudSignalCommand deleteCommand = new DeleteFraudSignalCommand( theId );
         	
-            FraudSignalBusinessDelegate.getFraudSignalInstance().delete( deleteCommand );
+            FraudSignalService.getFraudSignalInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted FraudSignal with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class FraudSignalTest
         List<FraudSignal> collection  = null;
 
         try {
-            // call the static get method on the FraudSignalBusinessDelegate
-            collection = FraudSignalBusinessDelegate.getFraudSignalInstance().getAllFraudSignal();
+            // call the static get method on the FraudSignalService
+            collection = FraudSignalService.getFraudSignalInstance().getAllFraudSignal();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

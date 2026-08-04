@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	TrainingRunBusinessDelegate
+ *  	TrainingRunService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/TrainingRun")
 public class TrainingRunRestController extends BaseSpringRestController {
 
+	public TrainingRunRestController( TrainingRunService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a TrainingRun.  if not key provided, calls create, otherwise calls save
      * @param		TrainingRun	trainingRun
@@ -93,7 +96,7 @@ public class TrainingRunRestController extends BaseSpringRestController {
     	TrainingRun entity = null;
 		try {       
         	
-			entity = TrainingRunBusinessDelegate.getTrainingRunInstance().createTrainingRun( command );
+			entity = service.createTrainingRun( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class TrainingRunRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateTrainingRunCommand
 			// -----------------------------------------------
-			entity = TrainingRunBusinessDelegate.getTrainingRunInstance().updateTrainingRun(command);;
+			entity = service.updateTrainingRun(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "TrainingRunController:update() - successfully update TrainingRun - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class TrainingRunRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteTrainingRunCommand command ) {                
     	try {
-        	TrainingRunBusinessDelegate delegate = TrainingRunBusinessDelegate.getTrainingRunInstance();
+        	TrainingRunService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted TrainingRun with key " + command.getTrainingRunId() );
@@ -151,7 +154,7 @@ public class TrainingRunRestController extends BaseSpringRestController {
     	TrainingRun entity = null;
 
     	try {  
-    		entity = TrainingRunBusinessDelegate.getTrainingRunInstance().getTrainingRun( new TrainingRunFetchOneSummary( uuid ) );   
+    		entity = service.getTrainingRun( new TrainingRunFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load TrainingRun using Id " + uuid );
@@ -171,7 +174,7 @@ public class TrainingRunRestController extends BaseSpringRestController {
         
     	try {
             // load the TrainingRun
-            trainingRunList = TrainingRunBusinessDelegate.getTrainingRunInstance().getAllTrainingRun();
+            trainingRunList = service.getAllTrainingRun();
             
             if ( trainingRunList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all TrainingRuns" );
@@ -192,7 +195,7 @@ public class TrainingRunRestController extends BaseSpringRestController {
 	@PutMapping("/assignExperiment")
 	public void assignExperiment( @RequestBody AssignExperimentToTrainingRunCommand command ) {
 		try {
-			TrainingRunBusinessDelegate.getTrainingRunInstance().assignExperiment( command );   
+			service.assignExperiment( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Experiment", exc );
@@ -206,7 +209,7 @@ public class TrainingRunRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignExperiment")
 	public void unAssignExperiment( @RequestBody(required=true)  UnAssignExperimentFromTrainingRunCommand command ) {
 		try {
-			TrainingRunBusinessDelegate.getTrainingRunInstance().unAssignExperiment( command );   
+			service.unAssignExperiment( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Experiment", exc );
@@ -220,7 +223,7 @@ public class TrainingRunRestController extends BaseSpringRestController {
 	@PutMapping("/assignModelVersion")
 	public void assignModelVersion( @RequestBody AssignModelVersionToTrainingRunCommand command ) {
 		try {
-			TrainingRunBusinessDelegate.getTrainingRunInstance().assignModelVersion( command );   
+			service.assignModelVersion( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign ModelVersion", exc );
@@ -234,7 +237,7 @@ public class TrainingRunRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignModelVersion")
 	public void unAssignModelVersion( @RequestBody(required=true)  UnAssignModelVersionFromTrainingRunCommand command ) {
 		try {
-			TrainingRunBusinessDelegate.getTrainingRunInstance().unAssignModelVersion( command );   
+			service.unAssignModelVersion( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign ModelVersion", exc );
@@ -249,7 +252,7 @@ public class TrainingRunRestController extends BaseSpringRestController {
 	@PutMapping("/addToInputDatasets")
 	public void addToInputDatasets( @RequestBody(required=true) AssignInputDatasetsToTrainingRunCommand command ) {
 		try {
-			TrainingRunBusinessDelegate.getTrainingRunInstance().addToInputDatasets( command );   
+			service.addToInputDatasets( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set InputDatasets", exc );
@@ -264,7 +267,7 @@ public class TrainingRunRestController extends BaseSpringRestController {
 	public void removeFromInputDatasets( 	@RequestBody(required=true) RemoveInputDatasetsFromTrainingRunCommand command )
 	{		
 		try {
-			TrainingRunBusinessDelegate.getTrainingRunInstance().removeFromInputDatasets( command );
+			service.removeFromInputDatasets( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set InputDatasets", exc );
@@ -278,7 +281,7 @@ public class TrainingRunRestController extends BaseSpringRestController {
 	@PutMapping("/addToFeatures")
 	public void addToFeatures( @RequestBody(required=true) AssignFeaturesToTrainingRunCommand command ) {
 		try {
-			TrainingRunBusinessDelegate.getTrainingRunInstance().addToFeatures( command );   
+			service.addToFeatures( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Features", exc );
@@ -293,7 +296,7 @@ public class TrainingRunRestController extends BaseSpringRestController {
 	public void removeFromFeatures( 	@RequestBody(required=true) RemoveFeaturesFromTrainingRunCommand command )
 	{		
 		try {
-			TrainingRunBusinessDelegate.getTrainingRunInstance().removeFromFeatures( command );
+			service.removeFromFeatures( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Features", exc );
@@ -307,7 +310,7 @@ public class TrainingRunRestController extends BaseSpringRestController {
 	@PutMapping("/addToRunMetrics")
 	public void addToRunMetrics( @RequestBody(required=true) AssignRunMetricsToTrainingRunCommand command ) {
 		try {
-			TrainingRunBusinessDelegate.getTrainingRunInstance().addToRunMetrics( command );   
+			service.addToRunMetrics( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set RunMetrics", exc );
@@ -322,7 +325,7 @@ public class TrainingRunRestController extends BaseSpringRestController {
 	public void removeFromRunMetrics( 	@RequestBody(required=true) RemoveRunMetricsFromTrainingRunCommand command )
 	{		
 		try {
-			TrainingRunBusinessDelegate.getTrainingRunInstance().removeFromRunMetrics( command );
+			service.removeFromRunMetrics( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set RunMetrics", exc );
@@ -336,7 +339,7 @@ public class TrainingRunRestController extends BaseSpringRestController {
 	@PutMapping("/addToRunParameters")
 	public void addToRunParameters( @RequestBody(required=true) AssignRunParametersToTrainingRunCommand command ) {
 		try {
-			TrainingRunBusinessDelegate.getTrainingRunInstance().addToRunParameters( command );   
+			service.addToRunParameters( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set RunParameters", exc );
@@ -351,7 +354,7 @@ public class TrainingRunRestController extends BaseSpringRestController {
 	public void removeFromRunParameters( 	@RequestBody(required=true) RemoveRunParametersFromTrainingRunCommand command )
 	{		
 		try {
-			TrainingRunBusinessDelegate.getTrainingRunInstance().removeFromRunParameters( command );
+			service.removeFromRunParameters( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set RunParameters", exc );
@@ -365,6 +368,7 @@ public class TrainingRunRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected TrainingRun trainingRun = null;
+	protected TrainingRunService service = null;
     private static final Logger LOGGER = Logger.getLogger(TrainingRunRestController.class.getName());
     
 }

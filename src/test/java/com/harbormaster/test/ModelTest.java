@@ -94,7 +94,7 @@ public class ModelTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a Model" );
 
         try {            
-            entity = ModelBusinessDelegate.getModelInstance().createModel( generateNewCommand() );
+            entity = ModelService.getModelInstance().createModel( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getModelId();
@@ -125,7 +125,7 @@ public class ModelTest
         msg.append( theId );
 
         try {
-            entity = ModelBusinessDelegate.getModelInstance().getModel( new ModelFetchOneSummary(theId) );
+            entity = ModelService.getModelInstance().getModel( new ModelFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class ModelTest
 
             LOGGER.info( "-- Now updating the created Model." );
             
-            ModelBusinessDelegate proxy = ModelBusinessDelegate.getModelInstance();            
+            ModelService proxy = ModelService.getModelInstance();            
             entity = proxy.updateModel( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class ModelTest
         try {
         	DeleteModelCommand deleteCommand = new DeleteModelCommand( theId );
         	
-            ModelBusinessDelegate.getModelInstance().delete( deleteCommand );
+            ModelService.getModelInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted Model with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class ModelTest
         List<Model> collection  = null;
 
         try {
-            // call the static get method on the ModelBusinessDelegate
-            collection = ModelBusinessDelegate.getModelInstance().getAllModel();
+            // call the static get method on the ModelService
+            collection = ModelService.getModelInstance().getAllModel();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

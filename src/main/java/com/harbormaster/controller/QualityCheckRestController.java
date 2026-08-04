@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	QualityCheckBusinessDelegate
+ *  	QualityCheckService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/QualityCheck")
 public class QualityCheckRestController extends BaseSpringRestController {
 
+	public QualityCheckRestController( QualityCheckService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a QualityCheck.  if not key provided, calls create, otherwise calls save
      * @param		QualityCheck	qualityCheck
@@ -93,7 +96,7 @@ public class QualityCheckRestController extends BaseSpringRestController {
     	QualityCheck entity = null;
 		try {       
         	
-			entity = QualityCheckBusinessDelegate.getQualityCheckInstance().createQualityCheck( command );
+			entity = service.createQualityCheck( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class QualityCheckRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateQualityCheckCommand
 			// -----------------------------------------------
-			entity = QualityCheckBusinessDelegate.getQualityCheckInstance().updateQualityCheck(command);;
+			entity = service.updateQualityCheck(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "QualityCheckController:update() - successfully update QualityCheck - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class QualityCheckRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteQualityCheckCommand command ) {                
     	try {
-        	QualityCheckBusinessDelegate delegate = QualityCheckBusinessDelegate.getQualityCheckInstance();
+        	QualityCheckService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted QualityCheck with key " + command.getQualityCheckId() );
@@ -151,7 +154,7 @@ public class QualityCheckRestController extends BaseSpringRestController {
     	QualityCheck entity = null;
 
     	try {  
-    		entity = QualityCheckBusinessDelegate.getQualityCheckInstance().getQualityCheck( new QualityCheckFetchOneSummary( uuid ) );   
+    		entity = service.getQualityCheck( new QualityCheckFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load QualityCheck using Id " + uuid );
@@ -171,7 +174,7 @@ public class QualityCheckRestController extends BaseSpringRestController {
         
     	try {
             // load the QualityCheck
-            qualityCheckList = QualityCheckBusinessDelegate.getQualityCheckInstance().getAllQualityCheck();
+            qualityCheckList = service.getAllQualityCheck();
             
             if ( qualityCheckList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all QualityChecks" );
@@ -192,7 +195,7 @@ public class QualityCheckRestController extends BaseSpringRestController {
 	@PutMapping("/assignRule")
 	public void assignRule( @RequestBody AssignRuleToQualityCheckCommand command ) {
 		try {
-			QualityCheckBusinessDelegate.getQualityCheckInstance().assignRule( command );   
+			service.assignRule( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Rule", exc );
@@ -206,7 +209,7 @@ public class QualityCheckRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignRule")
 	public void unAssignRule( @RequestBody(required=true)  UnAssignRuleFromQualityCheckCommand command ) {
 		try {
-			QualityCheckBusinessDelegate.getQualityCheckInstance().unAssignRule( command );   
+			service.unAssignRule( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Rule", exc );
@@ -220,7 +223,7 @@ public class QualityCheckRestController extends BaseSpringRestController {
 	@PutMapping("/assignDataset")
 	public void assignDataset( @RequestBody AssignDatasetToQualityCheckCommand command ) {
 		try {
-			QualityCheckBusinessDelegate.getQualityCheckInstance().assignDataset( command );   
+			service.assignDataset( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Dataset", exc );
@@ -234,7 +237,7 @@ public class QualityCheckRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignDataset")
 	public void unAssignDataset( @RequestBody(required=true)  UnAssignDatasetFromQualityCheckCommand command ) {
 		try {
-			QualityCheckBusinessDelegate.getQualityCheckInstance().unAssignDataset( command );   
+			service.unAssignDataset( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Dataset", exc );
@@ -249,6 +252,7 @@ public class QualityCheckRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected QualityCheck qualityCheck = null;
+	protected QualityCheckService service = null;
     private static final Logger LOGGER = Logger.getLogger(QualityCheckRestController.class.getName());
     
 }

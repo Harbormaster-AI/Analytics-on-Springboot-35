@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	DataPipelineBusinessDelegate
+ *  	DataPipelineService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/DataPipeline")
 public class DataPipelineRestController extends BaseSpringRestController {
 
+	public DataPipelineRestController( DataPipelineService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a DataPipeline.  if not key provided, calls create, otherwise calls save
      * @param		DataPipeline	dataPipeline
@@ -93,7 +96,7 @@ public class DataPipelineRestController extends BaseSpringRestController {
     	DataPipeline entity = null;
 		try {       
         	
-			entity = DataPipelineBusinessDelegate.getDataPipelineInstance().createDataPipeline( command );
+			entity = service.createDataPipeline( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class DataPipelineRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateDataPipelineCommand
 			// -----------------------------------------------
-			entity = DataPipelineBusinessDelegate.getDataPipelineInstance().updateDataPipeline(command);;
+			entity = service.updateDataPipeline(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "DataPipelineController:update() - successfully update DataPipeline - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class DataPipelineRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteDataPipelineCommand command ) {                
     	try {
-        	DataPipelineBusinessDelegate delegate = DataPipelineBusinessDelegate.getDataPipelineInstance();
+        	DataPipelineService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted DataPipeline with key " + command.getDataPipelineId() );
@@ -151,7 +154,7 @@ public class DataPipelineRestController extends BaseSpringRestController {
     	DataPipeline entity = null;
 
     	try {  
-    		entity = DataPipelineBusinessDelegate.getDataPipelineInstance().getDataPipeline( new DataPipelineFetchOneSummary( uuid ) );   
+    		entity = service.getDataPipeline( new DataPipelineFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load DataPipeline using Id " + uuid );
@@ -171,7 +174,7 @@ public class DataPipelineRestController extends BaseSpringRestController {
         
     	try {
             // load the DataPipeline
-            dataPipelineList = DataPipelineBusinessDelegate.getDataPipelineInstance().getAllDataPipeline();
+            dataPipelineList = service.getAllDataPipeline();
             
             if ( dataPipelineList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all DataPipelines" );
@@ -192,7 +195,7 @@ public class DataPipelineRestController extends BaseSpringRestController {
 	@PutMapping("/assignWorkspace")
 	public void assignWorkspace( @RequestBody AssignWorkspaceToDataPipelineCommand command ) {
 		try {
-			DataPipelineBusinessDelegate.getDataPipelineInstance().assignWorkspace( command );   
+			service.assignWorkspace( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Workspace", exc );
@@ -206,7 +209,7 @@ public class DataPipelineRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignWorkspace")
 	public void unAssignWorkspace( @RequestBody(required=true)  UnAssignWorkspaceFromDataPipelineCommand command ) {
 		try {
-			DataPipelineBusinessDelegate.getDataPipelineInstance().unAssignWorkspace( command );   
+			service.unAssignWorkspace( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Workspace", exc );
@@ -220,7 +223,7 @@ public class DataPipelineRestController extends BaseSpringRestController {
 	@PutMapping("/assignLineageNode")
 	public void assignLineageNode( @RequestBody AssignLineageNodeToDataPipelineCommand command ) {
 		try {
-			DataPipelineBusinessDelegate.getDataPipelineInstance().assignLineageNode( command );   
+			service.assignLineageNode( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign LineageNode", exc );
@@ -234,7 +237,7 @@ public class DataPipelineRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignLineageNode")
 	public void unAssignLineageNode( @RequestBody(required=true)  UnAssignLineageNodeFromDataPipelineCommand command ) {
 		try {
-			DataPipelineBusinessDelegate.getDataPipelineInstance().unAssignLineageNode( command );   
+			service.unAssignLineageNode( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign LineageNode", exc );
@@ -249,7 +252,7 @@ public class DataPipelineRestController extends BaseSpringRestController {
 	@PutMapping("/addToTasks")
 	public void addToTasks( @RequestBody(required=true) AssignTasksToDataPipelineCommand command ) {
 		try {
-			DataPipelineBusinessDelegate.getDataPipelineInstance().addToTasks( command );   
+			service.addToTasks( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Tasks", exc );
@@ -264,7 +267,7 @@ public class DataPipelineRestController extends BaseSpringRestController {
 	public void removeFromTasks( 	@RequestBody(required=true) RemoveTasksFromDataPipelineCommand command )
 	{		
 		try {
-			DataPipelineBusinessDelegate.getDataPipelineInstance().removeFromTasks( command );
+			service.removeFromTasks( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Tasks", exc );
@@ -278,7 +281,7 @@ public class DataPipelineRestController extends BaseSpringRestController {
 	@PutMapping("/addToSources")
 	public void addToSources( @RequestBody(required=true) AssignSourcesToDataPipelineCommand command ) {
 		try {
-			DataPipelineBusinessDelegate.getDataPipelineInstance().addToSources( command );   
+			service.addToSources( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Sources", exc );
@@ -293,7 +296,7 @@ public class DataPipelineRestController extends BaseSpringRestController {
 	public void removeFromSources( 	@RequestBody(required=true) RemoveSourcesFromDataPipelineCommand command )
 	{		
 		try {
-			DataPipelineBusinessDelegate.getDataPipelineInstance().removeFromSources( command );
+			service.removeFromSources( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Sources", exc );
@@ -307,7 +310,7 @@ public class DataPipelineRestController extends BaseSpringRestController {
 	@PutMapping("/addToOutputs")
 	public void addToOutputs( @RequestBody(required=true) AssignOutputsToDataPipelineCommand command ) {
 		try {
-			DataPipelineBusinessDelegate.getDataPipelineInstance().addToOutputs( command );   
+			service.addToOutputs( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Outputs", exc );
@@ -322,7 +325,7 @@ public class DataPipelineRestController extends BaseSpringRestController {
 	public void removeFromOutputs( 	@RequestBody(required=true) RemoveOutputsFromDataPipelineCommand command )
 	{		
 		try {
-			DataPipelineBusinessDelegate.getDataPipelineInstance().removeFromOutputs( command );
+			service.removeFromOutputs( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Outputs", exc );
@@ -336,6 +339,7 @@ public class DataPipelineRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected DataPipeline dataPipeline = null;
+	protected DataPipelineService service = null;
     private static final Logger LOGGER = Logger.getLogger(DataPipelineRestController.class.getName());
     
 }

@@ -94,7 +94,7 @@ public class FeatureSetTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a FeatureSet" );
 
         try {            
-            entity = FeatureSetBusinessDelegate.getFeatureSetInstance().createFeatureSet( generateNewCommand() );
+            entity = FeatureSetService.getFeatureSetInstance().createFeatureSet( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getFeatureSetId();
@@ -125,7 +125,7 @@ public class FeatureSetTest
         msg.append( theId );
 
         try {
-            entity = FeatureSetBusinessDelegate.getFeatureSetInstance().getFeatureSet( new FeatureSetFetchOneSummary(theId) );
+            entity = FeatureSetService.getFeatureSetInstance().getFeatureSet( new FeatureSetFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class FeatureSetTest
 
             LOGGER.info( "-- Now updating the created FeatureSet." );
             
-            FeatureSetBusinessDelegate proxy = FeatureSetBusinessDelegate.getFeatureSetInstance();            
+            FeatureSetService proxy = FeatureSetService.getFeatureSetInstance();            
             entity = proxy.updateFeatureSet( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class FeatureSetTest
         try {
         	DeleteFeatureSetCommand deleteCommand = new DeleteFeatureSetCommand( theId );
         	
-            FeatureSetBusinessDelegate.getFeatureSetInstance().delete( deleteCommand );
+            FeatureSetService.getFeatureSetInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted FeatureSet with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class FeatureSetTest
         List<FeatureSet> collection  = null;
 
         try {
-            // call the static get method on the FeatureSetBusinessDelegate
-            collection = FeatureSetBusinessDelegate.getFeatureSetInstance().getAllFeatureSet();
+            // call the static get method on the FeatureSetService
+            collection = FeatureSetService.getFeatureSetInstance().getAllFeatureSet();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

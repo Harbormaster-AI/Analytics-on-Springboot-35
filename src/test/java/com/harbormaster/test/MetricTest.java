@@ -94,7 +94,7 @@ public class MetricTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a Metric" );
 
         try {            
-            entity = MetricBusinessDelegate.getMetricInstance().createMetric( generateNewCommand() );
+            entity = MetricService.getMetricInstance().createMetric( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getMetricId();
@@ -125,7 +125,7 @@ public class MetricTest
         msg.append( theId );
 
         try {
-            entity = MetricBusinessDelegate.getMetricInstance().getMetric( new MetricFetchOneSummary(theId) );
+            entity = MetricService.getMetricInstance().getMetric( new MetricFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class MetricTest
 
             LOGGER.info( "-- Now updating the created Metric." );
             
-            MetricBusinessDelegate proxy = MetricBusinessDelegate.getMetricInstance();            
+            MetricService proxy = MetricService.getMetricInstance();            
             entity = proxy.updateMetric( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class MetricTest
         try {
         	DeleteMetricCommand deleteCommand = new DeleteMetricCommand( theId );
         	
-            MetricBusinessDelegate.getMetricInstance().delete( deleteCommand );
+            MetricService.getMetricInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted Metric with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class MetricTest
         List<Metric> collection  = null;
 
         try {
-            // call the static get method on the MetricBusinessDelegate
-            collection = MetricBusinessDelegate.getMetricInstance().getAllMetric();
+            // call the static get method on the MetricService
+            collection = MetricService.getMetricInstance().getAllMetric();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

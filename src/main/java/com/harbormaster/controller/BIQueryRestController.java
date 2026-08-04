@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	BIQueryBusinessDelegate
+ *  	BIQueryService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/BIQuery")
 public class BIQueryRestController extends BaseSpringRestController {
 
+	public BIQueryRestController( BIQueryService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a BIQuery.  if not key provided, calls create, otherwise calls save
      * @param		BIQuery	bIQuery
@@ -93,7 +96,7 @@ public class BIQueryRestController extends BaseSpringRestController {
     	BIQuery entity = null;
 		try {       
         	
-			entity = BIQueryBusinessDelegate.getBIQueryInstance().createBIQuery( command );
+			entity = service.createBIQuery( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class BIQueryRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateBIQueryCommand
 			// -----------------------------------------------
-			entity = BIQueryBusinessDelegate.getBIQueryInstance().updateBIQuery(command);;
+			entity = service.updateBIQuery(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "BIQueryController:update() - successfully update BIQuery - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class BIQueryRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteBIQueryCommand command ) {                
     	try {
-        	BIQueryBusinessDelegate delegate = BIQueryBusinessDelegate.getBIQueryInstance();
+        	BIQueryService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted BIQuery with key " + command.getBIQueryId() );
@@ -151,7 +154,7 @@ public class BIQueryRestController extends BaseSpringRestController {
     	BIQuery entity = null;
 
     	try {  
-    		entity = BIQueryBusinessDelegate.getBIQueryInstance().getBIQuery( new BIQueryFetchOneSummary( uuid ) );   
+    		entity = service.getBIQuery( new BIQueryFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load BIQuery using Id " + uuid );
@@ -171,7 +174,7 @@ public class BIQueryRestController extends BaseSpringRestController {
         
     	try {
             // load the BIQuery
-            bIQueryList = BIQueryBusinessDelegate.getBIQueryInstance().getAllBIQuery();
+            bIQueryList = service.getAllBIQuery();
             
             if ( bIQueryList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all BIQuerys" );
@@ -192,7 +195,7 @@ public class BIQueryRestController extends BaseSpringRestController {
 	@PutMapping("/assignWorkspace")
 	public void assignWorkspace( @RequestBody AssignWorkspaceToBIQueryCommand command ) {
 		try {
-			BIQueryBusinessDelegate.getBIQueryInstance().assignWorkspace( command );   
+			service.assignWorkspace( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Workspace", exc );
@@ -206,7 +209,7 @@ public class BIQueryRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignWorkspace")
 	public void unAssignWorkspace( @RequestBody(required=true)  UnAssignWorkspaceFromBIQueryCommand command ) {
 		try {
-			BIQueryBusinessDelegate.getBIQueryInstance().unAssignWorkspace( command );   
+			service.unAssignWorkspace( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Workspace", exc );
@@ -221,7 +224,7 @@ public class BIQueryRestController extends BaseSpringRestController {
 	@PutMapping("/addToDatasets")
 	public void addToDatasets( @RequestBody(required=true) AssignDatasetsToBIQueryCommand command ) {
 		try {
-			BIQueryBusinessDelegate.getBIQueryInstance().addToDatasets( command );   
+			service.addToDatasets( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Datasets", exc );
@@ -236,7 +239,7 @@ public class BIQueryRestController extends BaseSpringRestController {
 	public void removeFromDatasets( 	@RequestBody(required=true) RemoveDatasetsFromBIQueryCommand command )
 	{		
 		try {
-			BIQueryBusinessDelegate.getBIQueryInstance().removeFromDatasets( command );
+			service.removeFromDatasets( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Datasets", exc );
@@ -250,7 +253,7 @@ public class BIQueryRestController extends BaseSpringRestController {
 	@PutMapping("/addToReports")
 	public void addToReports( @RequestBody(required=true) AssignReportsToBIQueryCommand command ) {
 		try {
-			BIQueryBusinessDelegate.getBIQueryInstance().addToReports( command );   
+			service.addToReports( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Reports", exc );
@@ -265,7 +268,7 @@ public class BIQueryRestController extends BaseSpringRestController {
 	public void removeFromReports( 	@RequestBody(required=true) RemoveReportsFromBIQueryCommand command )
 	{		
 		try {
-			BIQueryBusinessDelegate.getBIQueryInstance().removeFromReports( command );
+			service.removeFromReports( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Reports", exc );
@@ -279,7 +282,7 @@ public class BIQueryRestController extends BaseSpringRestController {
 	@PutMapping("/addToDashboards")
 	public void addToDashboards( @RequestBody(required=true) AssignDashboardsToBIQueryCommand command ) {
 		try {
-			BIQueryBusinessDelegate.getBIQueryInstance().addToDashboards( command );   
+			service.addToDashboards( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Dashboards", exc );
@@ -294,7 +297,7 @@ public class BIQueryRestController extends BaseSpringRestController {
 	public void removeFromDashboards( 	@RequestBody(required=true) RemoveDashboardsFromBIQueryCommand command )
 	{		
 		try {
-			BIQueryBusinessDelegate.getBIQueryInstance().removeFromDashboards( command );
+			service.removeFromDashboards( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Dashboards", exc );
@@ -308,7 +311,7 @@ public class BIQueryRestController extends BaseSpringRestController {
 	@PutMapping("/addToNotebooks")
 	public void addToNotebooks( @RequestBody(required=true) AssignNotebooksToBIQueryCommand command ) {
 		try {
-			BIQueryBusinessDelegate.getBIQueryInstance().addToNotebooks( command );   
+			service.addToNotebooks( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Notebooks", exc );
@@ -323,7 +326,7 @@ public class BIQueryRestController extends BaseSpringRestController {
 	public void removeFromNotebooks( 	@RequestBody(required=true) RemoveNotebooksFromBIQueryCommand command )
 	{		
 		try {
-			BIQueryBusinessDelegate.getBIQueryInstance().removeFromNotebooks( command );
+			service.removeFromNotebooks( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Notebooks", exc );
@@ -337,6 +340,7 @@ public class BIQueryRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected BIQuery bIQuery = null;
+	protected BIQueryService service = null;
     private static final Logger LOGGER = Logger.getLogger(BIQueryRestController.class.getName());
     
 }

@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	InferenceEndpointBusinessDelegate
+ *  	InferenceEndpointService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/InferenceEndpoint")
 public class InferenceEndpointRestController extends BaseSpringRestController {
 
+	public InferenceEndpointRestController( InferenceEndpointService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a InferenceEndpoint.  if not key provided, calls create, otherwise calls save
      * @param		InferenceEndpoint	inferenceEndpoint
@@ -93,7 +96,7 @@ public class InferenceEndpointRestController extends BaseSpringRestController {
     	InferenceEndpoint entity = null;
 		try {       
         	
-			entity = InferenceEndpointBusinessDelegate.getInferenceEndpointInstance().createInferenceEndpoint( command );
+			entity = service.createInferenceEndpoint( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class InferenceEndpointRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateInferenceEndpointCommand
 			// -----------------------------------------------
-			entity = InferenceEndpointBusinessDelegate.getInferenceEndpointInstance().updateInferenceEndpoint(command);;
+			entity = service.updateInferenceEndpoint(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "InferenceEndpointController:update() - successfully update InferenceEndpoint - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class InferenceEndpointRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteInferenceEndpointCommand command ) {                
     	try {
-        	InferenceEndpointBusinessDelegate delegate = InferenceEndpointBusinessDelegate.getInferenceEndpointInstance();
+        	InferenceEndpointService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted InferenceEndpoint with key " + command.getInferenceEndpointId() );
@@ -151,7 +154,7 @@ public class InferenceEndpointRestController extends BaseSpringRestController {
     	InferenceEndpoint entity = null;
 
     	try {  
-    		entity = InferenceEndpointBusinessDelegate.getInferenceEndpointInstance().getInferenceEndpoint( new InferenceEndpointFetchOneSummary( uuid ) );   
+    		entity = service.getInferenceEndpoint( new InferenceEndpointFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load InferenceEndpoint using Id " + uuid );
@@ -171,7 +174,7 @@ public class InferenceEndpointRestController extends BaseSpringRestController {
         
     	try {
             // load the InferenceEndpoint
-            inferenceEndpointList = InferenceEndpointBusinessDelegate.getInferenceEndpointInstance().getAllInferenceEndpoint();
+            inferenceEndpointList = service.getAllInferenceEndpoint();
             
             if ( inferenceEndpointList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all InferenceEndpoints" );
@@ -192,7 +195,7 @@ public class InferenceEndpointRestController extends BaseSpringRestController {
 	@PutMapping("/assignModelVersion")
 	public void assignModelVersion( @RequestBody AssignModelVersionToInferenceEndpointCommand command ) {
 		try {
-			InferenceEndpointBusinessDelegate.getInferenceEndpointInstance().assignModelVersion( command );   
+			service.assignModelVersion( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign ModelVersion", exc );
@@ -206,7 +209,7 @@ public class InferenceEndpointRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignModelVersion")
 	public void unAssignModelVersion( @RequestBody(required=true)  UnAssignModelVersionFromInferenceEndpointCommand command ) {
 		try {
-			InferenceEndpointBusinessDelegate.getInferenceEndpointInstance().unAssignModelVersion( command );   
+			service.unAssignModelVersion( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign ModelVersion", exc );
@@ -220,7 +223,7 @@ public class InferenceEndpointRestController extends BaseSpringRestController {
 	@PutMapping("/assignWorkspace")
 	public void assignWorkspace( @RequestBody AssignWorkspaceToInferenceEndpointCommand command ) {
 		try {
-			InferenceEndpointBusinessDelegate.getInferenceEndpointInstance().assignWorkspace( command );   
+			service.assignWorkspace( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Workspace", exc );
@@ -234,7 +237,7 @@ public class InferenceEndpointRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignWorkspace")
 	public void unAssignWorkspace( @RequestBody(required=true)  UnAssignWorkspaceFromInferenceEndpointCommand command ) {
 		try {
-			InferenceEndpointBusinessDelegate.getInferenceEndpointInstance().unAssignWorkspace( command );   
+			service.unAssignWorkspace( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Workspace", exc );
@@ -249,7 +252,7 @@ public class InferenceEndpointRestController extends BaseSpringRestController {
 	@PutMapping("/addToPredictions")
 	public void addToPredictions( @RequestBody(required=true) AssignPredictionsToInferenceEndpointCommand command ) {
 		try {
-			InferenceEndpointBusinessDelegate.getInferenceEndpointInstance().addToPredictions( command );   
+			service.addToPredictions( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Predictions", exc );
@@ -264,7 +267,7 @@ public class InferenceEndpointRestController extends BaseSpringRestController {
 	public void removeFromPredictions( 	@RequestBody(required=true) RemovePredictionsFromInferenceEndpointCommand command )
 	{		
 		try {
-			InferenceEndpointBusinessDelegate.getInferenceEndpointInstance().removeFromPredictions( command );
+			service.removeFromPredictions( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Predictions", exc );
@@ -278,6 +281,7 @@ public class InferenceEndpointRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected InferenceEndpoint inferenceEndpoint = null;
+	protected InferenceEndpointService service = null;
     private static final Logger LOGGER = Logger.getLogger(InferenceEndpointRestController.class.getName());
     
 }

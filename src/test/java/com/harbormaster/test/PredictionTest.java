@@ -94,7 +94,7 @@ public class PredictionTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a Prediction" );
 
         try {            
-            entity = PredictionBusinessDelegate.getPredictionInstance().createPrediction( generateNewCommand() );
+            entity = PredictionService.getPredictionInstance().createPrediction( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getPredictionId();
@@ -125,7 +125,7 @@ public class PredictionTest
         msg.append( theId );
 
         try {
-            entity = PredictionBusinessDelegate.getPredictionInstance().getPrediction( new PredictionFetchOneSummary(theId) );
+            entity = PredictionService.getPredictionInstance().getPrediction( new PredictionFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class PredictionTest
 
             LOGGER.info( "-- Now updating the created Prediction." );
             
-            PredictionBusinessDelegate proxy = PredictionBusinessDelegate.getPredictionInstance();            
+            PredictionService proxy = PredictionService.getPredictionInstance();            
             entity = proxy.updatePrediction( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class PredictionTest
         try {
         	DeletePredictionCommand deleteCommand = new DeletePredictionCommand( theId );
         	
-            PredictionBusinessDelegate.getPredictionInstance().delete( deleteCommand );
+            PredictionService.getPredictionInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted Prediction with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class PredictionTest
         List<Prediction> collection  = null;
 
         try {
-            // call the static get method on the PredictionBusinessDelegate
-            collection = PredictionBusinessDelegate.getPredictionInstance().getAllPrediction();
+            // call the static get method on the PredictionService
+            collection = PredictionService.getPredictionInstance().getAllPrediction();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

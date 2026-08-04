@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	EvaluationMetricBusinessDelegate
+ *  	EvaluationMetricService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/EvaluationMetric")
 public class EvaluationMetricRestController extends BaseSpringRestController {
 
+	public EvaluationMetricRestController( EvaluationMetricService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a EvaluationMetric.  if not key provided, calls create, otherwise calls save
      * @param		EvaluationMetric	evaluationMetric
@@ -93,7 +96,7 @@ public class EvaluationMetricRestController extends BaseSpringRestController {
     	EvaluationMetric entity = null;
 		try {       
         	
-			entity = EvaluationMetricBusinessDelegate.getEvaluationMetricInstance().createEvaluationMetric( command );
+			entity = service.createEvaluationMetric( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class EvaluationMetricRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateEvaluationMetricCommand
 			// -----------------------------------------------
-			entity = EvaluationMetricBusinessDelegate.getEvaluationMetricInstance().updateEvaluationMetric(command);;
+			entity = service.updateEvaluationMetric(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "EvaluationMetricController:update() - successfully update EvaluationMetric - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class EvaluationMetricRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteEvaluationMetricCommand command ) {                
     	try {
-        	EvaluationMetricBusinessDelegate delegate = EvaluationMetricBusinessDelegate.getEvaluationMetricInstance();
+        	EvaluationMetricService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted EvaluationMetric with key " + command.getEvaluationMetricId() );
@@ -151,7 +154,7 @@ public class EvaluationMetricRestController extends BaseSpringRestController {
     	EvaluationMetric entity = null;
 
     	try {  
-    		entity = EvaluationMetricBusinessDelegate.getEvaluationMetricInstance().getEvaluationMetric( new EvaluationMetricFetchOneSummary( uuid ) );   
+    		entity = service.getEvaluationMetric( new EvaluationMetricFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load EvaluationMetric using Id " + uuid );
@@ -171,7 +174,7 @@ public class EvaluationMetricRestController extends BaseSpringRestController {
         
     	try {
             // load the EvaluationMetric
-            evaluationMetricList = EvaluationMetricBusinessDelegate.getEvaluationMetricInstance().getAllEvaluationMetric();
+            evaluationMetricList = service.getAllEvaluationMetric();
             
             if ( evaluationMetricList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all EvaluationMetrics" );
@@ -192,7 +195,7 @@ public class EvaluationMetricRestController extends BaseSpringRestController {
 	@PutMapping("/assignModelVersion")
 	public void assignModelVersion( @RequestBody AssignModelVersionToEvaluationMetricCommand command ) {
 		try {
-			EvaluationMetricBusinessDelegate.getEvaluationMetricInstance().assignModelVersion( command );   
+			service.assignModelVersion( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign ModelVersion", exc );
@@ -206,7 +209,7 @@ public class EvaluationMetricRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignModelVersion")
 	public void unAssignModelVersion( @RequestBody(required=true)  UnAssignModelVersionFromEvaluationMetricCommand command ) {
 		try {
-			EvaluationMetricBusinessDelegate.getEvaluationMetricInstance().unAssignModelVersion( command );   
+			service.unAssignModelVersion( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign ModelVersion", exc );
@@ -220,7 +223,7 @@ public class EvaluationMetricRestController extends BaseSpringRestController {
 	@PutMapping("/assignMetric")
 	public void assignMetric( @RequestBody AssignMetricToEvaluationMetricCommand command ) {
 		try {
-			EvaluationMetricBusinessDelegate.getEvaluationMetricInstance().assignMetric( command );   
+			service.assignMetric( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Metric", exc );
@@ -234,7 +237,7 @@ public class EvaluationMetricRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignMetric")
 	public void unAssignMetric( @RequestBody(required=true)  UnAssignMetricFromEvaluationMetricCommand command ) {
 		try {
-			EvaluationMetricBusinessDelegate.getEvaluationMetricInstance().unAssignMetric( command );   
+			service.unAssignMetric( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Metric", exc );
@@ -248,7 +251,7 @@ public class EvaluationMetricRestController extends BaseSpringRestController {
 	@PutMapping("/assignDataset")
 	public void assignDataset( @RequestBody AssignDatasetToEvaluationMetricCommand command ) {
 		try {
-			EvaluationMetricBusinessDelegate.getEvaluationMetricInstance().assignDataset( command );   
+			service.assignDataset( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Dataset", exc );
@@ -262,7 +265,7 @@ public class EvaluationMetricRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignDataset")
 	public void unAssignDataset( @RequestBody(required=true)  UnAssignDatasetFromEvaluationMetricCommand command ) {
 		try {
-			EvaluationMetricBusinessDelegate.getEvaluationMetricInstance().unAssignDataset( command );   
+			service.unAssignDataset( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Dataset", exc );
@@ -277,6 +280,7 @@ public class EvaluationMetricRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected EvaluationMetric evaluationMetric = null;
+	protected EvaluationMetricService service = null;
     private static final Logger LOGGER = Logger.getLogger(EvaluationMetricRestController.class.getName());
     
 }

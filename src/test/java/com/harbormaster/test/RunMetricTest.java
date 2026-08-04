@@ -94,7 +94,7 @@ public class RunMetricTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a RunMetric" );
 
         try {            
-            entity = RunMetricBusinessDelegate.getRunMetricInstance().createRunMetric( generateNewCommand() );
+            entity = RunMetricService.getRunMetricInstance().createRunMetric( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getRunMetricId();
@@ -125,7 +125,7 @@ public class RunMetricTest
         msg.append( theId );
 
         try {
-            entity = RunMetricBusinessDelegate.getRunMetricInstance().getRunMetric( new RunMetricFetchOneSummary(theId) );
+            entity = RunMetricService.getRunMetricInstance().getRunMetric( new RunMetricFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class RunMetricTest
 
             LOGGER.info( "-- Now updating the created RunMetric." );
             
-            RunMetricBusinessDelegate proxy = RunMetricBusinessDelegate.getRunMetricInstance();            
+            RunMetricService proxy = RunMetricService.getRunMetricInstance();            
             entity = proxy.updateRunMetric( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class RunMetricTest
         try {
         	DeleteRunMetricCommand deleteCommand = new DeleteRunMetricCommand( theId );
         	
-            RunMetricBusinessDelegate.getRunMetricInstance().delete( deleteCommand );
+            RunMetricService.getRunMetricInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted RunMetric with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class RunMetricTest
         List<RunMetric> collection  = null;
 
         try {
-            // call the static get method on the RunMetricBusinessDelegate
-            collection = RunMetricBusinessDelegate.getRunMetricInstance().getAllRunMetric();
+            // call the static get method on the RunMetricService
+            collection = RunMetricService.getRunMetricInstance().getAllRunMetric();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

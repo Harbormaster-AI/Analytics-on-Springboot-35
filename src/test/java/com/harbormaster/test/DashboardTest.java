@@ -94,7 +94,7 @@ public class DashboardTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a Dashboard" );
 
         try {            
-            entity = DashboardBusinessDelegate.getDashboardInstance().createDashboard( generateNewCommand() );
+            entity = DashboardService.getDashboardInstance().createDashboard( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getDashboardId();
@@ -125,7 +125,7 @@ public class DashboardTest
         msg.append( theId );
 
         try {
-            entity = DashboardBusinessDelegate.getDashboardInstance().getDashboard( new DashboardFetchOneSummary(theId) );
+            entity = DashboardService.getDashboardInstance().getDashboard( new DashboardFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class DashboardTest
 
             LOGGER.info( "-- Now updating the created Dashboard." );
             
-            DashboardBusinessDelegate proxy = DashboardBusinessDelegate.getDashboardInstance();            
+            DashboardService proxy = DashboardService.getDashboardInstance();            
             entity = proxy.updateDashboard( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class DashboardTest
         try {
         	DeleteDashboardCommand deleteCommand = new DeleteDashboardCommand( theId );
         	
-            DashboardBusinessDelegate.getDashboardInstance().delete( deleteCommand );
+            DashboardService.getDashboardInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted Dashboard with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class DashboardTest
         List<Dashboard> collection  = null;
 
         try {
-            // call the static get method on the DashboardBusinessDelegate
-            collection = DashboardBusinessDelegate.getDashboardInstance().getAllDashboard();
+            // call the static get method on the DashboardService
+            collection = DashboardService.getDashboardInstance().getAllDashboard();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

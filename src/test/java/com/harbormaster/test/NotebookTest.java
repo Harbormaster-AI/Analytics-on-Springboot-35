@@ -94,7 +94,7 @@ public class NotebookTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a Notebook" );
 
         try {            
-            entity = NotebookBusinessDelegate.getNotebookInstance().createNotebook( generateNewCommand() );
+            entity = NotebookService.getNotebookInstance().createNotebook( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getNotebookId();
@@ -125,7 +125,7 @@ public class NotebookTest
         msg.append( theId );
 
         try {
-            entity = NotebookBusinessDelegate.getNotebookInstance().getNotebook( new NotebookFetchOneSummary(theId) );
+            entity = NotebookService.getNotebookInstance().getNotebook( new NotebookFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class NotebookTest
 
             LOGGER.info( "-- Now updating the created Notebook." );
             
-            NotebookBusinessDelegate proxy = NotebookBusinessDelegate.getNotebookInstance();            
+            NotebookService proxy = NotebookService.getNotebookInstance();            
             entity = proxy.updateNotebook( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class NotebookTest
         try {
         	DeleteNotebookCommand deleteCommand = new DeleteNotebookCommand( theId );
         	
-            NotebookBusinessDelegate.getNotebookInstance().delete( deleteCommand );
+            NotebookService.getNotebookInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted Notebook with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class NotebookTest
         List<Notebook> collection  = null;
 
         try {
-            // call the static get method on the NotebookBusinessDelegate
-            collection = NotebookBusinessDelegate.getNotebookInstance().getAllNotebook();
+            // call the static get method on the NotebookService
+            collection = NotebookService.getNotebookInstance().getAllNotebook();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

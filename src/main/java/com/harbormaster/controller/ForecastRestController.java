@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	ForecastBusinessDelegate
+ *  	ForecastService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/Forecast")
 public class ForecastRestController extends BaseSpringRestController {
 
+	public ForecastRestController( ForecastService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a Forecast.  if not key provided, calls create, otherwise calls save
      * @param		Forecast	forecast
@@ -93,7 +96,7 @@ public class ForecastRestController extends BaseSpringRestController {
     	Forecast entity = null;
 		try {       
         	
-			entity = ForecastBusinessDelegate.getForecastInstance().createForecast( command );
+			entity = service.createForecast( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class ForecastRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateForecastCommand
 			// -----------------------------------------------
-			entity = ForecastBusinessDelegate.getForecastInstance().updateForecast(command);;
+			entity = service.updateForecast(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "ForecastController:update() - successfully update Forecast - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class ForecastRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteForecastCommand command ) {                
     	try {
-        	ForecastBusinessDelegate delegate = ForecastBusinessDelegate.getForecastInstance();
+        	ForecastService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted Forecast with key " + command.getForecastId() );
@@ -151,7 +154,7 @@ public class ForecastRestController extends BaseSpringRestController {
     	Forecast entity = null;
 
     	try {  
-    		entity = ForecastBusinessDelegate.getForecastInstance().getForecast( new ForecastFetchOneSummary( uuid ) );   
+    		entity = service.getForecast( new ForecastFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load Forecast using Id " + uuid );
@@ -171,7 +174,7 @@ public class ForecastRestController extends BaseSpringRestController {
         
     	try {
             // load the Forecast
-            forecastList = ForecastBusinessDelegate.getForecastInstance().getAllForecast();
+            forecastList = service.getAllForecast();
             
             if ( forecastList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Forecasts" );
@@ -192,7 +195,7 @@ public class ForecastRestController extends BaseSpringRestController {
 	@PutMapping("/assignModelVersion")
 	public void assignModelVersion( @RequestBody AssignModelVersionToForecastCommand command ) {
 		try {
-			ForecastBusinessDelegate.getForecastInstance().assignModelVersion( command );   
+			service.assignModelVersion( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign ModelVersion", exc );
@@ -206,7 +209,7 @@ public class ForecastRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignModelVersion")
 	public void unAssignModelVersion( @RequestBody(required=true)  UnAssignModelVersionFromForecastCommand command ) {
 		try {
-			ForecastBusinessDelegate.getForecastInstance().unAssignModelVersion( command );   
+			service.unAssignModelVersion( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign ModelVersion", exc );
@@ -220,7 +223,7 @@ public class ForecastRestController extends BaseSpringRestController {
 	@PutMapping("/assignTimeSeries")
 	public void assignTimeSeries( @RequestBody AssignTimeSeriesToForecastCommand command ) {
 		try {
-			ForecastBusinessDelegate.getForecastInstance().assignTimeSeries( command );   
+			service.assignTimeSeries( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign TimeSeries", exc );
@@ -234,7 +237,7 @@ public class ForecastRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignTimeSeries")
 	public void unAssignTimeSeries( @RequestBody(required=true)  UnAssignTimeSeriesFromForecastCommand command ) {
 		try {
-			ForecastBusinessDelegate.getForecastInstance().unAssignTimeSeries( command );   
+			service.unAssignTimeSeries( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign TimeSeries", exc );
@@ -249,7 +252,7 @@ public class ForecastRestController extends BaseSpringRestController {
 	@PutMapping("/addToDatasets")
 	public void addToDatasets( @RequestBody(required=true) AssignDatasetsToForecastCommand command ) {
 		try {
-			ForecastBusinessDelegate.getForecastInstance().addToDatasets( command );   
+			service.addToDatasets( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Datasets", exc );
@@ -264,7 +267,7 @@ public class ForecastRestController extends BaseSpringRestController {
 	public void removeFromDatasets( 	@RequestBody(required=true) RemoveDatasetsFromForecastCommand command )
 	{		
 		try {
-			ForecastBusinessDelegate.getForecastInstance().removeFromDatasets( command );
+			service.removeFromDatasets( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Datasets", exc );
@@ -278,6 +281,7 @@ public class ForecastRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected Forecast forecast = null;
+	protected ForecastService service = null;
     private static final Logger LOGGER = Logger.getLogger(ForecastRestController.class.getName());
     
 }

@@ -94,7 +94,7 @@ public class RunParameterTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a RunParameter" );
 
         try {            
-            entity = RunParameterBusinessDelegate.getRunParameterInstance().createRunParameter( generateNewCommand() );
+            entity = RunParameterService.getRunParameterInstance().createRunParameter( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getRunParameterId();
@@ -125,7 +125,7 @@ public class RunParameterTest
         msg.append( theId );
 
         try {
-            entity = RunParameterBusinessDelegate.getRunParameterInstance().getRunParameter( new RunParameterFetchOneSummary(theId) );
+            entity = RunParameterService.getRunParameterInstance().getRunParameter( new RunParameterFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class RunParameterTest
 
             LOGGER.info( "-- Now updating the created RunParameter." );
             
-            RunParameterBusinessDelegate proxy = RunParameterBusinessDelegate.getRunParameterInstance();            
+            RunParameterService proxy = RunParameterService.getRunParameterInstance();            
             entity = proxy.updateRunParameter( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class RunParameterTest
         try {
         	DeleteRunParameterCommand deleteCommand = new DeleteRunParameterCommand( theId );
         	
-            RunParameterBusinessDelegate.getRunParameterInstance().delete( deleteCommand );
+            RunParameterService.getRunParameterInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted RunParameter with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class RunParameterTest
         List<RunParameter> collection  = null;
 
         try {
-            // call the static get method on the RunParameterBusinessDelegate
-            collection = RunParameterBusinessDelegate.getRunParameterInstance().getAllRunParameter();
+            // call the static get method on the RunParameterService
+            collection = RunParameterService.getRunParameterInstance().getAllRunParameter();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

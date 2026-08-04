@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	FraudScenarioBusinessDelegate
+ *  	FraudScenarioService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/FraudScenario")
 public class FraudScenarioRestController extends BaseSpringRestController {
 
+	public FraudScenarioRestController( FraudScenarioService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a FraudScenario.  if not key provided, calls create, otherwise calls save
      * @param		FraudScenario	fraudScenario
@@ -93,7 +96,7 @@ public class FraudScenarioRestController extends BaseSpringRestController {
     	FraudScenario entity = null;
 		try {       
         	
-			entity = FraudScenarioBusinessDelegate.getFraudScenarioInstance().createFraudScenario( command );
+			entity = service.createFraudScenario( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class FraudScenarioRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateFraudScenarioCommand
 			// -----------------------------------------------
-			entity = FraudScenarioBusinessDelegate.getFraudScenarioInstance().updateFraudScenario(command);;
+			entity = service.updateFraudScenario(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "FraudScenarioController:update() - successfully update FraudScenario - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class FraudScenarioRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteFraudScenarioCommand command ) {                
     	try {
-        	FraudScenarioBusinessDelegate delegate = FraudScenarioBusinessDelegate.getFraudScenarioInstance();
+        	FraudScenarioService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted FraudScenario with key " + command.getFraudScenarioId() );
@@ -151,7 +154,7 @@ public class FraudScenarioRestController extends BaseSpringRestController {
     	FraudScenario entity = null;
 
     	try {  
-    		entity = FraudScenarioBusinessDelegate.getFraudScenarioInstance().getFraudScenario( new FraudScenarioFetchOneSummary( uuid ) );   
+    		entity = service.getFraudScenario( new FraudScenarioFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load FraudScenario using Id " + uuid );
@@ -171,7 +174,7 @@ public class FraudScenarioRestController extends BaseSpringRestController {
         
     	try {
             // load the FraudScenario
-            fraudScenarioList = FraudScenarioBusinessDelegate.getFraudScenarioInstance().getAllFraudScenario();
+            fraudScenarioList = service.getAllFraudScenario();
             
             if ( fraudScenarioList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all FraudScenarios" );
@@ -193,7 +196,7 @@ public class FraudScenarioRestController extends BaseSpringRestController {
 	@PutMapping("/addToModels")
 	public void addToModels( @RequestBody(required=true) AssignModelsToFraudScenarioCommand command ) {
 		try {
-			FraudScenarioBusinessDelegate.getFraudScenarioInstance().addToModels( command );   
+			service.addToModels( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Models", exc );
@@ -208,7 +211,7 @@ public class FraudScenarioRestController extends BaseSpringRestController {
 	public void removeFromModels( 	@RequestBody(required=true) RemoveModelsFromFraudScenarioCommand command )
 	{		
 		try {
-			FraudScenarioBusinessDelegate.getFraudScenarioInstance().removeFromModels( command );
+			service.removeFromModels( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Models", exc );
@@ -222,7 +225,7 @@ public class FraudScenarioRestController extends BaseSpringRestController {
 	@PutMapping("/addToDatasets")
 	public void addToDatasets( @RequestBody(required=true) AssignDatasetsToFraudScenarioCommand command ) {
 		try {
-			FraudScenarioBusinessDelegate.getFraudScenarioInstance().addToDatasets( command );   
+			service.addToDatasets( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Datasets", exc );
@@ -237,7 +240,7 @@ public class FraudScenarioRestController extends BaseSpringRestController {
 	public void removeFromDatasets( 	@RequestBody(required=true) RemoveDatasetsFromFraudScenarioCommand command )
 	{		
 		try {
-			FraudScenarioBusinessDelegate.getFraudScenarioInstance().removeFromDatasets( command );
+			service.removeFromDatasets( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Datasets", exc );
@@ -251,7 +254,7 @@ public class FraudScenarioRestController extends BaseSpringRestController {
 	@PutMapping("/addToAlerts")
 	public void addToAlerts( @RequestBody(required=true) AssignAlertsToFraudScenarioCommand command ) {
 		try {
-			FraudScenarioBusinessDelegate.getFraudScenarioInstance().addToAlerts( command );   
+			service.addToAlerts( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Alerts", exc );
@@ -266,7 +269,7 @@ public class FraudScenarioRestController extends BaseSpringRestController {
 	public void removeFromAlerts( 	@RequestBody(required=true) RemoveAlertsFromFraudScenarioCommand command )
 	{		
 		try {
-			FraudScenarioBusinessDelegate.getFraudScenarioInstance().removeFromAlerts( command );
+			service.removeFromAlerts( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Alerts", exc );
@@ -280,7 +283,7 @@ public class FraudScenarioRestController extends BaseSpringRestController {
 	@PutMapping("/addToSignals")
 	public void addToSignals( @RequestBody(required=true) AssignSignalsToFraudScenarioCommand command ) {
 		try {
-			FraudScenarioBusinessDelegate.getFraudScenarioInstance().addToSignals( command );   
+			service.addToSignals( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Signals", exc );
@@ -295,7 +298,7 @@ public class FraudScenarioRestController extends BaseSpringRestController {
 	public void removeFromSignals( 	@RequestBody(required=true) RemoveSignalsFromFraudScenarioCommand command )
 	{		
 		try {
-			FraudScenarioBusinessDelegate.getFraudScenarioInstance().removeFromSignals( command );
+			service.removeFromSignals( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Signals", exc );
@@ -309,6 +312,7 @@ public class FraudScenarioRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected FraudScenario fraudScenario = null;
+	protected FraudScenarioService service = null;
     private static final Logger LOGGER = Logger.getLogger(FraudScenarioRestController.class.getName());
     
 }

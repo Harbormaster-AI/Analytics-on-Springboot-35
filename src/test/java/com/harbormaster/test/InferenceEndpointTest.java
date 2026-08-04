@@ -94,7 +94,7 @@ public class InferenceEndpointTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a InferenceEndpoint" );
 
         try {            
-            entity = InferenceEndpointBusinessDelegate.getInferenceEndpointInstance().createInferenceEndpoint( generateNewCommand() );
+            entity = InferenceEndpointService.getInferenceEndpointInstance().createInferenceEndpoint( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getInferenceEndpointId();
@@ -125,7 +125,7 @@ public class InferenceEndpointTest
         msg.append( theId );
 
         try {
-            entity = InferenceEndpointBusinessDelegate.getInferenceEndpointInstance().getInferenceEndpoint( new InferenceEndpointFetchOneSummary(theId) );
+            entity = InferenceEndpointService.getInferenceEndpointInstance().getInferenceEndpoint( new InferenceEndpointFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class InferenceEndpointTest
 
             LOGGER.info( "-- Now updating the created InferenceEndpoint." );
             
-            InferenceEndpointBusinessDelegate proxy = InferenceEndpointBusinessDelegate.getInferenceEndpointInstance();            
+            InferenceEndpointService proxy = InferenceEndpointService.getInferenceEndpointInstance();            
             entity = proxy.updateInferenceEndpoint( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class InferenceEndpointTest
         try {
         	DeleteInferenceEndpointCommand deleteCommand = new DeleteInferenceEndpointCommand( theId );
         	
-            InferenceEndpointBusinessDelegate.getInferenceEndpointInstance().delete( deleteCommand );
+            InferenceEndpointService.getInferenceEndpointInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted InferenceEndpoint with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class InferenceEndpointTest
         List<InferenceEndpoint> collection  = null;
 
         try {
-            // call the static get method on the InferenceEndpointBusinessDelegate
-            collection = InferenceEndpointBusinessDelegate.getInferenceEndpointInstance().getAllInferenceEndpoint();
+            // call the static get method on the InferenceEndpointService
+            collection = InferenceEndpointService.getInferenceEndpointInstance().getAllInferenceEndpoint();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

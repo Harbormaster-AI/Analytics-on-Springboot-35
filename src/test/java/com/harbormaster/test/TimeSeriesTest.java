@@ -94,7 +94,7 @@ public class TimeSeriesTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a TimeSeries" );
 
         try {            
-            entity = TimeSeriesBusinessDelegate.getTimeSeriesInstance().createTimeSeries( generateNewCommand() );
+            entity = TimeSeriesService.getTimeSeriesInstance().createTimeSeries( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getTimeSeriesId();
@@ -125,7 +125,7 @@ public class TimeSeriesTest
         msg.append( theId );
 
         try {
-            entity = TimeSeriesBusinessDelegate.getTimeSeriesInstance().getTimeSeries( new TimeSeriesFetchOneSummary(theId) );
+            entity = TimeSeriesService.getTimeSeriesInstance().getTimeSeries( new TimeSeriesFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class TimeSeriesTest
 
             LOGGER.info( "-- Now updating the created TimeSeries." );
             
-            TimeSeriesBusinessDelegate proxy = TimeSeriesBusinessDelegate.getTimeSeriesInstance();            
+            TimeSeriesService proxy = TimeSeriesService.getTimeSeriesInstance();            
             entity = proxy.updateTimeSeries( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class TimeSeriesTest
         try {
         	DeleteTimeSeriesCommand deleteCommand = new DeleteTimeSeriesCommand( theId );
         	
-            TimeSeriesBusinessDelegate.getTimeSeriesInstance().delete( deleteCommand );
+            TimeSeriesService.getTimeSeriesInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted TimeSeries with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class TimeSeriesTest
         List<TimeSeries> collection  = null;
 
         try {
-            // call the static get method on the TimeSeriesBusinessDelegate
-            collection = TimeSeriesBusinessDelegate.getTimeSeriesInstance().getAllTimeSeries();
+            // call the static get method on the TimeSeriesService
+            collection = TimeSeriesService.getTimeSeriesInstance().getAllTimeSeries();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

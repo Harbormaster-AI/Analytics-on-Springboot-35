@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	AnomalyBusinessDelegate
+ *  	AnomalyService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/Anomaly")
 public class AnomalyRestController extends BaseSpringRestController {
 
+	public AnomalyRestController( AnomalyService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a Anomaly.  if not key provided, calls create, otherwise calls save
      * @param		Anomaly	anomaly
@@ -93,7 +96,7 @@ public class AnomalyRestController extends BaseSpringRestController {
     	Anomaly entity = null;
 		try {       
         	
-			entity = AnomalyBusinessDelegate.getAnomalyInstance().createAnomaly( command );
+			entity = service.createAnomaly( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class AnomalyRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateAnomalyCommand
 			// -----------------------------------------------
-			entity = AnomalyBusinessDelegate.getAnomalyInstance().updateAnomaly(command);;
+			entity = service.updateAnomaly(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "AnomalyController:update() - successfully update Anomaly - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class AnomalyRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteAnomalyCommand command ) {                
     	try {
-        	AnomalyBusinessDelegate delegate = AnomalyBusinessDelegate.getAnomalyInstance();
+        	AnomalyService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted Anomaly with key " + command.getAnomalyId() );
@@ -151,7 +154,7 @@ public class AnomalyRestController extends BaseSpringRestController {
     	Anomaly entity = null;
 
     	try {  
-    		entity = AnomalyBusinessDelegate.getAnomalyInstance().getAnomaly( new AnomalyFetchOneSummary( uuid ) );   
+    		entity = service.getAnomaly( new AnomalyFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load Anomaly using Id " + uuid );
@@ -171,7 +174,7 @@ public class AnomalyRestController extends BaseSpringRestController {
         
     	try {
             // load the Anomaly
-            anomalyList = AnomalyBusinessDelegate.getAnomalyInstance().getAllAnomaly();
+            anomalyList = service.getAllAnomaly();
             
             if ( anomalyList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Anomalys" );
@@ -192,7 +195,7 @@ public class AnomalyRestController extends BaseSpringRestController {
 	@PutMapping("/assignTimeSeries")
 	public void assignTimeSeries( @RequestBody AssignTimeSeriesToAnomalyCommand command ) {
 		try {
-			AnomalyBusinessDelegate.getAnomalyInstance().assignTimeSeries( command );   
+			service.assignTimeSeries( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign TimeSeries", exc );
@@ -206,7 +209,7 @@ public class AnomalyRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignTimeSeries")
 	public void unAssignTimeSeries( @RequestBody(required=true)  UnAssignTimeSeriesFromAnomalyCommand command ) {
 		try {
-			AnomalyBusinessDelegate.getAnomalyInstance().unAssignTimeSeries( command );   
+			service.unAssignTimeSeries( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign TimeSeries", exc );
@@ -220,7 +223,7 @@ public class AnomalyRestController extends BaseSpringRestController {
 	@PutMapping("/assignAlert")
 	public void assignAlert( @RequestBody AssignAlertToAnomalyCommand command ) {
 		try {
-			AnomalyBusinessDelegate.getAnomalyInstance().assignAlert( command );   
+			service.assignAlert( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Alert", exc );
@@ -234,7 +237,7 @@ public class AnomalyRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignAlert")
 	public void unAssignAlert( @RequestBody(required=true)  UnAssignAlertFromAnomalyCommand command ) {
 		try {
-			AnomalyBusinessDelegate.getAnomalyInstance().unAssignAlert( command );   
+			service.unAssignAlert( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Alert", exc );
@@ -248,7 +251,7 @@ public class AnomalyRestController extends BaseSpringRestController {
 	@PutMapping("/assignDataset")
 	public void assignDataset( @RequestBody AssignDatasetToAnomalyCommand command ) {
 		try {
-			AnomalyBusinessDelegate.getAnomalyInstance().assignDataset( command );   
+			service.assignDataset( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Dataset", exc );
@@ -262,7 +265,7 @@ public class AnomalyRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignDataset")
 	public void unAssignDataset( @RequestBody(required=true)  UnAssignDatasetFromAnomalyCommand command ) {
 		try {
-			AnomalyBusinessDelegate.getAnomalyInstance().unAssignDataset( command );   
+			service.unAssignDataset( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Dataset", exc );
@@ -277,6 +280,7 @@ public class AnomalyRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected Anomaly anomaly = null;
+	protected AnomalyService service = null;
     private static final Logger LOGGER = Logger.getLogger(AnomalyRestController.class.getName());
     
 }

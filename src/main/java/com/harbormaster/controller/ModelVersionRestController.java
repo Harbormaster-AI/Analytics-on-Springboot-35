@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	ModelVersionBusinessDelegate
+ *  	ModelVersionService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/ModelVersion")
 public class ModelVersionRestController extends BaseSpringRestController {
 
+	public ModelVersionRestController( ModelVersionService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a ModelVersion.  if not key provided, calls create, otherwise calls save
      * @param		ModelVersion	modelVersion
@@ -93,7 +96,7 @@ public class ModelVersionRestController extends BaseSpringRestController {
     	ModelVersion entity = null;
 		try {       
         	
-			entity = ModelVersionBusinessDelegate.getModelVersionInstance().createModelVersion( command );
+			entity = service.createModelVersion( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class ModelVersionRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateModelVersionCommand
 			// -----------------------------------------------
-			entity = ModelVersionBusinessDelegate.getModelVersionInstance().updateModelVersion(command);;
+			entity = service.updateModelVersion(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "ModelVersionController:update() - successfully update ModelVersion - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class ModelVersionRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteModelVersionCommand command ) {                
     	try {
-        	ModelVersionBusinessDelegate delegate = ModelVersionBusinessDelegate.getModelVersionInstance();
+        	ModelVersionService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted ModelVersion with key " + command.getModelVersionId() );
@@ -151,7 +154,7 @@ public class ModelVersionRestController extends BaseSpringRestController {
     	ModelVersion entity = null;
 
     	try {  
-    		entity = ModelVersionBusinessDelegate.getModelVersionInstance().getModelVersion( new ModelVersionFetchOneSummary( uuid ) );   
+    		entity = service.getModelVersion( new ModelVersionFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load ModelVersion using Id " + uuid );
@@ -171,7 +174,7 @@ public class ModelVersionRestController extends BaseSpringRestController {
         
     	try {
             // load the ModelVersion
-            modelVersionList = ModelVersionBusinessDelegate.getModelVersionInstance().getAllModelVersion();
+            modelVersionList = service.getAllModelVersion();
             
             if ( modelVersionList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all ModelVersions" );
@@ -192,7 +195,7 @@ public class ModelVersionRestController extends BaseSpringRestController {
 	@PutMapping("/assignModel")
 	public void assignModel( @RequestBody AssignModelToModelVersionCommand command ) {
 		try {
-			ModelVersionBusinessDelegate.getModelVersionInstance().assignModel( command );   
+			service.assignModel( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Model", exc );
@@ -206,7 +209,7 @@ public class ModelVersionRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignModel")
 	public void unAssignModel( @RequestBody(required=true)  UnAssignModelFromModelVersionCommand command ) {
 		try {
-			ModelVersionBusinessDelegate.getModelVersionInstance().unAssignModel( command );   
+			service.unAssignModel( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Model", exc );
@@ -220,7 +223,7 @@ public class ModelVersionRestController extends BaseSpringRestController {
 	@PutMapping("/assignTrainingRun")
 	public void assignTrainingRun( @RequestBody AssignTrainingRunToModelVersionCommand command ) {
 		try {
-			ModelVersionBusinessDelegate.getModelVersionInstance().assignTrainingRun( command );   
+			service.assignTrainingRun( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign TrainingRun", exc );
@@ -234,7 +237,7 @@ public class ModelVersionRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignTrainingRun")
 	public void unAssignTrainingRun( @RequestBody(required=true)  UnAssignTrainingRunFromModelVersionCommand command ) {
 		try {
-			ModelVersionBusinessDelegate.getModelVersionInstance().unAssignTrainingRun( command );   
+			service.unAssignTrainingRun( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign TrainingRun", exc );
@@ -249,7 +252,7 @@ public class ModelVersionRestController extends BaseSpringRestController {
 	@PutMapping("/addToEvaluationMetrics")
 	public void addToEvaluationMetrics( @RequestBody(required=true) AssignEvaluationMetricsToModelVersionCommand command ) {
 		try {
-			ModelVersionBusinessDelegate.getModelVersionInstance().addToEvaluationMetrics( command );   
+			service.addToEvaluationMetrics( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set EvaluationMetrics", exc );
@@ -264,7 +267,7 @@ public class ModelVersionRestController extends BaseSpringRestController {
 	public void removeFromEvaluationMetrics( 	@RequestBody(required=true) RemoveEvaluationMetricsFromModelVersionCommand command )
 	{		
 		try {
-			ModelVersionBusinessDelegate.getModelVersionInstance().removeFromEvaluationMetrics( command );
+			service.removeFromEvaluationMetrics( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set EvaluationMetrics", exc );
@@ -278,7 +281,7 @@ public class ModelVersionRestController extends BaseSpringRestController {
 	@PutMapping("/addToDeployments")
 	public void addToDeployments( @RequestBody(required=true) AssignDeploymentsToModelVersionCommand command ) {
 		try {
-			ModelVersionBusinessDelegate.getModelVersionInstance().addToDeployments( command );   
+			service.addToDeployments( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Deployments", exc );
@@ -293,7 +296,7 @@ public class ModelVersionRestController extends BaseSpringRestController {
 	public void removeFromDeployments( 	@RequestBody(required=true) RemoveDeploymentsFromModelVersionCommand command )
 	{		
 		try {
-			ModelVersionBusinessDelegate.getModelVersionInstance().removeFromDeployments( command );
+			service.removeFromDeployments( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Deployments", exc );
@@ -307,7 +310,7 @@ public class ModelVersionRestController extends BaseSpringRestController {
 	@PutMapping("/addToFeatureSets")
 	public void addToFeatureSets( @RequestBody(required=true) AssignFeatureSetsToModelVersionCommand command ) {
 		try {
-			ModelVersionBusinessDelegate.getModelVersionInstance().addToFeatureSets( command );   
+			service.addToFeatureSets( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set FeatureSets", exc );
@@ -322,7 +325,7 @@ public class ModelVersionRestController extends BaseSpringRestController {
 	public void removeFromFeatureSets( 	@RequestBody(required=true) RemoveFeatureSetsFromModelVersionCommand command )
 	{		
 		try {
-			ModelVersionBusinessDelegate.getModelVersionInstance().removeFromFeatureSets( command );
+			service.removeFromFeatureSets( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set FeatureSets", exc );
@@ -336,7 +339,7 @@ public class ModelVersionRestController extends BaseSpringRestController {
 	@PutMapping("/addToDatasets")
 	public void addToDatasets( @RequestBody(required=true) AssignDatasetsToModelVersionCommand command ) {
 		try {
-			ModelVersionBusinessDelegate.getModelVersionInstance().addToDatasets( command );   
+			service.addToDatasets( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Datasets", exc );
@@ -351,7 +354,7 @@ public class ModelVersionRestController extends BaseSpringRestController {
 	public void removeFromDatasets( 	@RequestBody(required=true) RemoveDatasetsFromModelVersionCommand command )
 	{		
 		try {
-			ModelVersionBusinessDelegate.getModelVersionInstance().removeFromDatasets( command );
+			service.removeFromDatasets( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Datasets", exc );
@@ -365,6 +368,7 @@ public class ModelVersionRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected ModelVersion modelVersion = null;
+	protected ModelVersionService service = null;
     private static final Logger LOGGER = Logger.getLogger(ModelVersionRestController.class.getName());
     
 }

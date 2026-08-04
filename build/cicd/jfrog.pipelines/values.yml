@@ -1,8 +1,8 @@
 gitRepo:
   gitProvider: 
-  path: /Analytics-on-Springboot-35
+  path: /Analytics-on-springboot-35
   TestDBUrl: 
-  TestDBName: AnalyticsonSpringboot35_test_db
+  TestDBName: Analyticsonspringboot35_test_db
   TestDBPassword: 
   TestDBDialect: org.hibernate.dialect.MySQL8Dialect 
   TestDBDriver: com.mysql.cj.jdbc.Driver

@@ -94,7 +94,7 @@ public class EvaluationMetricTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a EvaluationMetric" );
 
         try {            
-            entity = EvaluationMetricBusinessDelegate.getEvaluationMetricInstance().createEvaluationMetric( generateNewCommand() );
+            entity = EvaluationMetricService.getEvaluationMetricInstance().createEvaluationMetric( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getEvaluationMetricId();
@@ -125,7 +125,7 @@ public class EvaluationMetricTest
         msg.append( theId );
 
         try {
-            entity = EvaluationMetricBusinessDelegate.getEvaluationMetricInstance().getEvaluationMetric( new EvaluationMetricFetchOneSummary(theId) );
+            entity = EvaluationMetricService.getEvaluationMetricInstance().getEvaluationMetric( new EvaluationMetricFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class EvaluationMetricTest
 
             LOGGER.info( "-- Now updating the created EvaluationMetric." );
             
-            EvaluationMetricBusinessDelegate proxy = EvaluationMetricBusinessDelegate.getEvaluationMetricInstance();            
+            EvaluationMetricService proxy = EvaluationMetricService.getEvaluationMetricInstance();            
             entity = proxy.updateEvaluationMetric( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class EvaluationMetricTest
         try {
         	DeleteEvaluationMetricCommand deleteCommand = new DeleteEvaluationMetricCommand( theId );
         	
-            EvaluationMetricBusinessDelegate.getEvaluationMetricInstance().delete( deleteCommand );
+            EvaluationMetricService.getEvaluationMetricInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted EvaluationMetric with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class EvaluationMetricTest
         List<EvaluationMetric> collection  = null;
 
         try {
-            // call the static get method on the EvaluationMetricBusinessDelegate
-            collection = EvaluationMetricBusinessDelegate.getEvaluationMetricInstance().getAllEvaluationMetric();
+            // call the static get method on the EvaluationMetricService
+            collection = EvaluationMetricService.getEvaluationMetricInstance().getAllEvaluationMetric();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

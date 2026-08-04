@@ -94,7 +94,7 @@ public class FeatureTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a Feature" );
 
         try {            
-            entity = FeatureBusinessDelegate.getFeatureInstance().createFeature( generateNewCommand() );
+            entity = FeatureService.getFeatureInstance().createFeature( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getFeatureId();
@@ -125,7 +125,7 @@ public class FeatureTest
         msg.append( theId );
 
         try {
-            entity = FeatureBusinessDelegate.getFeatureInstance().getFeature( new FeatureFetchOneSummary(theId) );
+            entity = FeatureService.getFeatureInstance().getFeature( new FeatureFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class FeatureTest
 
             LOGGER.info( "-- Now updating the created Feature." );
             
-            FeatureBusinessDelegate proxy = FeatureBusinessDelegate.getFeatureInstance();            
+            FeatureService proxy = FeatureService.getFeatureInstance();            
             entity = proxy.updateFeature( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class FeatureTest
         try {
         	DeleteFeatureCommand deleteCommand = new DeleteFeatureCommand( theId );
         	
-            FeatureBusinessDelegate.getFeatureInstance().delete( deleteCommand );
+            FeatureService.getFeatureInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted Feature with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class FeatureTest
         List<Feature> collection  = null;
 
         try {
-            // call the static get method on the FeatureBusinessDelegate
-            collection = FeatureBusinessDelegate.getFeatureInstance().getAllFeature();
+            // call the static get method on the FeatureService
+            collection = FeatureService.getFeatureInstance().getAllFeature();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

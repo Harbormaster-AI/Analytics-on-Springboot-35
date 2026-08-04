@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	FraudSignalBusinessDelegate
+ *  	FraudSignalService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/FraudSignal")
 public class FraudSignalRestController extends BaseSpringRestController {
 
+	public FraudSignalRestController( FraudSignalService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a FraudSignal.  if not key provided, calls create, otherwise calls save
      * @param		FraudSignal	fraudSignal
@@ -93,7 +96,7 @@ public class FraudSignalRestController extends BaseSpringRestController {
     	FraudSignal entity = null;
 		try {       
         	
-			entity = FraudSignalBusinessDelegate.getFraudSignalInstance().createFraudSignal( command );
+			entity = service.createFraudSignal( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class FraudSignalRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateFraudSignalCommand
 			// -----------------------------------------------
-			entity = FraudSignalBusinessDelegate.getFraudSignalInstance().updateFraudSignal(command);;
+			entity = service.updateFraudSignal(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "FraudSignalController:update() - successfully update FraudSignal - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class FraudSignalRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteFraudSignalCommand command ) {                
     	try {
-        	FraudSignalBusinessDelegate delegate = FraudSignalBusinessDelegate.getFraudSignalInstance();
+        	FraudSignalService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted FraudSignal with key " + command.getFraudSignalId() );
@@ -151,7 +154,7 @@ public class FraudSignalRestController extends BaseSpringRestController {
     	FraudSignal entity = null;
 
     	try {  
-    		entity = FraudSignalBusinessDelegate.getFraudSignalInstance().getFraudSignal( new FraudSignalFetchOneSummary( uuid ) );   
+    		entity = service.getFraudSignal( new FraudSignalFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load FraudSignal using Id " + uuid );
@@ -171,7 +174,7 @@ public class FraudSignalRestController extends BaseSpringRestController {
         
     	try {
             // load the FraudSignal
-            fraudSignalList = FraudSignalBusinessDelegate.getFraudSignalInstance().getAllFraudSignal();
+            fraudSignalList = service.getAllFraudSignal();
             
             if ( fraudSignalList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all FraudSignals" );
@@ -192,7 +195,7 @@ public class FraudSignalRestController extends BaseSpringRestController {
 	@PutMapping("/assignScenario")
 	public void assignScenario( @RequestBody AssignScenarioToFraudSignalCommand command ) {
 		try {
-			FraudSignalBusinessDelegate.getFraudSignalInstance().assignScenario( command );   
+			service.assignScenario( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Scenario", exc );
@@ -206,7 +209,7 @@ public class FraudSignalRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignScenario")
 	public void unAssignScenario( @RequestBody(required=true)  UnAssignScenarioFromFraudSignalCommand command ) {
 		try {
-			FraudSignalBusinessDelegate.getFraudSignalInstance().unAssignScenario( command );   
+			service.unAssignScenario( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Scenario", exc );
@@ -220,7 +223,7 @@ public class FraudSignalRestController extends BaseSpringRestController {
 	@PutMapping("/assignDataset")
 	public void assignDataset( @RequestBody AssignDatasetToFraudSignalCommand command ) {
 		try {
-			FraudSignalBusinessDelegate.getFraudSignalInstance().assignDataset( command );   
+			service.assignDataset( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Dataset", exc );
@@ -234,7 +237,7 @@ public class FraudSignalRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignDataset")
 	public void unAssignDataset( @RequestBody(required=true)  UnAssignDatasetFromFraudSignalCommand command ) {
 		try {
-			FraudSignalBusinessDelegate.getFraudSignalInstance().unAssignDataset( command );   
+			service.unAssignDataset( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Dataset", exc );
@@ -248,7 +251,7 @@ public class FraudSignalRestController extends BaseSpringRestController {
 	@PutMapping("/assignModelVersion")
 	public void assignModelVersion( @RequestBody AssignModelVersionToFraudSignalCommand command ) {
 		try {
-			FraudSignalBusinessDelegate.getFraudSignalInstance().assignModelVersion( command );   
+			service.assignModelVersion( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign ModelVersion", exc );
@@ -262,7 +265,7 @@ public class FraudSignalRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignModelVersion")
 	public void unAssignModelVersion( @RequestBody(required=true)  UnAssignModelVersionFromFraudSignalCommand command ) {
 		try {
-			FraudSignalBusinessDelegate.getFraudSignalInstance().unAssignModelVersion( command );   
+			service.unAssignModelVersion( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign ModelVersion", exc );
@@ -277,6 +280,7 @@ public class FraudSignalRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected FraudSignal fraudSignal = null;
+	protected FraudSignalService service = null;
     private static final Logger LOGGER = Logger.getLogger(FraudSignalRestController.class.getName());
     
 }

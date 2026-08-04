@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	RecommendationScenarioBusinessDelegate
+ *  	RecommendationScenarioService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/RecommendationScenario")
 public class RecommendationScenarioRestController extends BaseSpringRestController {
 
+	public RecommendationScenarioRestController( RecommendationScenarioService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a RecommendationScenario.  if not key provided, calls create, otherwise calls save
      * @param		RecommendationScenario	recommendationScenario
@@ -93,7 +96,7 @@ public class RecommendationScenarioRestController extends BaseSpringRestControll
     	RecommendationScenario entity = null;
 		try {       
         	
-			entity = RecommendationScenarioBusinessDelegate.getRecommendationScenarioInstance().createRecommendationScenario( command );
+			entity = service.createRecommendationScenario( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class RecommendationScenarioRestController extends BaseSpringRestControll
 			// -----------------------------------------------
 			// delegate the UpdateRecommendationScenarioCommand
 			// -----------------------------------------------
-			entity = RecommendationScenarioBusinessDelegate.getRecommendationScenarioInstance().updateRecommendationScenario(command);;
+			entity = service.updateRecommendationScenario(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "RecommendationScenarioController:update() - successfully update RecommendationScenario - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class RecommendationScenarioRestController extends BaseSpringRestControll
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteRecommendationScenarioCommand command ) {                
     	try {
-        	RecommendationScenarioBusinessDelegate delegate = RecommendationScenarioBusinessDelegate.getRecommendationScenarioInstance();
+        	RecommendationScenarioService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted RecommendationScenario with key " + command.getRecommendationScenarioId() );
@@ -151,7 +154,7 @@ public class RecommendationScenarioRestController extends BaseSpringRestControll
     	RecommendationScenario entity = null;
 
     	try {  
-    		entity = RecommendationScenarioBusinessDelegate.getRecommendationScenarioInstance().getRecommendationScenario( new RecommendationScenarioFetchOneSummary( uuid ) );   
+    		entity = service.getRecommendationScenario( new RecommendationScenarioFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load RecommendationScenario using Id " + uuid );
@@ -171,7 +174,7 @@ public class RecommendationScenarioRestController extends BaseSpringRestControll
         
     	try {
             // load the RecommendationScenario
-            recommendationScenarioList = RecommendationScenarioBusinessDelegate.getRecommendationScenarioInstance().getAllRecommendationScenario();
+            recommendationScenarioList = service.getAllRecommendationScenario();
             
             if ( recommendationScenarioList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all RecommendationScenarios" );
@@ -193,7 +196,7 @@ public class RecommendationScenarioRestController extends BaseSpringRestControll
 	@PutMapping("/addToModels")
 	public void addToModels( @RequestBody(required=true) AssignModelsToRecommendationScenarioCommand command ) {
 		try {
-			RecommendationScenarioBusinessDelegate.getRecommendationScenarioInstance().addToModels( command );   
+			service.addToModels( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Models", exc );
@@ -208,7 +211,7 @@ public class RecommendationScenarioRestController extends BaseSpringRestControll
 	public void removeFromModels( 	@RequestBody(required=true) RemoveModelsFromRecommendationScenarioCommand command )
 	{		
 		try {
-			RecommendationScenarioBusinessDelegate.getRecommendationScenarioInstance().removeFromModels( command );
+			service.removeFromModels( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Models", exc );
@@ -222,7 +225,7 @@ public class RecommendationScenarioRestController extends BaseSpringRestControll
 	@PutMapping("/addToDatasets")
 	public void addToDatasets( @RequestBody(required=true) AssignDatasetsToRecommendationScenarioCommand command ) {
 		try {
-			RecommendationScenarioBusinessDelegate.getRecommendationScenarioInstance().addToDatasets( command );   
+			service.addToDatasets( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Datasets", exc );
@@ -237,7 +240,7 @@ public class RecommendationScenarioRestController extends BaseSpringRestControll
 	public void removeFromDatasets( 	@RequestBody(required=true) RemoveDatasetsFromRecommendationScenarioCommand command )
 	{		
 		try {
-			RecommendationScenarioBusinessDelegate.getRecommendationScenarioInstance().removeFromDatasets( command );
+			service.removeFromDatasets( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Datasets", exc );
@@ -251,7 +254,7 @@ public class RecommendationScenarioRestController extends BaseSpringRestControll
 	@PutMapping("/addToExperiments")
 	public void addToExperiments( @RequestBody(required=true) AssignExperimentsToRecommendationScenarioCommand command ) {
 		try {
-			RecommendationScenarioBusinessDelegate.getRecommendationScenarioInstance().addToExperiments( command );   
+			service.addToExperiments( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Experiments", exc );
@@ -266,7 +269,7 @@ public class RecommendationScenarioRestController extends BaseSpringRestControll
 	public void removeFromExperiments( 	@RequestBody(required=true) RemoveExperimentsFromRecommendationScenarioCommand command )
 	{		
 		try {
-			RecommendationScenarioBusinessDelegate.getRecommendationScenarioInstance().removeFromExperiments( command );
+			service.removeFromExperiments( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Experiments", exc );
@@ -280,7 +283,7 @@ public class RecommendationScenarioRestController extends BaseSpringRestControll
 	@PutMapping("/addToAlerts")
 	public void addToAlerts( @RequestBody(required=true) AssignAlertsToRecommendationScenarioCommand command ) {
 		try {
-			RecommendationScenarioBusinessDelegate.getRecommendationScenarioInstance().addToAlerts( command );   
+			service.addToAlerts( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Alerts", exc );
@@ -295,7 +298,7 @@ public class RecommendationScenarioRestController extends BaseSpringRestControll
 	public void removeFromAlerts( 	@RequestBody(required=true) RemoveAlertsFromRecommendationScenarioCommand command )
 	{		
 		try {
-			RecommendationScenarioBusinessDelegate.getRecommendationScenarioInstance().removeFromAlerts( command );
+			service.removeFromAlerts( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Alerts", exc );
@@ -309,6 +312,7 @@ public class RecommendationScenarioRestController extends BaseSpringRestControll
 // Attributes
 //************************************************************************
     protected RecommendationScenario recommendationScenario = null;
+	protected RecommendationScenarioService service = null;
     private static final Logger LOGGER = Logger.getLogger(RecommendationScenarioRestController.class.getName());
     
 }

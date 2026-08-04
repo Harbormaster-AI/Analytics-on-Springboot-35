@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	PredictionBusinessDelegate
+ *  	PredictionService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/Prediction")
 public class PredictionRestController extends BaseSpringRestController {
 
+	public PredictionRestController( PredictionService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a Prediction.  if not key provided, calls create, otherwise calls save
      * @param		Prediction	prediction
@@ -93,7 +96,7 @@ public class PredictionRestController extends BaseSpringRestController {
     	Prediction entity = null;
 		try {       
         	
-			entity = PredictionBusinessDelegate.getPredictionInstance().createPrediction( command );
+			entity = service.createPrediction( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class PredictionRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdatePredictionCommand
 			// -----------------------------------------------
-			entity = PredictionBusinessDelegate.getPredictionInstance().updatePrediction(command);;
+			entity = service.updatePrediction(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "PredictionController:update() - successfully update Prediction - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class PredictionRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeletePredictionCommand command ) {                
     	try {
-        	PredictionBusinessDelegate delegate = PredictionBusinessDelegate.getPredictionInstance();
+        	PredictionService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted Prediction with key " + command.getPredictionId() );
@@ -151,7 +154,7 @@ public class PredictionRestController extends BaseSpringRestController {
     	Prediction entity = null;
 
     	try {  
-    		entity = PredictionBusinessDelegate.getPredictionInstance().getPrediction( new PredictionFetchOneSummary( uuid ) );   
+    		entity = service.getPrediction( new PredictionFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load Prediction using Id " + uuid );
@@ -171,7 +174,7 @@ public class PredictionRestController extends BaseSpringRestController {
         
     	try {
             // load the Prediction
-            predictionList = PredictionBusinessDelegate.getPredictionInstance().getAllPrediction();
+            predictionList = service.getAllPrediction();
             
             if ( predictionList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Predictions" );
@@ -192,7 +195,7 @@ public class PredictionRestController extends BaseSpringRestController {
 	@PutMapping("/assignEndpoint")
 	public void assignEndpoint( @RequestBody AssignEndpointToPredictionCommand command ) {
 		try {
-			PredictionBusinessDelegate.getPredictionInstance().assignEndpoint( command );   
+			service.assignEndpoint( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Endpoint", exc );
@@ -206,7 +209,7 @@ public class PredictionRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignEndpoint")
 	public void unAssignEndpoint( @RequestBody(required=true)  UnAssignEndpointFromPredictionCommand command ) {
 		try {
-			PredictionBusinessDelegate.getPredictionInstance().unAssignEndpoint( command );   
+			service.unAssignEndpoint( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Endpoint", exc );
@@ -220,7 +223,7 @@ public class PredictionRestController extends BaseSpringRestController {
 	@PutMapping("/assignModelVersion")
 	public void assignModelVersion( @RequestBody AssignModelVersionToPredictionCommand command ) {
 		try {
-			PredictionBusinessDelegate.getPredictionInstance().assignModelVersion( command );   
+			service.assignModelVersion( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign ModelVersion", exc );
@@ -234,7 +237,7 @@ public class PredictionRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignModelVersion")
 	public void unAssignModelVersion( @RequestBody(required=true)  UnAssignModelVersionFromPredictionCommand command ) {
 		try {
-			PredictionBusinessDelegate.getPredictionInstance().unAssignModelVersion( command );   
+			service.unAssignModelVersion( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign ModelVersion", exc );
@@ -248,7 +251,7 @@ public class PredictionRestController extends BaseSpringRestController {
 	@PutMapping("/assignDataset")
 	public void assignDataset( @RequestBody AssignDatasetToPredictionCommand command ) {
 		try {
-			PredictionBusinessDelegate.getPredictionInstance().assignDataset( command );   
+			service.assignDataset( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Dataset", exc );
@@ -262,7 +265,7 @@ public class PredictionRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignDataset")
 	public void unAssignDataset( @RequestBody(required=true)  UnAssignDatasetFromPredictionCommand command ) {
 		try {
-			PredictionBusinessDelegate.getPredictionInstance().unAssignDataset( command );   
+			service.unAssignDataset( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Dataset", exc );
@@ -277,6 +280,7 @@ public class PredictionRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected Prediction prediction = null;
+	protected PredictionService service = null;
     private static final Logger LOGGER = Logger.getLogger(PredictionRestController.class.getName());
     
 }

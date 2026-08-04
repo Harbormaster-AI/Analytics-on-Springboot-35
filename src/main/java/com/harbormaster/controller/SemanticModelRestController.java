@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	SemanticModelBusinessDelegate
+ *  	SemanticModelService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/SemanticModel")
 public class SemanticModelRestController extends BaseSpringRestController {
 
+	public SemanticModelRestController( SemanticModelService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a SemanticModel.  if not key provided, calls create, otherwise calls save
      * @param		SemanticModel	semanticModel
@@ -93,7 +96,7 @@ public class SemanticModelRestController extends BaseSpringRestController {
     	SemanticModel entity = null;
 		try {       
         	
-			entity = SemanticModelBusinessDelegate.getSemanticModelInstance().createSemanticModel( command );
+			entity = service.createSemanticModel( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class SemanticModelRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateSemanticModelCommand
 			// -----------------------------------------------
-			entity = SemanticModelBusinessDelegate.getSemanticModelInstance().updateSemanticModel(command);;
+			entity = service.updateSemanticModel(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "SemanticModelController:update() - successfully update SemanticModel - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class SemanticModelRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteSemanticModelCommand command ) {                
     	try {
-        	SemanticModelBusinessDelegate delegate = SemanticModelBusinessDelegate.getSemanticModelInstance();
+        	SemanticModelService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted SemanticModel with key " + command.getSemanticModelId() );
@@ -151,7 +154,7 @@ public class SemanticModelRestController extends BaseSpringRestController {
     	SemanticModel entity = null;
 
     	try {  
-    		entity = SemanticModelBusinessDelegate.getSemanticModelInstance().getSemanticModel( new SemanticModelFetchOneSummary( uuid ) );   
+    		entity = service.getSemanticModel( new SemanticModelFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load SemanticModel using Id " + uuid );
@@ -171,7 +174,7 @@ public class SemanticModelRestController extends BaseSpringRestController {
         
     	try {
             // load the SemanticModel
-            semanticModelList = SemanticModelBusinessDelegate.getSemanticModelInstance().getAllSemanticModel();
+            semanticModelList = service.getAllSemanticModel();
             
             if ( semanticModelList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all SemanticModels" );
@@ -193,7 +196,7 @@ public class SemanticModelRestController extends BaseSpringRestController {
 	@PutMapping("/addToDatasets")
 	public void addToDatasets( @RequestBody(required=true) AssignDatasetsToSemanticModelCommand command ) {
 		try {
-			SemanticModelBusinessDelegate.getSemanticModelInstance().addToDatasets( command );   
+			service.addToDatasets( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Datasets", exc );
@@ -208,7 +211,7 @@ public class SemanticModelRestController extends BaseSpringRestController {
 	public void removeFromDatasets( 	@RequestBody(required=true) RemoveDatasetsFromSemanticModelCommand command )
 	{		
 		try {
-			SemanticModelBusinessDelegate.getSemanticModelInstance().removeFromDatasets( command );
+			service.removeFromDatasets( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Datasets", exc );
@@ -222,7 +225,7 @@ public class SemanticModelRestController extends BaseSpringRestController {
 	@PutMapping("/addToMetrics")
 	public void addToMetrics( @RequestBody(required=true) AssignMetricsToSemanticModelCommand command ) {
 		try {
-			SemanticModelBusinessDelegate.getSemanticModelInstance().addToMetrics( command );   
+			service.addToMetrics( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Metrics", exc );
@@ -237,7 +240,7 @@ public class SemanticModelRestController extends BaseSpringRestController {
 	public void removeFromMetrics( 	@RequestBody(required=true) RemoveMetricsFromSemanticModelCommand command )
 	{		
 		try {
-			SemanticModelBusinessDelegate.getSemanticModelInstance().removeFromMetrics( command );
+			service.removeFromMetrics( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Metrics", exc );
@@ -251,7 +254,7 @@ public class SemanticModelRestController extends BaseSpringRestController {
 	@PutMapping("/addToDimensions")
 	public void addToDimensions( @RequestBody(required=true) AssignDimensionsToSemanticModelCommand command ) {
 		try {
-			SemanticModelBusinessDelegate.getSemanticModelInstance().addToDimensions( command );   
+			service.addToDimensions( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Dimensions", exc );
@@ -266,7 +269,7 @@ public class SemanticModelRestController extends BaseSpringRestController {
 	public void removeFromDimensions( 	@RequestBody(required=true) RemoveDimensionsFromSemanticModelCommand command )
 	{		
 		try {
-			SemanticModelBusinessDelegate.getSemanticModelInstance().removeFromDimensions( command );
+			service.removeFromDimensions( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Dimensions", exc );
@@ -280,7 +283,7 @@ public class SemanticModelRestController extends BaseSpringRestController {
 	@PutMapping("/addToMeasures")
 	public void addToMeasures( @RequestBody(required=true) AssignMeasuresToSemanticModelCommand command ) {
 		try {
-			SemanticModelBusinessDelegate.getSemanticModelInstance().addToMeasures( command );   
+			service.addToMeasures( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Measures", exc );
@@ -295,7 +298,7 @@ public class SemanticModelRestController extends BaseSpringRestController {
 	public void removeFromMeasures( 	@RequestBody(required=true) RemoveMeasuresFromSemanticModelCommand command )
 	{		
 		try {
-			SemanticModelBusinessDelegate.getSemanticModelInstance().removeFromMeasures( command );
+			service.removeFromMeasures( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Measures", exc );
@@ -309,7 +312,7 @@ public class SemanticModelRestController extends BaseSpringRestController {
 	@PutMapping("/addToGlossaryTerms")
 	public void addToGlossaryTerms( @RequestBody(required=true) AssignGlossaryTermsToSemanticModelCommand command ) {
 		try {
-			SemanticModelBusinessDelegate.getSemanticModelInstance().addToGlossaryTerms( command );   
+			service.addToGlossaryTerms( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set GlossaryTerms", exc );
@@ -324,7 +327,7 @@ public class SemanticModelRestController extends BaseSpringRestController {
 	public void removeFromGlossaryTerms( 	@RequestBody(required=true) RemoveGlossaryTermsFromSemanticModelCommand command )
 	{		
 		try {
-			SemanticModelBusinessDelegate.getSemanticModelInstance().removeFromGlossaryTerms( command );
+			service.removeFromGlossaryTerms( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set GlossaryTerms", exc );
@@ -338,6 +341,7 @@ public class SemanticModelRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected SemanticModel semanticModel = null;
+	protected SemanticModelService service = null;
     private static final Logger LOGGER = Logger.getLogger(SemanticModelRestController.class.getName());
     
 }

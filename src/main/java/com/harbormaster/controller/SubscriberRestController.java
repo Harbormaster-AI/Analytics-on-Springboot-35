@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	SubscriberBusinessDelegate
+ *  	SubscriberService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/Subscriber")
 public class SubscriberRestController extends BaseSpringRestController {
 
+	public SubscriberRestController( SubscriberService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a Subscriber.  if not key provided, calls create, otherwise calls save
      * @param		Subscriber	subscriber
@@ -93,7 +96,7 @@ public class SubscriberRestController extends BaseSpringRestController {
     	Subscriber entity = null;
 		try {       
         	
-			entity = SubscriberBusinessDelegate.getSubscriberInstance().createSubscriber( command );
+			entity = service.createSubscriber( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class SubscriberRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateSubscriberCommand
 			// -----------------------------------------------
-			entity = SubscriberBusinessDelegate.getSubscriberInstance().updateSubscriber(command);;
+			entity = service.updateSubscriber(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "SubscriberController:update() - successfully update Subscriber - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class SubscriberRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteSubscriberCommand command ) {                
     	try {
-        	SubscriberBusinessDelegate delegate = SubscriberBusinessDelegate.getSubscriberInstance();
+        	SubscriberService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted Subscriber with key " + command.getSubscriberId() );
@@ -151,7 +154,7 @@ public class SubscriberRestController extends BaseSpringRestController {
     	Subscriber entity = null;
 
     	try {  
-    		entity = SubscriberBusinessDelegate.getSubscriberInstance().getSubscriber( new SubscriberFetchOneSummary( uuid ) );   
+    		entity = service.getSubscriber( new SubscriberFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load Subscriber using Id " + uuid );
@@ -171,7 +174,7 @@ public class SubscriberRestController extends BaseSpringRestController {
         
     	try {
             // load the Subscriber
-            subscriberList = SubscriberBusinessDelegate.getSubscriberInstance().getAllSubscriber();
+            subscriberList = service.getAllSubscriber();
             
             if ( subscriberList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Subscribers" );
@@ -193,7 +196,7 @@ public class SubscriberRestController extends BaseSpringRestController {
 	@PutMapping("/addToAlerts")
 	public void addToAlerts( @RequestBody(required=true) AssignAlertsToSubscriberCommand command ) {
 		try {
-			SubscriberBusinessDelegate.getSubscriberInstance().addToAlerts( command );   
+			service.addToAlerts( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Alerts", exc );
@@ -208,7 +211,7 @@ public class SubscriberRestController extends BaseSpringRestController {
 	public void removeFromAlerts( 	@RequestBody(required=true) RemoveAlertsFromSubscriberCommand command )
 	{		
 		try {
-			SubscriberBusinessDelegate.getSubscriberInstance().removeFromAlerts( command );
+			service.removeFromAlerts( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Alerts", exc );
@@ -222,6 +225,7 @@ public class SubscriberRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected Subscriber subscriber = null;
+	protected SubscriberService service = null;
     private static final Logger LOGGER = Logger.getLogger(SubscriberRestController.class.getName());
     
 }

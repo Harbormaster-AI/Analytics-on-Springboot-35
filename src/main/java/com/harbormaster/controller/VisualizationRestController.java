@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	VisualizationBusinessDelegate
+ *  	VisualizationService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/Visualization")
 public class VisualizationRestController extends BaseSpringRestController {
 
+	public VisualizationRestController( VisualizationService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a Visualization.  if not key provided, calls create, otherwise calls save
      * @param		Visualization	visualization
@@ -93,7 +96,7 @@ public class VisualizationRestController extends BaseSpringRestController {
     	Visualization entity = null;
 		try {       
         	
-			entity = VisualizationBusinessDelegate.getVisualizationInstance().createVisualization( command );
+			entity = service.createVisualization( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class VisualizationRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateVisualizationCommand
 			// -----------------------------------------------
-			entity = VisualizationBusinessDelegate.getVisualizationInstance().updateVisualization(command);;
+			entity = service.updateVisualization(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "VisualizationController:update() - successfully update Visualization - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class VisualizationRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteVisualizationCommand command ) {                
     	try {
-        	VisualizationBusinessDelegate delegate = VisualizationBusinessDelegate.getVisualizationInstance();
+        	VisualizationService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted Visualization with key " + command.getVisualizationId() );
@@ -151,7 +154,7 @@ public class VisualizationRestController extends BaseSpringRestController {
     	Visualization entity = null;
 
     	try {  
-    		entity = VisualizationBusinessDelegate.getVisualizationInstance().getVisualization( new VisualizationFetchOneSummary( uuid ) );   
+    		entity = service.getVisualization( new VisualizationFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load Visualization using Id " + uuid );
@@ -171,7 +174,7 @@ public class VisualizationRestController extends BaseSpringRestController {
         
     	try {
             // load the Visualization
-            visualizationList = VisualizationBusinessDelegate.getVisualizationInstance().getAllVisualization();
+            visualizationList = service.getAllVisualization();
             
             if ( visualizationList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all Visualizations" );
@@ -192,7 +195,7 @@ public class VisualizationRestController extends BaseSpringRestController {
 	@PutMapping("/assignDashboard")
 	public void assignDashboard( @RequestBody AssignDashboardToVisualizationCommand command ) {
 		try {
-			VisualizationBusinessDelegate.getVisualizationInstance().assignDashboard( command );   
+			service.assignDashboard( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Dashboard", exc );
@@ -206,7 +209,7 @@ public class VisualizationRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignDashboard")
 	public void unAssignDashboard( @RequestBody(required=true)  UnAssignDashboardFromVisualizationCommand command ) {
 		try {
-			VisualizationBusinessDelegate.getVisualizationInstance().unAssignDashboard( command );   
+			service.unAssignDashboard( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Dashboard", exc );
@@ -220,7 +223,7 @@ public class VisualizationRestController extends BaseSpringRestController {
 	@PutMapping("/assignReport")
 	public void assignReport( @RequestBody AssignReportToVisualizationCommand command ) {
 		try {
-			VisualizationBusinessDelegate.getVisualizationInstance().assignReport( command );   
+			service.assignReport( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Report", exc );
@@ -234,7 +237,7 @@ public class VisualizationRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignReport")
 	public void unAssignReport( @RequestBody(required=true)  UnAssignReportFromVisualizationCommand command ) {
 		try {
-			VisualizationBusinessDelegate.getVisualizationInstance().unAssignReport( command );   
+			service.unAssignReport( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Report", exc );
@@ -249,7 +252,7 @@ public class VisualizationRestController extends BaseSpringRestController {
 	@PutMapping("/addToMetrics")
 	public void addToMetrics( @RequestBody(required=true) AssignMetricsToVisualizationCommand command ) {
 		try {
-			VisualizationBusinessDelegate.getVisualizationInstance().addToMetrics( command );   
+			service.addToMetrics( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Metrics", exc );
@@ -264,7 +267,7 @@ public class VisualizationRestController extends BaseSpringRestController {
 	public void removeFromMetrics( 	@RequestBody(required=true) RemoveMetricsFromVisualizationCommand command )
 	{		
 		try {
-			VisualizationBusinessDelegate.getVisualizationInstance().removeFromMetrics( command );
+			service.removeFromMetrics( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Metrics", exc );
@@ -278,7 +281,7 @@ public class VisualizationRestController extends BaseSpringRestController {
 	@PutMapping("/addToDimensions")
 	public void addToDimensions( @RequestBody(required=true) AssignDimensionsToVisualizationCommand command ) {
 		try {
-			VisualizationBusinessDelegate.getVisualizationInstance().addToDimensions( command );   
+			service.addToDimensions( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Dimensions", exc );
@@ -293,7 +296,7 @@ public class VisualizationRestController extends BaseSpringRestController {
 	public void removeFromDimensions( 	@RequestBody(required=true) RemoveDimensionsFromVisualizationCommand command )
 	{		
 		try {
-			VisualizationBusinessDelegate.getVisualizationInstance().removeFromDimensions( command );
+			service.removeFromDimensions( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Dimensions", exc );
@@ -307,7 +310,7 @@ public class VisualizationRestController extends BaseSpringRestController {
 	@PutMapping("/addToDatasets")
 	public void addToDatasets( @RequestBody(required=true) AssignDatasetsToVisualizationCommand command ) {
 		try {
-			VisualizationBusinessDelegate.getVisualizationInstance().addToDatasets( command );   
+			service.addToDatasets( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Datasets", exc );
@@ -322,7 +325,7 @@ public class VisualizationRestController extends BaseSpringRestController {
 	public void removeFromDatasets( 	@RequestBody(required=true) RemoveDatasetsFromVisualizationCommand command )
 	{		
 		try {
-			VisualizationBusinessDelegate.getVisualizationInstance().removeFromDatasets( command );
+			service.removeFromDatasets( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Datasets", exc );
@@ -336,6 +339,7 @@ public class VisualizationRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected Visualization visualization = null;
+	protected VisualizationService service = null;
     private static final Logger LOGGER = Logger.getLogger(VisualizationRestController.class.getName());
     
 }

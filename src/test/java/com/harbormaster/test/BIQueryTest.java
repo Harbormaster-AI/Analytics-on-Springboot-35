@@ -94,7 +94,7 @@ public class BIQueryTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a BIQuery" );
 
         try {            
-            entity = BIQueryBusinessDelegate.getBIQueryInstance().createBIQuery( generateNewCommand() );
+            entity = BIQueryService.getBIQueryInstance().createBIQuery( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getBIQueryId();
@@ -125,7 +125,7 @@ public class BIQueryTest
         msg.append( theId );
 
         try {
-            entity = BIQueryBusinessDelegate.getBIQueryInstance().getBIQuery( new BIQueryFetchOneSummary(theId) );
+            entity = BIQueryService.getBIQueryInstance().getBIQuery( new BIQueryFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class BIQueryTest
 
             LOGGER.info( "-- Now updating the created BIQuery." );
             
-            BIQueryBusinessDelegate proxy = BIQueryBusinessDelegate.getBIQueryInstance();            
+            BIQueryService proxy = BIQueryService.getBIQueryInstance();            
             entity = proxy.updateBIQuery( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class BIQueryTest
         try {
         	DeleteBIQueryCommand deleteCommand = new DeleteBIQueryCommand( theId );
         	
-            BIQueryBusinessDelegate.getBIQueryInstance().delete( deleteCommand );
+            BIQueryService.getBIQueryInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted BIQuery with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class BIQueryTest
         List<BIQuery> collection  = null;
 
         try {
-            // call the static get method on the BIQueryBusinessDelegate
-            collection = BIQueryBusinessDelegate.getBIQueryInstance().getAllBIQuery();
+            // call the static get method on the BIQueryService
+            collection = BIQueryService.getBIQueryInstance().getAllBIQuery();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

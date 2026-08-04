@@ -94,7 +94,7 @@ public class RecommendationScenarioTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a RecommendationScenario" );
 
         try {            
-            entity = RecommendationScenarioBusinessDelegate.getRecommendationScenarioInstance().createRecommendationScenario( generateNewCommand() );
+            entity = RecommendationScenarioService.getRecommendationScenarioInstance().createRecommendationScenario( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getRecommendationScenarioId();
@@ -125,7 +125,7 @@ public class RecommendationScenarioTest
         msg.append( theId );
 
         try {
-            entity = RecommendationScenarioBusinessDelegate.getRecommendationScenarioInstance().getRecommendationScenario( new RecommendationScenarioFetchOneSummary(theId) );
+            entity = RecommendationScenarioService.getRecommendationScenarioInstance().getRecommendationScenario( new RecommendationScenarioFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class RecommendationScenarioTest
 
             LOGGER.info( "-- Now updating the created RecommendationScenario." );
             
-            RecommendationScenarioBusinessDelegate proxy = RecommendationScenarioBusinessDelegate.getRecommendationScenarioInstance();            
+            RecommendationScenarioService proxy = RecommendationScenarioService.getRecommendationScenarioInstance();            
             entity = proxy.updateRecommendationScenario( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class RecommendationScenarioTest
         try {
         	DeleteRecommendationScenarioCommand deleteCommand = new DeleteRecommendationScenarioCommand( theId );
         	
-            RecommendationScenarioBusinessDelegate.getRecommendationScenarioInstance().delete( deleteCommand );
+            RecommendationScenarioService.getRecommendationScenarioInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted RecommendationScenario with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class RecommendationScenarioTest
         List<RecommendationScenario> collection  = null;
 
         try {
-            // call the static get method on the RecommendationScenarioBusinessDelegate
-            collection = RecommendationScenarioBusinessDelegate.getRecommendationScenarioInstance().getAllRecommendationScenario();
+            // call the static get method on the RecommendationScenarioService
+            collection = RecommendationScenarioService.getRecommendationScenarioInstance().getAllRecommendationScenario();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

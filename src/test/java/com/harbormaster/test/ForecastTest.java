@@ -94,7 +94,7 @@ public class ForecastTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a Forecast" );
 
         try {            
-            entity = ForecastBusinessDelegate.getForecastInstance().createForecast( generateNewCommand() );
+            entity = ForecastService.getForecastInstance().createForecast( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getForecastId();
@@ -125,7 +125,7 @@ public class ForecastTest
         msg.append( theId );
 
         try {
-            entity = ForecastBusinessDelegate.getForecastInstance().getForecast( new ForecastFetchOneSummary(theId) );
+            entity = ForecastService.getForecastInstance().getForecast( new ForecastFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class ForecastTest
 
             LOGGER.info( "-- Now updating the created Forecast." );
             
-            ForecastBusinessDelegate proxy = ForecastBusinessDelegate.getForecastInstance();            
+            ForecastService proxy = ForecastService.getForecastInstance();            
             entity = proxy.updateForecast( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class ForecastTest
         try {
         	DeleteForecastCommand deleteCommand = new DeleteForecastCommand( theId );
         	
-            ForecastBusinessDelegate.getForecastInstance().delete( deleteCommand );
+            ForecastService.getForecastInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted Forecast with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class ForecastTest
         List<Forecast> collection  = null;
 
         try {
-            // call the static get method on the ForecastBusinessDelegate
-            collection = ForecastBusinessDelegate.getForecastInstance().getAllForecast();
+            // call the static get method on the ForecastService
+            collection = ForecastService.getForecastInstance().getAllForecast();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

@@ -94,7 +94,7 @@ public class AnalyticsWorkspaceTest
         StringBuilder msg = new StringBuilder( "-- Failed to create a AnalyticsWorkspace" );
 
         try {            
-            entity = AnalyticsWorkspaceBusinessDelegate.getAnalyticsWorkspaceInstance().createAnalyticsWorkspace( generateNewCommand() );
+            entity = AnalyticsWorkspaceService.getAnalyticsWorkspaceInstance().createAnalyticsWorkspace( generateNewCommand() );
             assertNotNull( entity, msg.toString() );
 
             theId = entity.getAnalyticsWorkspaceId();
@@ -125,7 +125,7 @@ public class AnalyticsWorkspaceTest
         msg.append( theId );
 
         try {
-            entity = AnalyticsWorkspaceBusinessDelegate.getAnalyticsWorkspaceInstance().getAnalyticsWorkspace( new AnalyticsWorkspaceFetchOneSummary(theId) );
+            entity = AnalyticsWorkspaceService.getAnalyticsWorkspaceInstance().getAnalyticsWorkspace( new AnalyticsWorkspaceFetchOneSummary(theId) );
             
             assertNotNull( entity,msg.toString() );
 
@@ -166,7 +166,7 @@ public class AnalyticsWorkspaceTest
 
             LOGGER.info( "-- Now updating the created AnalyticsWorkspace." );
             
-            AnalyticsWorkspaceBusinessDelegate proxy = AnalyticsWorkspaceBusinessDelegate.getAnalyticsWorkspaceInstance();            
+            AnalyticsWorkspaceService proxy = AnalyticsWorkspaceService.getAnalyticsWorkspaceInstance();            
             entity = proxy.updateAnalyticsWorkspace( updateCommand );   
             
             assertNotNull( entity, msg.toString()  );
@@ -193,7 +193,7 @@ public class AnalyticsWorkspaceTest
         try {
         	DeleteAnalyticsWorkspaceCommand deleteCommand = new DeleteAnalyticsWorkspaceCommand( theId );
         	
-            AnalyticsWorkspaceBusinessDelegate.getAnalyticsWorkspaceInstance().delete( deleteCommand );
+            AnalyticsWorkspaceService.getAnalyticsWorkspaceInstance().delete( deleteCommand );
             
             LOGGER.info( "-- Successfully deleted AnalyticsWorkspace with primary key " + theId );            
         }
@@ -217,8 +217,8 @@ public class AnalyticsWorkspaceTest
         List<AnalyticsWorkspace> collection  = null;
 
         try {
-            // call the static get method on the AnalyticsWorkspaceBusinessDelegate
-            collection = AnalyticsWorkspaceBusinessDelegate.getAnalyticsWorkspaceInstance().getAllAnalyticsWorkspace();
+            // call the static get method on the AnalyticsWorkspaceService
+            collection = AnalyticsWorkspaceService.getAnalyticsWorkspaceInstance().getAllAnalyticsWorkspace();
 
             if ( collection == null || collection.size() == 0 ) {
                 LOGGER.warning( unexpectedErrorMsg );

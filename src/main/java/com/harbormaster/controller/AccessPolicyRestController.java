@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.harbormaster.api.*;
-import com.harbormaster.delegate.*;
+import com.harbormaster.service.*;
 import com.harbormaster.entity.*;
 import com.harbormaster.exception.*;
 
@@ -62,7 +62,7 @@ import com.harbormaster.exception.*;
  *
  * <h3>Services Used</h3>
  *
- *  	AccessPolicyBusinessDelegate
+ *  	AccessPolicyService
  *
  * <h3>Produces</h3>
  *
@@ -83,6 +83,9 @@ import com.harbormaster.exception.*;
 @RequestMapping("/AccessPolicy")
 public class AccessPolicyRestController extends BaseSpringRestController {
 
+	public AccessPolicyRestController( AccessPolicyService service ) {
+		this.service = service;
+	}
     /**
      * Handles create a AccessPolicy.  if not key provided, calls create, otherwise calls save
      * @param		AccessPolicy	accessPolicy
@@ -93,7 +96,7 @@ public class AccessPolicyRestController extends BaseSpringRestController {
     	AccessPolicy entity = null;
 		try {       
         	
-			entity = AccessPolicyBusinessDelegate.getAccessPolicyInstance().createAccessPolicy( command );
+			entity = service.createAccessPolicy( command );
         }
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, exc.getMessage(), exc );        	
@@ -114,7 +117,7 @@ public class AccessPolicyRestController extends BaseSpringRestController {
 			// -----------------------------------------------
 			// delegate the UpdateAccessPolicyCommand
 			// -----------------------------------------------
-			entity = AccessPolicyBusinessDelegate.getAccessPolicyInstance().updateAccessPolicy(command);;
+			entity = service.updateAccessPolicy(command);;
 	    }
 	    catch( Throwable exc ) {
 	    	LOGGER.log( Level.WARNING, "AccessPolicyController:update() - successfully update AccessPolicy - " + exc.getMessage());        	
@@ -130,7 +133,7 @@ public class AccessPolicyRestController extends BaseSpringRestController {
     @DeleteMapping("/delete")    
     public void delete( @RequestBody(required=true) DeleteAccessPolicyCommand command ) {                
     	try {
-        	AccessPolicyBusinessDelegate delegate = AccessPolicyBusinessDelegate.getAccessPolicyInstance();
+        	AccessPolicyService delegate = service;
 
         	delegate.delete( command );
     		LOGGER.log( Level.WARNING, "Successfully deleted AccessPolicy with key " + command.getAccessPolicyId() );
@@ -151,7 +154,7 @@ public class AccessPolicyRestController extends BaseSpringRestController {
     	AccessPolicy entity = null;
 
     	try {  
-    		entity = AccessPolicyBusinessDelegate.getAccessPolicyInstance().getAccessPolicy( new AccessPolicyFetchOneSummary( uuid ) );   
+    		entity = service.getAccessPolicy( new AccessPolicyFetchOneSummary( uuid ) );   
         }
         catch( Throwable exc ) {
             LOGGER.log( Level.WARNING, "failed to load AccessPolicy using Id " + uuid );
@@ -171,7 +174,7 @@ public class AccessPolicyRestController extends BaseSpringRestController {
         
     	try {
             // load the AccessPolicy
-            accessPolicyList = AccessPolicyBusinessDelegate.getAccessPolicyInstance().getAllAccessPolicy();
+            accessPolicyList = service.getAllAccessPolicy();
             
             if ( accessPolicyList != null )
                 LOGGER.log( Level.INFO,  "successfully loaded all AccessPolicys" );
@@ -192,7 +195,7 @@ public class AccessPolicyRestController extends BaseSpringRestController {
 	@PutMapping("/assignWorkspace")
 	public void assignWorkspace( @RequestBody AssignWorkspaceToAccessPolicyCommand command ) {
 		try {
-			AccessPolicyBusinessDelegate.getAccessPolicyInstance().assignWorkspace( command );   
+			service.assignWorkspace( command );   
 		}
         catch( Throwable exc ) {
         	LOGGER.log( Level.WARNING, "Failed to assign Workspace", exc );
@@ -206,7 +209,7 @@ public class AccessPolicyRestController extends BaseSpringRestController {
 	@PutMapping("/unAssignWorkspace")
 	public void unAssignWorkspace( @RequestBody(required=true)  UnAssignWorkspaceFromAccessPolicyCommand command ) {
 		try {
-			AccessPolicyBusinessDelegate.getAccessPolicyInstance().unAssignWorkspace( command );   
+			service.unAssignWorkspace( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to unassign Workspace", exc );
@@ -221,7 +224,7 @@ public class AccessPolicyRestController extends BaseSpringRestController {
 	@PutMapping("/addToDatasets")
 	public void addToDatasets( @RequestBody(required=true) AssignDatasetsToAccessPolicyCommand command ) {
 		try {
-			AccessPolicyBusinessDelegate.getAccessPolicyInstance().addToDatasets( command );   
+			service.addToDatasets( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Datasets", exc );
@@ -236,7 +239,7 @@ public class AccessPolicyRestController extends BaseSpringRestController {
 	public void removeFromDatasets( 	@RequestBody(required=true) RemoveDatasetsFromAccessPolicyCommand command )
 	{		
 		try {
-			AccessPolicyBusinessDelegate.getAccessPolicyInstance().removeFromDatasets( command );
+			service.removeFromDatasets( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Datasets", exc );
@@ -250,7 +253,7 @@ public class AccessPolicyRestController extends BaseSpringRestController {
 	@PutMapping("/addToDashboards")
 	public void addToDashboards( @RequestBody(required=true) AssignDashboardsToAccessPolicyCommand command ) {
 		try {
-			AccessPolicyBusinessDelegate.getAccessPolicyInstance().addToDashboards( command );   
+			service.addToDashboards( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Dashboards", exc );
@@ -265,7 +268,7 @@ public class AccessPolicyRestController extends BaseSpringRestController {
 	public void removeFromDashboards( 	@RequestBody(required=true) RemoveDashboardsFromAccessPolicyCommand command )
 	{		
 		try {
-			AccessPolicyBusinessDelegate.getAccessPolicyInstance().removeFromDashboards( command );
+			service.removeFromDashboards( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Dashboards", exc );
@@ -279,7 +282,7 @@ public class AccessPolicyRestController extends BaseSpringRestController {
 	@PutMapping("/addToReports")
 	public void addToReports( @RequestBody(required=true) AssignReportsToAccessPolicyCommand command ) {
 		try {
-			AccessPolicyBusinessDelegate.getAccessPolicyInstance().addToReports( command );   
+			service.addToReports( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Reports", exc );
@@ -294,7 +297,7 @@ public class AccessPolicyRestController extends BaseSpringRestController {
 	public void removeFromReports( 	@RequestBody(required=true) RemoveReportsFromAccessPolicyCommand command )
 	{		
 		try {
-			AccessPolicyBusinessDelegate.getAccessPolicyInstance().removeFromReports( command );
+			service.removeFromReports( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Reports", exc );
@@ -308,7 +311,7 @@ public class AccessPolicyRestController extends BaseSpringRestController {
 	@PutMapping("/addToModels")
 	public void addToModels( @RequestBody(required=true) AssignModelsToAccessPolicyCommand command ) {
 		try {
-			AccessPolicyBusinessDelegate.getAccessPolicyInstance().addToModels( command );   
+			service.addToModels( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set Models", exc );
@@ -323,7 +326,7 @@ public class AccessPolicyRestController extends BaseSpringRestController {
 	public void removeFromModels( 	@RequestBody(required=true) RemoveModelsFromAccessPolicyCommand command )
 	{		
 		try {
-			AccessPolicyBusinessDelegate.getAccessPolicyInstance().removeFromModels( command );
+			service.removeFromModels( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set Models", exc );
@@ -337,7 +340,7 @@ public class AccessPolicyRestController extends BaseSpringRestController {
 	@PutMapping("/addToFeatureSets")
 	public void addToFeatureSets( @RequestBody(required=true) AssignFeatureSetsToAccessPolicyCommand command ) {
 		try {
-			AccessPolicyBusinessDelegate.getAccessPolicyInstance().addToFeatureSets( command );   
+			service.addToFeatureSets( command );   
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to add to Set FeatureSets", exc );
@@ -352,7 +355,7 @@ public class AccessPolicyRestController extends BaseSpringRestController {
 	public void removeFromFeatureSets( 	@RequestBody(required=true) RemoveFeatureSetsFromAccessPolicyCommand command )
 	{		
 		try {
-			AccessPolicyBusinessDelegate.getAccessPolicyInstance().removeFromFeatureSets( command );
+			service.removeFromFeatureSets( command );
 		}
 		catch( Exception exc ) {
 			LOGGER.log( Level.WARNING, "Failed to remove from Set FeatureSets", exc );
@@ -366,6 +369,7 @@ public class AccessPolicyRestController extends BaseSpringRestController {
 // Attributes
 //************************************************************************
     protected AccessPolicy accessPolicy = null;
+	protected AccessPolicyService service = null;
     private static final Logger LOGGER = Logger.getLogger(AccessPolicyRestController.class.getName());
     
 }
