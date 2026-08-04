@@ -136,7 +136,7 @@ extends BaseBusinessDelegate {
             entity.setName( command.getName() );
             entity.setSchemaVersion( command.getSchemaVersion() );
             entity.setRefreshSchedule( command.getRefreshSchedule() );
-            entity.setIsSensitive( command.getIsSensitive() );
+            entity.setSensitive( command.getSensitive() );
             entity.setDataFormat( command.getDataFormat() );
     	    
         	// ------------------------------------------
@@ -181,7 +181,7 @@ extends BaseBusinessDelegate {
             entity.setName( command.getName() );
             entity.setSchemaVersion( command.getSchemaVersion() );
             entity.setRefreshSchedule( command.getRefreshSchedule() );
-            entity.setIsSensitive( command.getIsSensitive() );
+            entity.setSensitive( command.getSensitive() );
             entity.setWorkspace( command.getWorkspace() );
             entity.setSources( command.getSources() );
             entity.setPipelines( command.getPipelines() );

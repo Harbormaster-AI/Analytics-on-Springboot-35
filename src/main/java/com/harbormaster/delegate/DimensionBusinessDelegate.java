@@ -134,7 +134,7 @@ extends BaseBusinessDelegate {
 
             entity.setDimensionId( command.getDimensionId() );
             entity.setName( command.getName() );
-            entity.setIsTime( command.getIsTime() );
+            entity.setTypeTime( command.getTypeTime() );
             entity.setDimensionType( command.getDimensionType() );
     	    
         	// ------------------------------------------
@@ -177,7 +177,7 @@ extends BaseBusinessDelegate {
 
             entity.setDimensionId( command.getDimensionId() );
             entity.setName( command.getName() );
-            entity.setIsTime( command.getIsTime() );
+            entity.setTypeTime( command.getTypeTime() );
             entity.setSemanticModel( command.getSemanticModel() );
             entity.setDatasets( command.getDatasets() );
             entity.setGlossaryTerms( command.getGlossaryTerms() );

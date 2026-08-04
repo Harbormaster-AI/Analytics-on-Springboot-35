@@ -62,7 +62,7 @@ data class DataSource(
       AttributeOverride( name = "username", column = Column(name = "connection_username"))
     )
     var connection: ConnectionInfo? = null,
-    var isStreaming: Boolean? = null,
+    var streaming: Boolean? = null,
     @OneToOne(fetch = FetchType.EAGER) @JoinColumn(name = "workspace") var workspace: AnalyticsWorkspace? = null,
     @OneToMany(fetch = FetchType.EAGER) @JoinColumn(name = "producedDatasets") var producedDatasets:  Set<DataSet>? = null,
     @OneToMany(fetch = FetchType.EAGER) @JoinColumn(name = "pipelines") var pipelines:  Set<DataPipeline>? = null,
@@ -80,7 +80,7 @@ data class DataSet(
       AttributeOverride( name = "timezone", column = Column(name = "refreshSchedule_timezone"))
     )
     var refreshSchedule: CronSchedule? = null,
-    var isSensitive: Boolean? = null,
+    var sensitive: Boolean? = null,
     @OneToOne(fetch = FetchType.EAGER) @JoinColumn(name = "workspace") var workspace: AnalyticsWorkspace? = null,
     @OneToMany(fetch = FetchType.EAGER) @JoinColumn(name = "sources") var sources:  Set<DataSource>? = null,
     @OneToMany(fetch = FetchType.EAGER) @JoinColumn(name = "pipelines") var pipelines:  Set<DataPipeline>? = null,
@@ -141,7 +141,7 @@ data class SemanticModel(
 data class Dimension(
     @Id var dimensionId: UUID? = null,
     var name: String? = null,
-    var isTime: Boolean? = null,
+    var typeTime: Boolean? = null,
     @OneToOne(fetch = FetchType.EAGER) @JoinColumn(name = "semanticModel") var semanticModel: SemanticModel? = null,
     @OneToMany(fetch = FetchType.EAGER) @JoinColumn(name = "datasets") var datasets:  Set<DataSet>? = null,
     @OneToMany(fetch = FetchType.EAGER) @JoinColumn(name = "glossaryTerms") var glossaryTerms:  Set<BusinessGlossaryTerm>? = null,

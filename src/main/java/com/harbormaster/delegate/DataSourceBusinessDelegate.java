@@ -135,7 +135,7 @@ extends BaseBusinessDelegate {
             entity.setDataSourceId( command.getDataSourceId() );
             entity.setName( command.getName() );
             entity.setConnection( command.getConnection() );
-            entity.setIsStreaming( command.getIsStreaming() );
+            entity.setStreaming( command.getStreaming() );
             entity.setSourceType( command.getSourceType() );
             entity.setFormat( command.getFormat() );
     	    
@@ -180,7 +180,7 @@ extends BaseBusinessDelegate {
             entity.setDataSourceId( command.getDataSourceId() );
             entity.setName( command.getName() );
             entity.setConnection( command.getConnection() );
-            entity.setIsStreaming( command.getIsStreaming() );
+            entity.setStreaming( command.getStreaming() );
             entity.setWorkspace( command.getWorkspace() );
             entity.setProducedDatasets( command.getProducedDatasets() );
             entity.setPipelines( command.getPipelines() );

@@ -98,7 +98,7 @@ data class CreateDataSourceCommand(
       AttributeOverride( name = "username", column = Column(name = "connection_username"))
     )
     var connection: ConnectionInfo? = null,
-    var isStreaming: Boolean? = null,
+    var streaming: Boolean? = null,
     @Enumerated(EnumType.STRING) var sourceType: DataSourceType? = null,
     @Enumerated(EnumType.STRING) var format: DataFormat? = null
 )
@@ -113,7 +113,7 @@ data class UpdateDataSourceCommand(
       AttributeOverride( name = "username", column = Column(name = "connection_username"))
     )
     var connection: ConnectionInfo? = null,
-    var isStreaming: Boolean? = null,
+    var streaming: Boolean? = null,
     var workspace: AnalyticsWorkspace? = null,
     var producedDatasets:  Set<DataSet>? = null,
     var pipelines:  Set<DataPipeline>? = null,
@@ -144,7 +144,7 @@ data class CreateDataSetCommand(
       AttributeOverride( name = "timezone", column = Column(name = "refreshSchedule_timezone"))
     )
     var refreshSchedule: CronSchedule? = null,
-    var isSensitive: Boolean? = null,
+    var sensitive: Boolean? = null,
     @Enumerated(EnumType.STRING) var dataFormat: DataFormat? = null
 )
 
@@ -157,7 +157,7 @@ data class UpdateDataSetCommand(
       AttributeOverride( name = "timezone", column = Column(name = "refreshSchedule_timezone"))
     )
     var refreshSchedule: CronSchedule? = null,
-    var isSensitive: Boolean? = null,
+    var sensitive: Boolean? = null,
     var workspace: AnalyticsWorkspace? = null,
     var sources:  Set<DataSource>? = null,
     var pipelines:  Set<DataPipeline>? = null,
@@ -319,14 +319,14 @@ data class RemoveGlossaryTermsFromSemanticModelCommand(@Id  val semanticModelId:
 data class CreateDimensionCommand(
     @Id var dimensionId: UUID? = null,
     var name: String? = null,
-    var isTime: Boolean? = null,
+    var typeTime: Boolean? = null,
     @Enumerated(EnumType.STRING) var dimensionType: DimensionType? = null
 )
 
 data class UpdateDimensionCommand(
     @Id var dimensionId: UUID? = null,
     var name: String? = null,
-    var isTime: Boolean? = null,
+    var typeTime: Boolean? = null,
     var semanticModel: SemanticModel? = null,
     var datasets:  Set<DataSet>? = null,
     var glossaryTerms:  Set<BusinessGlossaryTerm>? = null,
